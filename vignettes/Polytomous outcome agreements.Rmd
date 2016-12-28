@@ -1,0 +1,93 @@
+---
+title: "Agreement on polytomous outcomes in the situation of more than two raters"
+author: "Iris Eekhout"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Agreement on polytomous outcomes in the situation of more than two raters}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Specific agreement on polytomous outcomes in the situation of more than two raters
+This document describes the use of the Agree package for two data examples dat are used in the paper on specific agreement on polytomous outcomes in the situation of more than two raters. The first data example is an example of ordinal ratings and the second example of nominal rating. 
+
+
+## Ordinal data example
+For the ordinal data example we use data from a study by Dikmans et al. (2015). This data is based on photographs’s of breasts of 50 women after breast reconstruction. The photographs are  independently scored by 5 surgeons, the patien, and three mothers. They each rated the quality of the reconstruction on a 5 point ordinal scale with the verbal anchors on the left side ‘very dissatisfied’ on the left end and on the right end ‘very satisfied’ on the right end. They specifically rated the volume, shape, symmetry, scars and nipple. In this paper we use the data of 4 surgeons because one surgeon had some missing values and we look at the rates for symmetry. Data set 1 is used for the example of ordinal categories.
+
+```{r}
+load("~/Github/Agree/data/breast.rda")
+
+variables_available <- c("volume", "shape", "symmetry", "scars", "nipple")
+raters_available <- c("Patient", "PCH1", "PCH2", "PCH3", "PCH4", "PCH5", "Mam1", "Mam2", "Mam3")
+
+variable <- variables_available[3]
+raters <- c(raters_available[2:5])
+ratersvars <- paste(raters, variable, sep="_")
+
+data1 <- data.frame(breast[ratersvars])
+```
+
+### Agreement table
+First the agreement table are summed for all rater combinations into one agreement table. Then the off diagonal cells are averaged to obtain symmetry agreement tables. 
+
+```{r}
+sumtable(data1,offdiag = FALSE)
+sumtable(data1,offdiag = TRUE)
+```
+
+### Agreement
+From the agreement table we can calculate the agreement. And we can calculate the confidence interval around this agreement.
+```{r}
+table1 <- sumtable(data1,offdiag = TRUE)
+agreement(table1)
+CIagreement(agreement(table),m=4,n=nrow(data1))
+
+```
+
+For ordinal data it might also be useful to look at the agreement when they may be one category off. So the agreement plus or minus one category. 
+
+```{r}
+agreement.plusone(table1)
+CIagreement(agreement.plusone(table1),m=4,n=nrow(data1))
+```
+
+### Specific agreement
+The specific agreement for polytomous data, can be defined in two ways: the agreement of for one category versus not that category (e.g. satisfied versus all other categories) or the agreement for one category versus any other (e.g. satistfied versus ) 
+
+```{r}
+specific.agreement2(table1)
+
+```
+
+
+## nominal data example
+For the nominal data example we use a dataset that was used in a paper by Fleis (1971), which originated from Sandifer et al. In this data patients are diagnosed in 5 categories: Depession, Personality Disorder, Schizophrenia, Neurois, and Other by 6 raters. 
+
+```{r}
+
+load("~/Github/Agree/data/diagnoses.rda")
+data2 <- data.frame(lapply(diagnoses,as.factor))
+```
+
+
+### Agreement table
+First the agreement table are summed for all rater combinations into one agreement table. Then the off diagonal cells are averaged to obtain symmetry agreement tables. 
+
+```{r}
+sumtable(data2,offdiag = FALSE)
+sumtable(data2,offdiag = TRUE)
+```
+
+### Agreement
+From the agreement table we can calculate the agreement. And we can calculate the confidence interval around this agreement.
+```{r}
+table2 <- sumtable(data2,ratings = colnames(data2),levels=levels(data2[,1]),offdiag = TRUE)
+
+agreement(table2)
+
+specific.agreement2(table2)
+
+CIagreement(agreement(table2),m=5,n=nrow(data2))
+
