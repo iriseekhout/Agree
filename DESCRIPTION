@@ -1,0 +1,16 @@
+Package: Agree
+Title: Agreement between multiple raters for multiple likert answer categories.
+Version: 0.0.0.9000
+Authors@R: person("Iris", "Eekhout", email = "iris.eekhout@tno.nl", role = c("aut", "cre"))
+Description: The agreement between multiple raters can be obained for a variable
+    rated by 2 or more Likert answer categories. The confidence interval around the
+    agreement can be obtained, corrected for multiple raters.
+Depends:
+    R (>= 3.3.0)
+License: 
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 5.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
