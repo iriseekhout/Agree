@@ -22,12 +22,16 @@
 #'                  r3=factor(c(1,1,1,3,3,2,1,0,1,0,2,2,0,3,1)),
 #'                  r4=factor(c(1,2,1,0,3,3,1,0,3,0,2,2,0,2,1)))
 #' sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1", "2", "3"))
-sumtable <- function(df, ratings, levels, offdiag=TRUE){
- stopifnot(is.data.frame(df))
+sumtable <- function(df, ratings=NULL, levels=NULL, offdiag=NULL){
+  stopifnot(is.data.frame(df))
+  if(is.null(ratings)){ratings=colnames(df)}
   stopifnot(is.character(ratings))
   stopifnot(all(purrr::map_chr(df[ratings], class)=="factor"))
+  if(is.null(levels)){levels=levels(df[,ratings[1]])}
+  if(is.null(offdiag)){if(length(levels==2)){offdiag=FALSE}
+                     if(length(levels>3)){offdiag=TRUE}}
 
-    df <- df[ratings]
+  df <- df[ratings]
   nraters <- length(ratings)
   crosval <- t(combn(ratings,2))
 
@@ -45,16 +49,16 @@ sumtable <- function(df, ratings, levels, offdiag=TRUE){
       sumtable <- sumtable + crostab
     }
     }
-  if(length(ratings==2)|offdiag==FALSE){
-    sumtable}
-  if(length(ratings>2|offdiag==TRUE)){
+  if(offdiag==TRUE){
   ## off diagonal means in matrix
-  mat1 <- matrix(0,length(levels),length(levels))
+  mat1 <-sumtable*0
   for (i in levels){ for (j in levels){
     mat1[i,j] <- (sumtable[i,j]+sumtable[j,i])/2
     mat1[j,i] <- (sumtable[i,j]+sumtable[j,i])/2
   }}
   sumtable <- mat1
-  sumtable}
-}
+  }
+  sumtable
+  }
+
 
