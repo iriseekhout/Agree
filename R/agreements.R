@@ -74,7 +74,7 @@ specific.agreement
 #' agreement.plusone(table)
 agreement.plusone <- function(table){
   stopifnot(nrow(table)==ncol(table))
-  stopifnot(nrow(table>2))
+  stopifnot(nrow(table)>2)
   agreeup <- agreelow <- vector()
   for (i in 1:(ncol(table) - 1)) {
     agreeup[i] <- table[i,i + 1]
@@ -105,7 +105,7 @@ agreement.plusone <- function(table){
 #' specific.agreement2(table)
 specific.agreement2 <- function(table){
   stopifnot(nrow(table)==ncol(table))
-  mat1 <- matrix(0,nrow(table),ncol(table))
+  mat1 <- table*0
   if(is.null(colnames(table))){levels <- 1:nrow(table)}
   else {levels <- colnames(table)}
   for (i in seq_along(levels)){
@@ -121,7 +121,7 @@ specific.agreement2 <- function(table){
   betweentable <- rbind(mat1.2, c(mat1.2_colprop[1:length(levels) ],mat1.2_coltot[length(levels) + 1]))
   rownames(betweentable) <- c(paste(levels), "PROP")
   colnames(betweentable) <- c(paste(levels), "SUM")
-  betweentable(round(betweentable),3)
+  betweentable <-round(betweentable,3)
   specific.agreements <- mat1.2_colprop[1:length(levels)]
 
   mat2 <- matrix (0,length(levels) ,length(levels) )
