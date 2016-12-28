@@ -51,7 +51,7 @@ if(specific=="positive"){
   specific.agreement <- (2*(sumtab[1,1]))/((2*(sumtab[1,1]))+(sumtab[1,2])+(sumtab[2,1]))
 }
 if(specific=="negative"){
-  specific.agreement <- (2*(sumtab[1,1]))/((2*(sumtab[1,1]))+(sumtab[1,2])+(sumtab[2,1]))
+  specific.agreement <- (2*(sumtab[2,2]))/((2*(sumtab[2,2]))+(sumtab[1,2])+(sumtab[2,1]))
 }
 specific.agreement=specific.agreement
 }
