@@ -2,6 +2,7 @@
 
 dat1 <- read.delim("C:/Users/eekhouti/Github/Agree/data-raw/data/Data validatiestudie versie 3.txt",dec=",")
 dat1[dat1==9999]<- NA  ## 9999 is missing hercoderen
+dat1[dat1==6]<- NA  ## 6 is missing hercoderen
 
 
 ## variabele namen in dat moeten gespecificeerd zijn als "[rater]"_"[variable]"
