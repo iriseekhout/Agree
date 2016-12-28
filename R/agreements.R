@@ -91,8 +91,8 @@ agreement.plusone <- function(table){
 #'
 #' @param table A data matrix or table with equal number of columns and rows.
 #'
-#' @return betweentable The same as the input table, where the discordant cells are averaged to correct for random rater combinations.
-#' @return specific.agreements
+#' @return betweentable is the same as the input table, where the discordant cells are averaged to correct for random rater combinations.
+#' @return specific.agreements is the probability for each category versus all the others
 #' @return specific.agreements.prop
 #' @export
 #'
@@ -122,7 +122,7 @@ specific.agreement2 <- function(table){
   rownames(betweentable) <- c(paste(levels), "PROP")
   colnames(betweentable) <- c(paste(levels), "SUM")
   betweentable <-round(betweentable,3)
-  specific.agreements <- mat1.2_colprop[1:length(levels)]
+  cat.proportions <- mat1.2_colprop[1:length(levels)]
 
   mat2 <- matrix (0,length(levels) ,length(levels) )
   for (i in seq_along(levels)) {
@@ -131,6 +131,7 @@ specific.agreement2 <- function(table){
   prop_agree_cat <- round(mat2, 3)
   rownames(prop_agree_cat) <- c(paste(levels))
   colnames(prop_agree_cat) <- c(paste(levels))
-
-  list(betweentable=betweentable, specific.agreements=specific.agreements, specific.agreements.prop=prop_agree_cat)
+  specific.agreement <- diag(prop_agree_cat)
+  cel.proportions <- prop_agree_cat
+  list(betweentable=betweentable, cat.proportions=cat.proportions, cel.proportions=cel.proportions, specific.agreement=specific.agreement)
 }
