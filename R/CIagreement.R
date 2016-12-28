@@ -27,11 +27,13 @@ CIagreement <- function(p, n, m, level=0.95, correction="continuity"){
   stopifnot(is.numeric(n))
   stopifnot(is.numeric(m))
   stopifnot(level>=0|level<=1)
-  stofifnot(is.character(correction))
+  stopifnot(is.character(correction))
   a <- qnorm(1-((1-level)/2))
   n <- n*sqrt(m-1)
   if (correction=="continuity"){
-  CIagreement<-  p+c(-(qnorm(1-(a/2))*(sqrt(1/n*(p*(1-p))))-1/(2*n)),0, (qnorm(1-(a/2))*(sqrt(1/n*(p*(1-p))))+1/(2*n)))
+  CIagreement<-  p+c(-(a*(sqrt(1/n*(p*(1-p))))-1/(2*n)),0, (a*(sqrt(1/n*(p*(1-p))))+1/(2*n)))
+  CIagreement <-  c(CIlow=CIagreement[1], p=CIagreement[2], CIhigh=CIagreement[3])
+
   }
   if (correction=="Fleis"){
     FCIlow <- ((2*n*p+(a*a)-1)-a*sqrt((a*a)-(2+(1/n))+4*p*(n*(1-p)+1)))/(2*((a*a)+n))
