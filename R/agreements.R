@@ -48,10 +48,10 @@ agreement <- function(table){
 specific.agreement1 <- function(table, specific="positive"){
   stopifnot(nrow(table)==2 & ncol(table)==2)
 if(specific=="positive"){
-  specific.agreement <- (2*(sumtab[1,1]))/((2*(sumtab[1,1]))+(sumtab[1,2])+(sumtab[2,1]))
+  specific.agreement <- (2*(table[1,1]))/((2*(table[1,1]))+(table[1,2])+(table[2,1]))
 }
 if(specific=="negative"){
-  specific.agreement <- (2*(sumtab[2,2]))/((2*(sumtab[2,2]))+(sumtab[1,2])+(sumtab[2,1]))
+  specific.agreement <- (2*(table[2,2]))/((2*(table[2,2]))+(table[1,2])+(table[2,1]))
 }
 specific.agreement
 }
@@ -77,8 +77,8 @@ agreement.plusone <- function(table){
   stopifnot(nrow(table>2))
   agreeup <- agreelow <- vector()
   for (i in 1:(ncol(table) - 1)) {
-    agreeup[i] <- sumtab[i,i + 1]
-    agreelow[i] <- sumtab[i + 1,i]
+    agreeup[i] <- table[i,i + 1]
+    agreelow[i] <- table[i + 1,i]
   }
   agreement.plusone <-  (sum(diag(table),agreeup, agreelow) / sum(table))
   agreement.plusone
