@@ -85,15 +85,14 @@ agreement.plusone <- function(table){
 }
 
 
-#' Specific agreement for more than 2 categories
+#' Conditional agreement for more than 2 categories
 #'
-#' specific agreement when there are more than two categories (averages over discordant cells to correct for random rater combinations). INCLUDE FORMULAS.
+#' Conditional agreement when there are more than two categories (averages over discordant cells to correct for random rater combinations). INCLUDE FORMULAS.
 #'
 #' @param table A data matrix or table with equal number of columns and rows.
 #'
 #' @return betweentable is the same as the input table, where the discordant cells are averaged to correct for random rater combinations.
-#' @return specific.agreements is the probability for each category versus all the others
-#' @return specific.agreements.prop
+#' @return conditionaltable is a table with conditional agreement proportions
 #' @export
 #'
 #' @examples
@@ -133,5 +132,38 @@ specific.agreement2 <- function(table){
   colnames(prop_agree_cat) <- c(paste(levels))
   specific.agreement <- diag(prop_agree_cat)
   cel.proportions <- prop_agree_cat
-  list(betweentable=betweentable, cat.proportions=cat.proportions, cel.proportions=cel.proportions, specific.agreement=specific.agreement)
+  list(betweentable=betweentable, conditionaltable=cel.proportions)
+}
+
+
+#' Specific agreement for more than 2 categories
+#'
+#' specific agreement when there are more than two categories (averages over discordant cells to correct for random rater combinations). INCLUDE FORMULAS.
+#' Specific agreement for one category versus the others, for example very satisfied verus rest.
+#'
+#' @param table A data matrix or table with equal number of columns and rows.
+#'
+#' @return betweentable is the same as the input table, where the discordant cells are averaged to correct for random rater combinations.
+#' @return specific.agreements is the probability for each category versus all the others
+#' @return specific.agreements.prop
+#' @export
+#'
+#' @examples
+#' #' df <- data.frame(r1=factor(c(1,2,2,0,3,3,1,0,3,0,2,2,0,3,1)),
+#'                  r2=factor(c(1,1,1,0,3,3,1,0,1,0,2,2,0,2,1)),
+#'                  r3=factor(c(1,1,1,3,3,2,1,0,1,0,2,2,0,3,1)),
+#'                  r4=factor(c(1,2,1,0,3,3,1,0,3,0,2,2,0,2,1)))
+#' table <- sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1", "2", "3"))
+#' specific.agreement2(table)
+spec.agreement2 <- function(table, cat1, cat2=NULL){
+  stopifnot(nrow(table)==ncol(table))
+  mat1 <- table*0
+  if(is.null(colnames(table))){levels <- 1:nrow(table)}
+  if(is.null(cat2)){ #if no cat2, then cat1 versus all others
+  SA <- (2*table[cat1,cat1]) / (2*table[cat1,cat1] + (sum(table[,cat1])-table[cat1,cat1])+(sum(table[cat1,])-table[cat1,cat1]))
+  }
+  if(!is.null(cat2)){#if there is a cat2, then cat1 versus cat2
+  SA <- (2*table[cat1,cat1]) / (2*table[cat1,cat1] + table[cat1,cat2]+ table[cat2,cat1])
+  }
+  SA
 }
