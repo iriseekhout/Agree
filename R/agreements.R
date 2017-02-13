@@ -28,14 +28,14 @@ agreement <- function(table){
   agreement
 }
 
-#' Specific agreement
+#' positive agreement
 #'
 #' A function to obtain the positve or negative agreement between 2 or more raters when categories are dichotomous. INCLUDE FORMULAS.
 #'
 #' @param table A 2 x 2 data matrix or table.
 #' @param specific A character vector indicating whether the \code{"positive"} or \code{"negative"} agreements should be obtained.
 #'
-#' @return An S3 object containing the proportion of specific agreement.
+#' @return An S3 object containing the proportion of positive (or negative) agreement.
 #' @export
 #'
 #' @examples
@@ -44,8 +44,8 @@ agreement <- function(table){
 #'                  r3=factor(c(1,1,1,0,0,0,1,1,1,0,0,1,0,1,1)),
 #'                  r4=factor(c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)))
 #' table <- sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1"))
-#' specific.agreement1(table, specific="positive")
-specific.agreement1 <- function(table, specific="positive"){
+#' positive.agreement(table, specific="positive")
+positive.agreement <- function(table, specific="positive"){
   stopifnot(nrow(table)==2 & ncol(table)==2)
 if(specific=="positive"){
   specific.agreement <- (2*(table[1,1]))/((2*(table[1,1]))+(table[1,2])+(table[2,1]))
@@ -155,7 +155,7 @@ specific.agreement2 <- function(table){
 #'                  r4=factor(c(1,2,1,0,3,3,1,0,3,0,2,2,0,2,1)))
 #' table <- sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1", "2", "3"))
 #' specific.agreement2(table)
-spec.agreement2 <- function(table, cat1, cat2=NULL){
+specific.agreement <- function(table, cat1, cat2=NULL){
   stopifnot(nrow(table)==ncol(table))
   mat1 <- table*0
   if(is.null(colnames(table))){levels <- 1:nrow(table)}
