@@ -102,7 +102,7 @@ agreement.plusone <- function(table){
 #'                  r4=factor(c(1,2,1,0,3,3,1,0,3,0,2,2,0,2,1)))
 #' table <- sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1", "2", "3"))
 #' specific.agreement2(table)
-specific.agreement2 <- function(table){
+conditional.agreement <- function(table){
   stopifnot(nrow(table)==ncol(table))
   mat1 <- table*0
   if(is.null(colnames(table))){levels <- 1:nrow(table)}
@@ -154,7 +154,7 @@ specific.agreement2 <- function(table){
 #'                  r3=factor(c(1,1,1,3,3,2,1,0,1,0,2,2,0,3,1)),
 #'                  r4=factor(c(1,2,1,0,3,3,1,0,3,0,2,2,0,2,1)))
 #' table <- sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1", "2", "3"))
-#' specific.agreement2(table)
+#' specific.agreement(table)
 specific.agreement <- function(table, cat1, cat2=NULL){
   stopifnot(nrow(table)==ncol(table))
   mat1 <- table*0
