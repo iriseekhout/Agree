@@ -23,4 +23,3 @@ The agreement between 2 or more raters when they may be one category off. Only r
 table <- sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1", "2", "3"))
 agreement.plusone(table)
 }
-

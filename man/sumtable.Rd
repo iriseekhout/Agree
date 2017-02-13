@@ -4,14 +4,16 @@
 \alias{sumtable}
 \title{Summed Table}
 \usage{
-sumtable(df, ratings, levels)
+sumtable(df, ratings = NULL, levels = NULL, offdiag = NULL)
 }
 \arguments{
 \item{df}{The input data frame that contains the scores for each rater in each column}
 
 \item{ratings}{A character vector that contains the names of the factor variables that need to be used as ratings}
 
-\item{levels}{A character vector that contains the levels of the factors}
+\item{levels}{A character vector that contains the levels of the factors.}
+
+\item{offdiag}{A logical parameter indicating if the of diagonal means should be used, default is TRUE with more than two raters}
 }
 \value{
 Returns a contingency table, an object of class "table", an array of integer values.
@@ -32,4 +34,3 @@ df <- data.frame(r1=factor(c(1,2,2,0,3,3,1,0,3,0,2,2,0,3,1)),
                  r4=factor(c(1,2,1,0,3,3,1,0,3,0,2,2,0,2,1)))
 sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1", "2", "3"))
 }
-

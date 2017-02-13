@@ -7,13 +7,13 @@
 agreement(table)
 }
 \arguments{
-\item{table}{ a data matrix or table with equal number of columns and rows.}
+\item{table}{A data matrix or table with equal number of columns and rows.}
 }
 \value{
 An S3 object containing the proportion of overall agreement.
 }
 \description{
-The proportion of overall agreement between 2 or more raters is calculated by the sum over the diagonal of the cross table divided by the total sum of the cells.
+The proportion of overall agreement between 2 or more raters is calculated by INCLUDE FORMULA.
 }
 \examples{
 df <- data.frame(r1=factor(c(1,0,1,0,0,1,1,0,0,0,1,1,0,1,1)),
@@ -30,4 +30,3 @@ df <- data.frame(r1=factor(c(1,2,2,0,3,3,1,0,3,0,2,2,0,3,1)),
 table <- sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1", "2", "3"))
 agreement(table)
 }
-

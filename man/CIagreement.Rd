@@ -33,4 +33,3 @@ p <- agreement(table)
 CIagreement(p=p, n=nrow(df), m=ncol(df))
 
 }
-
