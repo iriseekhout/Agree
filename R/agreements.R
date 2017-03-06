@@ -142,10 +142,10 @@ conditional.agreement <- function(table){
 #' Specific agreement for one category versus the others, for example very satisfied verus rest.
 #'
 #' @param table A data matrix or table with equal number of columns and rows.
+#' @param cat1 A character indicating the category for which specific agreement should be obtained.
+#' @param cat2 A character indicating the category to which the specific agreement should be compared, if left empty all other categories are used.
 #'
-#' @return betweentable is the same as the input table, where the discordant cells are averaged to correct for random rater combinations.
-#' @return specific.agreements is the probability for each category versus all the others
-#' @return specific.agreements.prop
+#' @return An S3 object containing the proportion of specific agreement.
 #' @export
 #'
 #' @examples
