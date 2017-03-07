@@ -44,13 +44,13 @@ CIagreement <- function(data, level=0.95, correction="continuity", ratings=NULL,
   if (!is.null(cat1) & is.null(cat2)){ #if no cat2, then cat1 versus all others
     p <- (2*table[cat1,cat1]) / (2*table[cat1,cat1] + (sum(table[,cat1])-table[cat1,cat1])+(sum(table[cat1,])-table[cat1,cat1]))
     #add adjustment for specific agreement
-    n <- ((table[cat1,cat1]+(sum(table[cat1,])-table[cat1,cat1]))/((m*m-1)/2))*sqrt(m-1)
+    n <- ((table[cat1,cat1]+(sum(table[cat1,])-table[cat1,cat1]))/(m*(m-1)/2))*sqrt(m-1)
   }
   #specific agreement versus cat2
   if(!is.null(cat1) & !is.null(cat2)){#if there is a cat2, then cat1 versus cat2
     p <- (2*table[cat1,cat1]) / (2*table[cat1,cat1] + table[cat1,cat2]+ table[cat2,cat1])
     #add adjustment for specific agreement
-    n <- (table[cat1,cat1]+ table[cat1,cat2] /((m*m-1)/2))*sqrt(m-1)
+    n <- (table[cat1,cat1]+ table[cat1,cat2] /(m*(m-1)/2))*sqrt(m-1)
   }
 
   #obtain CI
