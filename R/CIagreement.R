@@ -35,7 +35,7 @@ CIagreement <- function(data, level=0.95, correction="continuity", ratings=NULL,
   if(is.null(colnames(table))){
     levels <- 1:nrow(table)
     }
-  #ordinari agreement
+  #ordinary agreement
   if(is.null(cat1)&is.null(cat2)){
     p <- Agree::agreement(table)
     n <- n*sqrt(m-1)
@@ -45,14 +45,14 @@ CIagreement <- function(data, level=0.95, correction="continuity", ratings=NULL,
     p <- (2*table[cat1,cat1]) / (2*table[cat1,cat1] + (sum(table[,cat1])-table[cat1,cat1])+(sum(table[cat1,])-table[cat1,cat1]))
     #add adjustment for specific agreement
     #n <- ((table[cat1,cat1]+(sum(table[cat1,])-table[cat1,cat1]))/(m*(m-1)/2))*sqrt(m-1)
-    n <- ((sum(table[cat1,]))/(m*(m-1)/2))*sqrt(m-1)
+    n <- (((sum(table[cat1,])+sum(table[,cat1]))/2)/(m*(m-1)/2))*sqrt(m-1)
 
   }
   #specific agreement versus cat2
   if(!is.null(cat1) & !is.null(cat2)){#if there is a cat2, then cat1 versus cat2
     p <- (2*table[cat1,cat1]) / (2*table[cat1,cat1] + table[cat1,cat2]+ table[cat2,cat1])
     #add adjustment for specific agreement
-    n <- ((table[cat1,cat1]+ table[cat1,cat2]) /(m*(m-1)/2))*sqrt(m-1)
+    n <- ((((table[cat1,cat1]+table[cat1,cat2])+(table[cat1,cat1]+table[cat2,cat1]))/2) /(m*(m-1)/2))*sqrt(m-1)
   }
 
   #obtain CI
@@ -60,7 +60,6 @@ CIagreement <- function(data, level=0.95, correction="continuity", ratings=NULL,
   if (correction=="continuity"){
     CIagreement<-  p+c(-(a*(sqrt(1/n*(p*(1-p))))-1/(2*n)),0, (a*(sqrt(1/n*(p*(1-p))))+1/(2*n)))
     CIagreement <-  c(CIlow=CIagreement[1], p=CIagreement[2], CIhigh=CIagreement[3])
-
   }
   if (correction=="Fleis"){
     FCIlow <- ((2*n*p+(a*a)-1)-a*sqrt((a*a)-(2+(1/n))+4*p*(n*(1-p)+1)))/(2*((a*a)+n))
