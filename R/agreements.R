@@ -30,7 +30,7 @@ agreement <- function(table){
 
 #' positive agreement
 #'
-#' A function to obtain the positve or negative agreement between 2 or more raters when categories are dichotomous. INCLUDE FORMULAS.
+#' A function to obtain the positive or negative agreement between 2 or more raters when categories are dichotomous. INCLUDE FORMULAS.
 #'
 #' @param table A 2 x 2 data matrix or table.
 #' @param specific A character vector indicating whether the \code{"positive"} or \code{"negative"} agreements should be obtained.

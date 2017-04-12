@@ -108,7 +108,7 @@ CIbootagreement <- function(data, cat1=NULL, cat2=NULL,b=1000, level=0.95){
       Agree::agreement(sumtable(data[x,]))}
     }
     res1a <- boot::boot(data,agree.boot,b)
-    BCI_agr <-  quantile(res1a$t,c((1-level)/2,level+((1-level)/2)))    # Bootstrapped confidence interval of Light's kappa
+    BCI_agr <-  quantile(res1a$t,c((1-level)/2,level+((1-level)/2)), na.rm=TRUE)    # Bootstrapped confidence interval of Light's kappa
   BCI_agree <- BCI_agr   #,BCIadj_agr$bca[4:5])
   BCI <- c(BCIlow=BCI_agree[1], est=p, BCIhigh=BCI_agree[2])
   BCI
