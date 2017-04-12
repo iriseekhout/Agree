@@ -8,13 +8,13 @@ specific.agreement(table, cat1, cat2 = NULL)
 }
 \arguments{
 \item{table}{A data matrix or table with equal number of columns and rows.}
+
+\item{cat1}{A character indicating the category for which specific agreement should be obtained.}
+
+\item{cat2}{A character indicating the category to which the specific agreement should be compared, if left empty all other categories are used.}
 }
 \value{
-betweentable is the same as the input table, where the discordant cells are averaged to correct for random rater combinations.
-
-specific.agreements is the probability for each category versus all the others
-
-specific.agreements.prop
+An S3 object containing the proportion of specific agreement.
 }
 \description{
 specific agreement when there are more than two categories (averages over discordant cells to correct for random rater combinations). INCLUDE FORMULAS.

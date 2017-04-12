@@ -2,34 +2,31 @@
 % Please edit documentation in R/CIagreement.R
 \name{CIagreement}
 \alias{CIagreement}
-\title{Confidence interval around the Agreement}
+\title{Confidence interval around the (specific) agreement}
 \usage{
-CIagreement(p, n, m, level = 0.95, correction = "continuity")
+CIagreement(data, level = 0.95, correction = "continuity", ratings = NULL,
+  levels = NULL, cat1 = NULL, cat2 = NULL, m = NULL, n = NULL)
 }
 \arguments{
-\item{p}{Proportion; a numeric value between 0 and 1}
-
-\item{n}{The sample size of the sample that is rated}
-
-\item{m}{The number of raters}
-
 \item{level}{Confidence level; default is 0.95.}
 
 \item{correction}{A character value indicating the method used for correction of the interval, options are "continuity" or "Fleis".}
+
+\item{cat1}{A character indicating the category for which specific agreement should be obtained.}
+
+\item{cat2}{A character indicating the category to which the specific agreement should be compared, if left empty all other categories are used.}
 }
 \value{
-A vector giving the lower and upper confidence limit around the probability.
+A vector giving the lower and upper confidence limit around the probability of specific agreement.
 }
 \description{
-The confidence interval estimated around the proportion of agreement between 2 or more raters.
+The confidence interval estimated around the proportion of agreement between 2 or more raters. If cat1 is defined then specific agreement will be calculated. If cat1 = NULL overall agreement will be calculated.
 }
 \examples{
 df <- data.frame(r1=factor(c(1,0,1,0,0,1,1,0,0,0,1,1,0,1,1)),
                  r2=factor(c(1,1,1,1,0,1,1,0,0,0,1,1,0,1,0)),
                  r3=factor(c(1,1,1,0,0,0,1,1,1,0,0,1,0,1,1)),
                  r4=factor(c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)))
-table <- sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1"))
-p <- agreement(table)
-CIagreement(p=p, n=nrow(df), m=ncol(df))
+CIagreement(data=df, n=nrow(df), m=ncol(df))
 
 }
