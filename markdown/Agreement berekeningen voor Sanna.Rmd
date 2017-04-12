@@ -155,10 +155,16 @@ CIbootagreement(data1.r3, cat1="Wel BCC")
 ```
 
 
-### Secondary outcome data
 
-####Agreement tabellen
-Er zijn 3 raters. Elke rater heeft twee beoordelingen gedaan. Ik bekijk de agreement per beoordeling (dus beoordeling 1 en beoordeling 2).
+
+### Secondary outcome data
+Er zijn 3 raters. Elke rater heeft twee beoordelingen gedaan. 
+
+####Tussen raters
+
+Eerst bekijken we de agreement tussen de drie raters per beoordeling (beoordeling 1 en beoordeling 2).
+
+#####Agreement tabellen 
 
 ```{r, echo=FALSE}
 data2.1 <- dat2[c("DK1", "YE1", "MP1")]
@@ -169,19 +175,21 @@ pander(sumtable(data2.1),offdiag=FALSE)
 
 print("beoordeling 2:")
 pander(sumtable(data2.2,offdiag=FALSE))
+
 ```
 
-####Overall agreement en betrouwbaarheidsinterval
+#####Overall agreement en betrouwbaarheidsinterval
 ```{r, echo=FALSE}
 print("beoordeling 1:")
 CIbootagreement(data2.1)
 
 print("beoordeling 2:")
 CIbootagreement(data2.2)
+
 ```
 
 
-####specific agreements
+#####specific agreements
 ```{r, echo=FALSE}
 print("beoordeling 1 (Geen BCC versus others):")
 CIbootagreement(data2.1, cat1="Geen BCC")
@@ -210,7 +218,7 @@ CIbootagreement(data2.2, cat1="superficieel BCC")
 
 ```
 
-####Conditional agreement tabel
+#####Conditional agreement tabel
 
 ```{r, echo=FALSE}
 print("beoordeling 1:")
@@ -221,7 +229,7 @@ pander(conditional.agreement(sumtable(data2.2,offdiag=FALSE))$conditionaltable)
 ```
 
 
-####Specific agreement one versus each other
+#####Specific agreement one versus each other
 **beoordeling 1**
 
 ```{r,echo=FALSE}
@@ -247,10 +255,10 @@ print("beoordeling 1 (aggressief BCC geen BCC):")
 CIbootagreement(data2.1, cat1="aggressief BCC", cat2="superficieel BCC")
 
 
-print("beoordeling 2 (nodulair BCC versus geen BCC):")
+print("beoordeling 1 (nodulair BCC versus geen BCC):")
 CIbootagreement(data2.1, cat1="nodulair BCC", cat2="Geen BCC")
 
-print("beoordeling 2 (nodulair BCC versus aggressief BCC):")
+print("beoordeling 1 (nodulair BCC versus aggressief BCC):")
 CIbootagreement(data2.1, cat1="nodulair BCC", cat2="aggressief BCC")
 
 print("beoordeling 1 (nodulair BCC versus superficieel BCC):")
@@ -316,3 +324,242 @@ CIbootagreement(data2.2, cat1="superficieel BCC", cat2="nodulair BCC")
 
 
 ```
+
+
+
+####Agreement binnen raters
+
+Hieronder bekijken we agreementen tussen de twee beoordelingen per rater. 
+
+#####Agreement tabellen 
+
+```{r, echo=FALSE}
+data2.r1 <- dat2[c("DK1", "DK2")]
+data2.r2 <- dat2[c("YE1", "YE2")]
+data2.r3 <- dat2[c("MP1", "MP2")]
+
+print("beoordeling rater 1 (DK):")
+pander(sumtable(data2.r1),offdiag=FALSE)
+
+print("beoordeling rater 2 (YE):")
+pander(sumtable(data2.r2,offdiag=FALSE))
+
+print("beoordeling rater 3 (MP):")
+pander(sumtable(data2.r3,offdiag=FALSE))
+```
+
+#####Overall agreement en betrouwbaarheidsinterval
+```{r, echo=FALSE}
+print("beoordeling rater 1 (DK):")
+CIbootagreement(data2.r1)
+
+print("beoordeling rater 2 (YE):")
+CIbootagreement(data2.r2)
+
+print("beoordeling rater 3 (MP):")
+CIbootagreement(data2.r3)
+```
+
+
+#####specific agreements
+```{r, echo=FALSE}
+print("beoordeling rater 1 (Geen BCC versus others):")
+CIbootagreement(data2.r, cat1="Geen BCC")
+
+print("beoordeling rater 1 (aggressief BCC versus others):")
+CIbootagreement(data2.r1, cat1="aggressief BCC")
+
+print("beoordeling rater 1 (nodulair BCC versus others):")
+CIbootagreement(data2.r1, cat1="nodulair BCC")
+
+print("beoordeling rater 1 (superficieel BCC versus others):")
+CIbootagreement(data2.r1, cat1="superficieel BCC")
+
+
+print("beoordeling rater 2: Geen BCC versus others")
+CIbootagreement(data2.r2, cat1="Geen BCC")
+
+print("beoordeling rater 2 (aggressief BCC versus others):")
+CIbootagreement(data2.r2, cat1="aggressief BCC")
+
+print("beoordeling rater 2 (nodulair BCC versus others):")
+CIbootagreement(data2.r2, cat1="nodulair BCC")
+
+print("beoordeling rater 2 (superficieel BCC versus others):")
+CIbootagreement(data2.r2, cat1="superficieel BCC")
+
+
+print("beoordeling rater 3: Geen BCC versus others")
+CIbootagreement(data2.r3, cat1="Geen BCC")
+
+print("beoordeling rater 3 (aggressief BCC versus others):")
+CIbootagreement(data2.r3, cat1="aggressief BCC")
+
+print("beoordeling rater 3 (nodulair BCC versus others):")
+CIbootagreement(data2.r3, cat1="nodulair BCC")
+
+print("beoordeling rater 3 (superficieel BCC versus others):")
+CIbootagreement(data2.r3, cat1="superficieel BCC")
+```
+
+
+#####Conditional agreement tabel
+
+```{r, echo=FALSE}
+print("beoordeling rater 1 (DK):")
+pander(conditional.agreement(sumtable(data2.r1,offdiag=FALSE))$conditionaltable)
+
+print("beoordeling rater 2 (YE):")
+pander(conditional.agreement(sumtable(data2.r2,offdiag=FALSE))$conditionaltable)
+
+print("beoordeling rater 3 (MP):")
+pander(conditional.agreement(sumtable(data2.r2,offdiag=FALSE))$conditionaltable)
+
+```
+
+
+#####Specific agreement one versus each other
+**rater 1 (DK)**
+
+```{r,echo=FALSE}
+print("beoordeling rater 1 (Geen BCC versus aggressief BCC):")
+CIbootagreement(data2.r1, cat1="Geen BCC", cat2="aggressief BCC")
+
+
+print("beoordeling rater 1 (Geen BCC versus nodulair BCC):")
+CIbootagreement(data2.r1, cat1="Geen BCC", cat2="nodulair BCC")
+
+print("beoordeling rater 1 (Geen BCC versus superficieel BCC):")
+CIbootagreement(data2.r1, cat1="Geen BCC", cat2="superficieel BCC")
+
+
+
+print("beoordeling rater 1 (aggressief BCC geen BCC):")
+CIbootagreement(data2.r1, cat1="aggressief BCC", cat2="Geen BCC")
+
+print("beoordeling rater 1 (aggressief BCC geen BCC):")
+CIbootagreement(data2.r1, cat1="aggressief BCC", cat2="nodulair BCC")
+
+print("beoordeling rater 1 (aggressief BCC geen BCC):")
+CIbootagreement(data2.r1, cat1="aggressief BCC", cat2="superficieel BCC")
+
+
+print("beoordeling rater 1 (nodulair BCC versus geen BCC):")
+CIbootagreement(data2.r1, cat1="nodulair BCC", cat2="Geen BCC")
+
+print("beoordeling rater 1 (nodulair BCC versus aggressief BCC):")
+CIbootagreement(data2.r1, cat1="nodulair BCC", cat2="aggressief BCC")
+
+print("beoordeling rater 1 (nodulair BCC versus superficieel BCC):")
+CIbootagreement(data2.r1, cat1="nodulair BCC", cat2="superficieel BCC")
+
+
+print("beoordeling rater 1 (superficieel BCC versus Geen BCC):")
+CIbootagreement(data2.r1, cat1="superficieel BCC", cat2="Geen BCC")
+
+print("beoordeling rater 1 (superficieel BCC versus aggressief BCC):")
+CIbootagreement(data2.r1, cat1="superficieel BCC", cat2="aggressief BCC")
+
+print("beoordeling rater 1 (superficieel BCC versus nodulair BCC):")
+CIbootagreement(data2.r1, cat1="superficieel BCC", cat2="nodulair BCC")
+
+
+```
+
+
+**rater 2 (YE)**
+
+```{r, echo=FALSE}
+print("beoordeling rater 2 (Geen BCC versus aggressief BCC):")
+CIbootagreement(data2.r2, cat1="Geen BCC", cat2="aggressief BCC")
+
+print("beoordeling rater 2 (Geen BCC versus nodulair BCC):")
+CIbootagreement(data2.r2, cat1="Geen BCC", cat2="nodulair BCC")
+
+print("beoordeling rater 2 (Geen BCC versus superficieel BCC):")
+CIbootagreement(data2.r2, cat1="Geen BCC", cat2="superficieel BCC")
+
+
+
+print("beoordeling rater 2 (aggressief BCC geen BCC):")
+CIbootagreement(data2.r2, cat1="aggressief BCC", cat2="Geen BCC")
+
+print("beoordeling rater 2 (aggressief BCC geen BCC):")
+CIbootagreement(data2.r2, cat1="aggressief BCC", cat2="nodulair BCC")
+
+print("beoordeling rater 2 (aggressief BCC geen BCC):")
+CIbootagreement(data2.r2, cat1="aggressief BCC", cat2="superficieel BCC")
+
+
+print("beoordeling rater 2 (nodulair BCC versus geen BCC):")
+CIbootagreement(data2.r2, cat1="nodulair BCC", cat2="Geen BCC")
+
+print("beoordeling rater 2 (nodulair BCC versus aggressief BCC):")
+CIbootagreement(data2.r2, cat1="nodulair BCC", cat2="aggressief BCC")
+
+print("beoordeling rater 2 (nodulair BCC versus superficieel BCC):")
+CIbootagreement(data2.r2, cat1="nodulair BCC", cat2="superficieel BCC")
+
+
+
+print("beoordeling rater 2 (superficieel BCC versus Geen BCC):")
+CIbootagreement(data2.r2, cat1="superficieel BCC", cat2="Geen BCC")
+
+print("beoordeling rater 2 (superficieel BCC versus aggressief BCC):")
+CIbootagreement(data2.r2, cat1="superficieel BCC", cat2="aggressief BCC")
+
+print("beoordeling rater 2 (superficieel BCC versus nodulair BCC):")
+CIbootagreement(data2.r2, cat1="superficieel BCC", cat2="nodulair BCC")
+
+
+```
+
+
+**rater 3 (MP)**
+
+```{r, echo=FALSE}
+print("beoordeling rater 3 (Geen BCC versus aggressief BCC):")
+CIbootagreement(data2.r3, cat1="Geen BCC", cat2="aggressief BCC")
+
+print("beoordeling rater 3 (Geen BCC versus nodulair BCC):")
+CIbootagreement(data2.r3, cat1="Geen BCC", cat2="nodulair BCC")
+
+print("beoordeling rater 3 (Geen BCC versus superficieel BCC):")
+CIbootagreement(data2.r3, cat1="Geen BCC", cat2="superficieel BCC")
+
+
+
+print("beoordeling rater 3 (aggressief BCC geen BCC):")
+CIbootagreement(data2.r3, cat1="aggressief BCC", cat2="Geen BCC")
+
+print("beoordeling rater 3 (aggressief BCC geen BCC):")
+CIbootagreement(data2.r3, cat1="aggressief BCC", cat2="nodulair BCC")
+
+print("beoordeling rater 3 (aggressief BCC geen BCC):")
+CIbootagreement(data2.r3, cat1="aggressief BCC", cat2="superficieel BCC")
+
+
+print("beoordeling rater 3 (nodulair BCC versus geen BCC):")
+CIbootagreement(data2.r3, cat1="nodulair BCC", cat2="Geen BCC")
+
+print("beoordeling rater 3 (nodulair BCC versus aggressief BCC):")
+CIbootagreement(data2.r3, cat1="nodulair BCC", cat2="aggressief BCC")
+
+print("beoordeling rater 3 (nodulair BCC versus superficieel BCC):")
+CIbootagreement(data2.r3, cat1="nodulair BCC", cat2="superficieel BCC")
+
+
+
+print("beoordeling rater 3 (superficieel BCC versus Geen BCC):")
+CIbootagreement(data2.r3, cat1="superficieel BCC", cat2="Geen BCC")
+
+print("beoordeling rater 3 (superficieel BCC versus aggressief BCC):")
+CIbootagreement(data2.r3, cat1="superficieel BCC", cat2="aggressief BCC")
+
+print("beoordeling rater 3 (superficieel BCC versus nodulair BCC):")
+CIbootagreement(data2.r3, cat1="superficieel BCC", cat2="nodulair BCC")
+
+
+```
+
+
