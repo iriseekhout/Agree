@@ -11,6 +11,7 @@
 
 <meta name="author" content="Iris Eekhout" />
 
+<meta name="date" content="2017-04-12" />
 
 <title>Analyses Sanna</title>
 
@@ -118,7 +119,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Analyses Sanna</h1>
 <h4 class="author"><em>Iris Eekhout</em></h4>
-<h4 class="date"><em>13 februari 2017</em></h4>
+<h4 class="date"><em>12 april 2017</em></h4>
 
 </div>
 
@@ -131,7 +132,8 @@ $(document).ready(function () {
 <pre><code>## Loading required package: xlsxjars</code></pre>
 <pre class="r"><code>dat1 &lt;- read.xlsx(&quot;C:/Users/eekhouti/CloudStation/VUmc/Agreement/Sanna/Database reliability studie.xlsx&quot;, sheetIndex = 1)
 dat2 &lt;- read.xlsx(&quot;C:/Users/eekhouti/CloudStation/VUmc/Agreement/Sanna/Database reliability studie.xlsx&quot;, sheetIndex = 2)
-
+dat1 &lt;- na.omit(dat1)
+dat2 &lt;- na.omit(dat2)
 
 dat1[dat1==9] &lt;- NA
 dat2[dat2==9] &lt;- NA
@@ -150,9 +152,12 @@ dat2 &lt;- data.frame(lapply(dat2,as.factor))</code></pre>
 </div>
 <div id="primary-outcome-data" class="section level3">
 <h3>Primary outcome data</h3>
-<div id="agreement-tabellen" class="section level4">
-<h4>Agreement tabellen</h4>
-<p>Er zijn 3 raters. Elke rater heeft twee beoordelingen gedaan. Ik bekijk de agreement per beoordeling (dus beoordeling 1 en beoordeling 2).</p>
+<p>Er zijn 3 raters. Elke rater heeft twee beoordelingen gedaan.</p>
+<div id="tussen-raters" class="section level4">
+<h4>Tussen raters</h4>
+<p>Eerst bekijken we de agreement tussen de drie raters per beoordeling (beoordeling 1 en beoordeling 2).</p>
+<div id="agreement-tabellen" class="section level5">
+<h5>Agreement tabellen</h5>
 <pre><code>## [1] &quot;beoordeling 1:&quot;</code></pre>
 <table style="width:51%;">
 <colgroup>
@@ -208,49 +213,159 @@ dat2 &lt;- data.frame(lapply(dat2,as.factor))</code></pre>
 </tbody>
 </table>
 <p>Overall agreement en betrouwbaarheidsinterval</p>
-<pre><code>## [1] &quot;beoordeling 1:&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.7048382 0.8194444 0.8868212</code></pre>
 <pre><code>## [1] &quot;bootstrap CI beoordeling1:&quot;</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.7304313     0.8194444     0.9007092</code></pre>
-<pre><code>## [1] &quot;beoordeling 2:&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.7362542 0.8472222 0.9080428</code></pre>
+##     0.7361111     0.8194444     0.9027778</code></pre>
 <pre><code>## [1] &quot;bootstrap CI beoordeling2:&quot;</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.7638889     0.8472222     0.9167092</code></pre>
+##     0.7638889     0.8472222     0.9170139</code></pre>
 </div>
-<div id="specific-agreements" class="section level4">
-<h4>specific agreements</h4>
-<p>Telkens staat eerst het CI bepaald met onze sample size corrrectie en daardonder de Bootstrap CI. De positieve agreement is met Fleis correctie gedaan, omdat je anders boven de 1 uitkomt. Op dit moment zou ik denk ik de bootstrap CI rapporteren in je studie. De sample size correctie die wij doen is denk ik iets te strikt, waardoor onze betrouwbaarheidsintervallen wat breed uitvallen.</p>
+<div id="specific-agreements" class="section level5">
+<h5>specific agreements</h5>
+<p>We hebben nu de betrouwbaarheidsintervallen op basis van bootstrapping bepaald. Dit een empirische methode waarbij de agreement op 1000 bootstap sample van de totale data wordt bepaald. Voor deze 1000 agreement bepalingen wordt dan het interval bepaald waar 95% van de agreement bepalingen tussen liggen.</p>
 <pre><code>## [1] &quot;beoordeling 1 (negative agreement):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.3045459 0.5357143 0.8426441</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.3042391     0.5357143     0.7000000</code></pre>
+##     0.3000000     0.5357143     0.7059436</code></pre>
 <pre><code>## [1] &quot;beoordeling 1 (postive agreement):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.7666890 0.8879310 0.9411597</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.8217822     0.8879310     0.9430894</code></pre>
+##     0.8173077     0.8879310     0.9421606</code></pre>
 <pre><code>## [1] &quot;beoordeling 2 (Negative agreement):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.4497154 0.6562500 0.9290759</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.4229839     0.6562500     0.8250481</code></pre>
+##     0.4000000     0.6562500     0.8181818</code></pre>
 <pre><code>## [1] &quot;beoordeling 2 (postive agreement):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.7807066 0.9017857 0.9507078</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.8437500     0.9017857     0.9508197</code></pre>
+##     0.8378054     0.9017857     0.9519250</code></pre>
+</div>
+</div>
+<div id="agreement-within-raters" class="section level4">
+<h4>Agreement within raters</h4>
+<div id="agreement-tabellen-1" class="section level5">
+<h5>Agreement tabellen</h5>
+<p>Er zijn 3 raters. Elke rater heeft twee beoordelingen gedaan. Hieronder bekijken we in hoeverre de eerste en tweede beoordeling van de raters overeen komen.</p>
+<pre><code>## [1] &quot;beoordelingen rater 1 (DK):&quot;</code></pre>
+<table style="width:51%;">
+<colgroup>
+<col width="20%"></col>
+<col width="15%"></col>
+<col width="15%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Geen BCC</th>
+<th align="center">Wel BCC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Geen BCC</strong></td>
+<td align="center">5</td>
+<td align="center">5</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Wel BCC</strong></td>
+<td align="center">5</td>
+<td align="center">33</td>
+</tr>
+</tbody>
+</table>
+<pre><code>## [1] &quot;beoordelingen rater 2 (YE):&quot;</code></pre>
+<table style="width:51%;">
+<colgroup>
+<col width="20%"></col>
+<col width="15%"></col>
+<col width="15%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Geen BCC</th>
+<th align="center">Wel BCC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Geen BCC</strong></td>
+<td align="center">7</td>
+<td align="center">2</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Wel BCC</strong></td>
+<td align="center">2</td>
+<td align="center">37</td>
+</tr>
+</tbody>
+</table>
+<pre><code>## [1] &quot;beoordelingen rater 3 (MP):&quot;</code></pre>
+<table style="width:51%;">
+<colgroup>
+<col width="20%"></col>
+<col width="15%"></col>
+<col width="15%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Geen BCC</th>
+<th align="center">Wel BCC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>Geen BCC</strong></td>
+<td align="center">8</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Wel BCC</strong></td>
+<td align="center">5</td>
+<td align="center">34</td>
+</tr>
+</tbody>
+</table>
+<p>Overall agreement en betrouwbaarheidsintervallen voor de within raters agreements</p>
+<pre><code>## [1] &quot;bootstrap CI beoordelingen rater 1 (DK):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.6666667     0.7916667     0.8958333</code></pre>
+<pre><code>## [1] &quot;bootstrap CI beoordelingen rater 2 (YE):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.8333333     0.9166667     0.9791667</code></pre>
+<pre><code>## [1] &quot;bootstrap CI beoordelingen rater 3 (MP):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.7708333     0.8750000     0.9583333</code></pre>
+</div>
+<div id="specific-agreements-1" class="section level5">
+<h5>specific agreements</h5>
+<p>We hebben nu de betrouwbaarheidsintervallen op basis van bootstrapping bepaald. Dit een empirische methode waarbij de agreement op 1000 bootstap sample van de totale data wordt bepaald. Voor deze 1000 agreement bepalingen wordt dan het interval bepaald waar 95% van de agreement bepalingen tussen liggen.</p>
+<pre><code>## [1] &quot;beoordeling rater 1 (negative agreement):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.1818182     0.5000000     0.7368421</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 1 (postive agreement):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.7878539     0.8684211     0.9367089</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 2 (Negative agreement):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.5000000     0.7777778     0.9524845</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 2 (postive agreement):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.8918919     0.9487179     0.9882353</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 3 (Negative agreement):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.4760504     0.7272727     0.9090909</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 3 (postive agreement):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.8436707     0.9189189     0.9729908</code></pre>
+</div>
 </div>
 </div>
 <div id="secondary-outcome-data" class="section level3">
 <h3>Secondary outcome data</h3>
-<div id="agreement-tabellen-1" class="section level4">
-<h4>Agreement tabellen</h4>
-<p>Er zijn 3 raters. Elke rater heeft twee beoordelingen gedaan. Ik bekijk de agreement per beoordeling (dus beoordeling 1 en beoordeling 2).</p>
+<p>Er zijn 3 raters. Elke rater heeft twee beoordelingen gedaan.</p>
+<div id="tussen-raters-1" class="section level4">
+<h4>Tussen raters</h4>
+<p>Eerst bekijken we de agreement tussen de drie raters per beoordeling (beoordeling 1 en beoordeling 2).</p>
+<div id="agreement-tabellen-2" class="section level5">
+<h5>Agreement tabellen</h5>
 <pre><code>## [1] &quot;beoordeling 1:&quot;</code></pre>
 <table style="width:90%;">
 <caption>Table continues below</caption>
@@ -400,62 +515,44 @@ dat2 &lt;- data.frame(lapply(dat2,as.factor))</code></pre>
 </tbody>
 </table>
 </div>
-<div id="overall-agreement-en-betrouwbaarheidsinterval" class="section level4">
-<h4>Overall agreement en betrouwbaarheidsinterval</h4>
+<div id="overall-agreement-en-betrouwbaarheidsinterval" class="section level5">
+<h5>Overall agreement en betrouwbaarheidsinterval</h5>
 <pre><code>## [1] &quot;beoordeling 1:&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.4107239 0.5211268 0.6459603</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.4252745     0.5211268     0.6326818</code></pre>
+##     0.4166667     0.5211268     0.6267606</code></pre>
 <pre><code>## [1] &quot;beoordeling 2:&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.3550540 0.4652778 0.5899323</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.3604074     0.4652778     0.5798007</code></pre>
+##     0.3541667     0.4652778     0.5763889</code></pre>
 </div>
-<div id="specific-agreements-1" class="section level4">
-<h4>specific agreements</h4>
+<div id="specific-agreements-2" class="section level5">
+<h5>specific agreements</h5>
 <pre><code>## [1] &quot;beoordeling 1 (Geen BCC versus others):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.3129719 0.5454545 0.8550761</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.3265069     0.5454545     0.7213115</code></pre>
+##     0.3030303     0.5454545     0.7058824</code></pre>
 <pre><code>## [1] &quot;beoordeling 1 (aggressief BCC versus others):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.3623029 0.5757576 0.8534947</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.3330357     0.5757576     0.7608954</code></pre>
+##     0.3448006     0.5757576     0.7568034</code></pre>
 <pre><code>## [1] &quot;beoordeling 1 (nodulair BCC versus others):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.3261197 0.5250000 0.7769133</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.3043478     0.5250000     0.6842105</code></pre>
+##     0.3030303     0.5250000     0.6833796</code></pre>
 <pre><code>## [1] &quot;beoordeling 1 (superficieel BCC versus others):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.2626158 0.4578313 0.7041630</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.2686070     0.4578313     0.6154321</code></pre>
+##     0.2646816     0.4578313     0.6194823</code></pre>
 <pre><code>## [1] &quot;beoordeling 2: Geen BCC versus others&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.4497154 0.6562500 0.9290759</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.3998214     0.6562500     0.8205357</code></pre>
+##     0.4000000     0.6562500     0.8181818</code></pre>
 <pre><code>## [1] &quot;beoordeling 2 (aggressief BCC versus others):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.1312200 0.3333333 0.5997291</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.1304348     0.3333333     0.5122690</code></pre>
 <pre><code>## [1] &quot;beoordeling 2 (nodulair BCC versus others):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.1729526 0.3684211 0.6197138</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.2000000     0.3684211     0.5217638</code></pre>
+##     0.2142316     0.3684211     0.5227273</code></pre>
 <pre><code>## [1] &quot;beoordeling 2 (superficieel BCC versus others):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.3152213 0.5121951 0.7609084</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.2972178     0.5121951     0.6666667</code></pre>
+##     0.2903226     0.5121951     0.6666667</code></pre>
 </div>
-<div id="conditional-agreement-tabel" class="section level4">
-<h4>Conditional agreement tabel</h4>
+<div id="conditional-agreement-tabel" class="section level5">
+<h5>Conditional agreement tabel</h5>
 <pre><code>## [1] &quot;beoordeling 1:&quot;</code></pre>
 <table style="width:90%;">
 <caption>Table continues below</caption>
@@ -605,130 +702,702 @@ dat2 &lt;- data.frame(lapply(dat2,as.factor))</code></pre>
 </tbody>
 </table>
 </div>
-<div id="specific-agreement-one-versus-each-other" class="section level4">
-<h4>Specific agreement one versus each other</h4>
+<div id="specific-agreement-one-versus-each-other" class="section level5">
+<h5>Specific agreement one versus each other</h5>
 <p><strong>beoordeling 1</strong></p>
 <pre><code>## [1] &quot;beoordeling 1 (Geen BCC versus aggressief BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.5145295 0.9375000 0.9773623</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
 ##     0.7826087     0.9375000     1.0000000</code></pre>
 <pre><code>## [1] &quot;beoordeling 1 (Geen BCC versus nodulair BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.4742449 0.8823529 0.9583248</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.7095825     0.8823529     1.0000000</code></pre>
+##     0.7058824     0.8823529     1.0000000</code></pre>
 <pre><code>## [1] &quot;beoordeling 1 (Geen BCC versus superficieel BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.3745351 0.6122449 0.9365392</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.3748843     0.6122449     0.7894737</code></pre>
+##     0.3782939     0.6122449     0.7727639</code></pre>
 <pre><code>## [1] &quot;beoordeling 1 (aggressief BCC geen BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.5821454 0.9500000 0.9819493</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
 ##     0.8233957     0.9500000     1.0000000</code></pre>
 <pre><code>## [1] &quot;beoordeling 1 (aggressief BCC geen BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.4779204 0.6909091 0.9810367</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.4284954     0.6909091     0.8506218</code></pre>
+##     0.4374716     0.6909091     0.8600116</code></pre>
 <pre><code>## [1] &quot;beoordeling 1 (aggressief BCC geen BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.4694912 0.8085106 0.9216331</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.5714286     0.8085106     0.9333333</code></pre>
-<pre><code>## [1] &quot;beoordeling 2 (nodulair BCC versus geen BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.5724523 0.9130435 0.9694174</code></pre>
+##     0.5908422     0.8085106     0.9411765</code></pre>
+<pre><code>## [1] &quot;beoordeling 1 (nodulair BCC versus geen BCC):&quot;</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.7441528     0.9130435     1.0000000</code></pre>
-<pre><code>## [1] &quot;beoordeling 2 (nodulair BCC versus aggressief BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.5097859 0.7118644 0.9858521</code></pre>
+##     0.7500000     0.9130435     1.0000000</code></pre>
+<pre><code>## [1] &quot;beoordeling 1 (nodulair BCC versus aggressief BCC):&quot;</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.5127660     0.7118644     0.8572197</code></pre>
+##     0.5098039     0.7118644     0.8621082</code></pre>
 <pre><code>## [1] &quot;beoordeling 1 (nodulair BCC versus superficieel BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.5097859 0.7118644 0.9858521</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.5000000     0.7118644     0.8607790</code></pre>
+##     0.5000000     0.7118644     0.8607683</code></pre>
 <pre><code>## [1] &quot;beoordeling 1 (superficieel BCC versus Geen BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.4518120 0.6666667 0.9559536</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.4489796     0.6666667     0.8359254</code></pre>
+##     0.4515726     0.6666667     0.8266667</code></pre>
 <pre><code>## [1] &quot;beoordeling 1 (superficieel BCC versus aggressief BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.6219417 0.8085106 1.0853486</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.6060606     0.8085106     0.9333333</code></pre>
+##     0.6000000     0.8085106     0.9411765</code></pre>
 <pre><code>## [1] &quot;beoordeling 1 (superficieel BCC versus nodulair BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.3871798 0.6909091 0.8478531</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.4827267     0.6909091     0.8400000</code></pre>
+##     0.4666279     0.6909091     0.8524590</code></pre>
 <p><strong>beoordeling 2</strong></p>
 <pre><code>## [1] &quot;beoordeling 2 (Geen BCC versus aggressief BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.5724523 0.9130435 0.9694174</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.7618227     0.9130435     0.9824710</code></pre>
+##     0.7617761     0.9130435     0.9824710</code></pre>
 <pre><code>## [1] &quot;beoordeling 2 (Geen BCC versus nodulair BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.5404085 0.8750000 0.9535011</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.6975403     0.8750000     0.9714484</code></pre>
+##     0.7000000     0.8750000     0.9730076</code></pre>
 <pre><code>## [1] &quot;beoordeling 2 (Geen BCC versus superficieel BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.5886643 0.7777778 1.0454587</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.5581395     0.7777778     0.9090909</code></pre>
+##     0.5451515     0.7777778     0.9130569</code></pre>
 <pre><code>## [1] &quot;beoordeling 2 (aggressief BCC geen BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.3802237 0.8461538 0.9450253</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.5714286     0.8461538     1.0000000</code></pre>
+##     0.5714286     0.8461538     0.9677419</code></pre>
 <pre><code>## [1] &quot;beoordeling 2 (aggressief BCC geen BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.2054149 0.4489796 0.7791288</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.1904762     0.4489796     0.6415094</code></pre>
+##     0.1933972     0.4489796     0.6429147</code></pre>
 <pre><code>## [1] &quot;beoordeling 2 (aggressief BCC geen BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.3594592 0.6285714 1.0189020</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.3225806     0.6285714     0.8000000</code></pre>
+##     0.3333333     0.6285714     0.8163265</code></pre>
 <pre><code>## [1] &quot;beoordeling 2 (nodulair BCC versus geen BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.4194801 0.8235294 0.9335634</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.5714286     0.8235294     0.9565670</code></pre>
+##     0.5712054     0.8235294     0.9600741</code></pre>
 <pre><code>## [1] &quot;beoordeling 2 (nodulair BCC versus aggressief BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.2755262 0.5090909 0.8197945</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.3224707     0.5090909     0.6575433</code></pre>
+##     0.3111111     0.5090909     0.6666667</code></pre>
 <pre><code>## [1] &quot;beoordeling 2 (nodulair BCC versus superficieel BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.4070769 0.6511628 0.9939148</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.4117647     0.6511628     0.8301887</code></pre>
+##     0.4000000     0.6511628     0.8235294</code></pre>
 <pre><code>## [1] &quot;beoordeling 2 (superficieel BCC versus Geen BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.5886643 0.7777778 1.0454587</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.5881636     0.7777778     0.9152895</code></pre>
+##     0.5777564     0.7777778     0.9130987</code></pre>
 <pre><code>## [1] &quot;beoordeling 2 (superficieel BCC versus aggressief BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.5709362 0.7636364 1.0334754</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.5580749     0.7636364     0.8955981</code></pre>
+##     0.5531915     0.7636364     0.9014085</code></pre>
 <pre><code>## [1] &quot;beoordeling 2 (superficieel BCC versus nodulair BCC):&quot;</code></pre>
-<pre><code>##     CIlow         p    CIhigh 
-## 0.5385944 0.7368421 1.0095221</code></pre>
 <pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
-##     0.5142491     0.7368421     0.8750000</code></pre>
+##     0.5116279     0.7368421     0.8718310</code></pre>
+</div>
+</div>
+<div id="agreement-binnen-raters" class="section level4">
+<h4>Agreement binnen raters</h4>
+<p>Hieronder bekijken we agreementen tussen de twee beoordelingen per rater.</p>
+<div id="agreement-tabellen-3" class="section level5">
+<h5>Agreement tabellen</h5>
+<pre><code>## [1] &quot;beoordeling rater 1 (DK):&quot;</code></pre>
+<table style="width:90%;">
+<caption>Table continues below</caption>
+<colgroup>
+<col width="31%"></col>
+<col width="23%"></col>
+<col width="15%"></col>
+<col width="19%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">aggressief BCC</th>
+<th align="center">Geen BCC</th>
+<th align="center">nodulair BCC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>aggressief BCC</strong></td>
+<td align="center">4</td>
+<td align="center">0.5</td>
+<td align="center">2.5</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Geen BCC</strong></td>
+<td align="center">0.5</td>
+<td align="center">5</td>
+<td align="center">1.5</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>nodulair BCC</strong></td>
+<td align="center">2.5</td>
+<td align="center">1.5</td>
+<td align="center">9</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>superficieel BCC</strong></td>
+<td align="center">1</td>
+<td align="center">3</td>
+<td align="center">2</td>
+</tr>
+</tbody>
+</table>
+<table style="width:57%;">
+<colgroup>
+<col width="31%"></col>
+<col width="25%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">superficieel BCC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>aggressief BCC</strong></td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Geen BCC</strong></td>
+<td align="center">3</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>nodulair BCC</strong></td>
+<td align="center">2</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>superficieel BCC</strong></td>
+<td align="center">9</td>
+</tr>
+</tbody>
+</table>
+<pre><code>## [1] &quot;beoordeling rater 2 (YE):&quot;</code></pre>
+<table style="width:90%;">
+<caption>Table continues below</caption>
+<colgroup>
+<col width="31%"></col>
+<col width="23%"></col>
+<col width="15%"></col>
+<col width="19%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">aggressief BCC</th>
+<th align="center">Geen BCC</th>
+<th align="center">nodulair BCC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>aggressief BCC</strong></td>
+<td align="center">7</td>
+<td align="center">0</td>
+<td align="center">2</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Geen BCC</strong></td>
+<td align="center">1</td>
+<td align="center">7</td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>nodulair BCC</strong></td>
+<td align="center">2</td>
+<td align="center">2</td>
+<td align="center">7</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>superficieel BCC</strong></td>
+<td align="center">1</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+</tbody>
+</table>
+<table style="width:57%;">
+<colgroup>
+<col width="31%"></col>
+<col width="25%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">superficieel BCC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>aggressief BCC</strong></td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Geen BCC</strong></td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>nodulair BCC</strong></td>
+<td align="center">5</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>superficieel BCC</strong></td>
+<td align="center">13</td>
+</tr>
+</tbody>
+</table>
+<pre><code>## [1] &quot;beoordeling rater 3 (MP):&quot;</code></pre>
+<table style="width:90%;">
+<caption>Table continues below</caption>
+<colgroup>
+<col width="31%"></col>
+<col width="23%"></col>
+<col width="15%"></col>
+<col width="19%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">aggressief BCC</th>
+<th align="center">Geen BCC</th>
+<th align="center">nodulair BCC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>aggressief BCC</strong></td>
+<td align="center">9</td>
+<td align="center">0</td>
+<td align="center">4</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Geen BCC</strong></td>
+<td align="center">0</td>
+<td align="center">8</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>nodulair BCC</strong></td>
+<td align="center">4</td>
+<td align="center">3</td>
+<td align="center">4</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>superficieel BCC</strong></td>
+<td align="center">2</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+</tbody>
+</table>
+<table style="width:57%;">
+<colgroup>
+<col width="31%"></col>
+<col width="25%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">superficieel BCC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>aggressief BCC</strong></td>
+<td align="center">2</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Geen BCC</strong></td>
+<td align="center">1</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>nodulair BCC</strong></td>
+<td align="center">2</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>superficieel BCC</strong></td>
+<td align="center">6</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="overall-agreement-en-betrouwbaarheidsinterval-1" class="section level5">
+<h5>Overall agreement en betrouwbaarheidsinterval</h5>
+<pre><code>## [1] &quot;beoordeling rater 1 (DK):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.4166667     0.5625000     0.6875000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 2 (YE):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.5833333     0.7083333     0.8333333</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 3 (MP):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.4375000     0.5744681     0.7021277</code></pre>
+</div>
+<div id="specific-agreements-3" class="section level5">
+<h5>specific agreements</h5>
+<pre><code>## [1] &quot;beoordeling rater 1 (Geen BCC versus others):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.1816206     0.5000000     0.7369396</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 1 (aggressief BCC versus others):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.1538462     0.5000000     0.7692308</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 1 (nodulair BCC versus others):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.3634740     0.6000000     0.7897368</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 1 (superficieel BCC versus others):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.3703704     0.6000000     0.7857143</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 2: Geen BCC versus others&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.5000000     0.7777778     0.9523810</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 2 (aggressief BCC versus others):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.4000000     0.7000000     0.9090909</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 2 (nodulair BCC versus others):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.2727273     0.5384615     0.7501689</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 2 (superficieel BCC versus others):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.6363636     0.8125000     0.9411765</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 3: Geen BCC versus others&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.5000000     0.7619048     0.9411765</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 3 (aggressief BCC versus others):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.3529412     0.6000000     0.8000000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 3 (nodulair BCC versus others):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##    0.09081028    0.36363636    0.60000000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 3 (superficieel BCC versus others):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.2500000     0.5714286     0.8000000</code></pre>
+</div>
+<div id="conditional-agreement-tabel-1" class="section level5">
+<h5>Conditional agreement tabel</h5>
+<pre><code>## [1] &quot;beoordeling rater 1 (DK):&quot;</code></pre>
+<table style="width:90%;">
+<caption>Table continues below</caption>
+<colgroup>
+<col width="31%"></col>
+<col width="23%"></col>
+<col width="15%"></col>
+<col width="19%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">aggressief BCC</th>
+<th align="center">Geen BCC</th>
+<th align="center">nodulair BCC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>aggressief BCC</strong></td>
+<td align="center">0.5</td>
+<td align="center">0.062</td>
+<td align="center">0.312</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Geen BCC</strong></td>
+<td align="center">0.05</td>
+<td align="center">0.5</td>
+<td align="center">0.15</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>nodulair BCC</strong></td>
+<td align="center">0.167</td>
+<td align="center">0.1</td>
+<td align="center">0.6</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>superficieel BCC</strong></td>
+<td align="center">0.067</td>
+<td align="center">0.2</td>
+<td align="center">0.133</td>
+</tr>
+</tbody>
+</table>
+<table style="width:57%;">
+<colgroup>
+<col width="31%"></col>
+<col width="25%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">superficieel BCC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>aggressief BCC</strong></td>
+<td align="center">0.125</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Geen BCC</strong></td>
+<td align="center">0.3</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>nodulair BCC</strong></td>
+<td align="center">0.133</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>superficieel BCC</strong></td>
+<td align="center">0.6</td>
+</tr>
+</tbody>
+</table>
+<pre><code>## [1] &quot;beoordeling rater 2 (YE):&quot;</code></pre>
+<table style="width:90%;">
+<caption>Table continues below</caption>
+<colgroup>
+<col width="31%"></col>
+<col width="23%"></col>
+<col width="15%"></col>
+<col width="19%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">aggressief BCC</th>
+<th align="center">Geen BCC</th>
+<th align="center">nodulair BCC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>aggressief BCC</strong></td>
+<td align="center">0.7</td>
+<td align="center">0.05</td>
+<td align="center">0.2</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Geen BCC</strong></td>
+<td align="center">0.056</td>
+<td align="center">0.778</td>
+<td align="center">0.167</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>nodulair BCC</strong></td>
+<td align="center">0.154</td>
+<td align="center">0.115</td>
+<td align="center">0.538</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>superficieel BCC</strong></td>
+<td align="center">0.031</td>
+<td align="center">0</td>
+<td align="center">0.156</td>
+</tr>
+</tbody>
+</table>
+<table style="width:57%;">
+<colgroup>
+<col width="31%"></col>
+<col width="25%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">superficieel BCC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>aggressief BCC</strong></td>
+<td align="center">0.05</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Geen BCC</strong></td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>nodulair BCC</strong></td>
+<td align="center">0.192</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>superficieel BCC</strong></td>
+<td align="center">0.812</td>
+</tr>
+</tbody>
+</table>
+<pre><code>## [1] &quot;beoordeling rater 3 (MP):&quot;</code></pre>
+<table style="width:90%;">
+<caption>Table continues below</caption>
+<colgroup>
+<col width="31%"></col>
+<col width="23%"></col>
+<col width="15%"></col>
+<col width="19%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">aggressief BCC</th>
+<th align="center">Geen BCC</th>
+<th align="center">nodulair BCC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>aggressief BCC</strong></td>
+<td align="center">0.7</td>
+<td align="center">0.05</td>
+<td align="center">0.2</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Geen BCC</strong></td>
+<td align="center">0.056</td>
+<td align="center">0.778</td>
+<td align="center">0.167</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>nodulair BCC</strong></td>
+<td align="center">0.154</td>
+<td align="center">0.115</td>
+<td align="center">0.538</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>superficieel BCC</strong></td>
+<td align="center">0.031</td>
+<td align="center">0</td>
+<td align="center">0.156</td>
+</tr>
+</tbody>
+</table>
+<table style="width:57%;">
+<colgroup>
+<col width="31%"></col>
+<col width="25%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">superficieel BCC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>aggressief BCC</strong></td>
+<td align="center">0.05</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>Geen BCC</strong></td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>nodulair BCC</strong></td>
+<td align="center">0.192</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>superficieel BCC</strong></td>
+<td align="center">0.812</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="specific-agreement-one-versus-each-other-1" class="section level5">
+<h5>Specific agreement one versus each other</h5>
+<p><strong>rater 1 (DK)</strong></p>
+<pre><code>## [1] &quot;beoordeling rater 1 (Geen BCC versus aggressief BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.6666667     0.9090909     1.0000000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 1 (Geen BCC versus nodulair BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.4000000     0.7692308     1.0000000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 1 (Geen BCC versus superficieel BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.2493056     0.6250000     0.8750000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 1 (aggressief BCC geen BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.5000000     0.8888889     1.0000000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 1 (aggressief BCC geen BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.2216667     0.6153846     0.9090909</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 1 (aggressief BCC geen BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##           0.4           0.8           1.0</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 1 (nodulair BCC versus geen BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.6666667     0.8571429     1.0000000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 1 (nodulair BCC versus aggressief BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.5555556     0.7826087     0.9473684</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 1 (nodulair BCC versus superficieel BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.5830357     0.8181818     0.9600000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 1 (superficieel BCC versus Geen BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.5000000     0.7500000     0.9143452</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 1 (superficieel BCC versus aggressief BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.7142857     0.9000000     1.0000000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 1 (superficieel BCC versus nodulair BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.5882353     0.8181818     0.9629630</code></pre>
+<p><strong>rater 2 (YE)</strong></p>
+<pre><code>## [1] &quot;beoordeling rater 2 (Geen BCC versus aggressief BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.7272727     0.9333333     1.0000000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 2 (Geen BCC versus nodulair BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.5553030     0.8235294     1.0000000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 2 (Geen BCC versus superficieel BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##             1             1             1</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 2 (aggressief BCC geen BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.7500000     0.9333333     1.0000000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 2 (aggressief BCC geen BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.5000000     0.7777778     0.9523810</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 2 (aggressief BCC geen BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.7500000     0.9333333     1.0000000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 2 (nodulair BCC versus geen BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.5000000     0.8235294     1.0000000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 2 (nodulair BCC versus aggressief BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.4994048     0.7777778     0.9565217</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 2 (nodulair BCC versus superficieel BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.4285714     0.7368421     0.9333333</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 2 (superficieel BCC versus Geen BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##             1             1             1</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 2 (superficieel BCC versus aggressief BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##      0.880000      0.962963      1.000000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 2 (superficieel BCC versus nodulair BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.6837719     0.8387097     0.9629630</code></pre>
+<p><strong>rater 3 (MP)</strong></p>
+<pre><code>## [1] &quot;beoordeling rater 3 (Geen BCC versus aggressief BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##             1             1             1</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 3 (Geen BCC versus nodulair BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.6000000     0.8421053     1.0000000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 3 (Geen BCC versus superficieel BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.6666667     0.8888889     1.0000000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 3 (aggressief BCC geen BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##             1             1             1</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 3 (aggressief BCC geen BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.4442708     0.6923077     0.8571429</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 3 (aggressief BCC geen BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.5882353     0.8181818     0.9600741</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 3 (nodulair BCC versus geen BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.2857143     0.7272727     1.0000000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 3 (nodulair BCC versus aggressief BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.1538462     0.5000000     0.7692308</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 3 (nodulair BCC versus superficieel BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.2500000     0.7272727     1.0000000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 3 (superficieel BCC versus Geen BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.5714286     0.8571429     1.0000000</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 3 (superficieel BCC versus aggressief BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##     0.4440476     0.7500000     0.9413313</code></pre>
+<pre><code>## [1] &quot;beoordeling rater 3 (superficieel BCC versus nodulair BCC):&quot;</code></pre>
+<pre><code>##   BCIlow.2.5%           est BCIhigh.97.5% 
+##           0.5           0.8           1.0</code></pre>
+</div>
 </div>
 </div>
 

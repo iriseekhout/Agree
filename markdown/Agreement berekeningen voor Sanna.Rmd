@@ -20,7 +20,8 @@ Missings coderen en de categorieen namen geven.
 library(xlsx)
 dat1 <- read.xlsx("C:/Users/eekhouti/CloudStation/VUmc/Agreement/Sanna/Database reliability studie.xlsx", sheetIndex = 1)
 dat2 <- read.xlsx("C:/Users/eekhouti/CloudStation/VUmc/Agreement/Sanna/Database reliability studie.xlsx", sheetIndex = 2)
-
+dat1 <- na.omit(dat1)
+dat2 <- na.omit(dat2)
 
 dat1[dat1==9] <- NA
 dat2[dat2==9] <- NA
@@ -364,7 +365,7 @@ CIbootagreement(data2.r3)
 #####specific agreements
 ```{r, echo=FALSE}
 print("beoordeling rater 1 (Geen BCC versus others):")
-CIbootagreement(data2.r, cat1="Geen BCC")
+CIbootagreement(data2.r1, cat1="Geen BCC")
 
 print("beoordeling rater 1 (aggressief BCC versus others):")
 CIbootagreement(data2.r1, cat1="aggressief BCC")
@@ -424,7 +425,6 @@ pander(conditional.agreement(sumtable(data2.r2,offdiag=FALSE))$conditionaltable)
 ```{r,echo=FALSE}
 print("beoordeling rater 1 (Geen BCC versus aggressief BCC):")
 CIbootagreement(data2.r1, cat1="Geen BCC", cat2="aggressief BCC")
-
 
 print("beoordeling rater 1 (Geen BCC versus nodulair BCC):")
 CIbootagreement(data2.r1, cat1="Geen BCC", cat2="nodulair BCC")
