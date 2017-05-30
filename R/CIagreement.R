@@ -23,7 +23,7 @@ CIagreement <- function(data, level=0.95, correction="continuity", ratings=NULL,
   stopifnot(level>=0|level<=1)
   stopifnot(is.character(correction))
   if(is.data.frame(data)){
-    table <- Agree::sumtable(data,ratings=ratings,level=levels)
+    table <- Agree::sumtable(data,ratings=ratings,level=levels, offdiag = TRUE)
     m=ncol(data)
     n=nrow(data)
   }
@@ -39,21 +39,19 @@ CIagreement <- function(data, level=0.95, correction="continuity", ratings=NULL,
   if(is.null(cat1)&is.null(cat2)){
     p <- Agree::agreement(table)
     n <- n*sqrt(m-1)
-  }
+    }
   #specific agreement versus all others
   if (!is.null(cat1) & is.null(cat2)){ #if no cat2, then cat1 versus all others
-    p <- (2*table[cat1,cat1]) / (2*table[cat1,cat1] + (sum(table[,cat1])-table[cat1,cat1])+(sum(table[cat1,])-table[cat1,cat1]))
-    #add adjustment for specific agreement
-    #n <- ((table[cat1,cat1]+(sum(table[cat1,])-table[cat1,cat1]))/(m*(m-1)/2))*sqrt(m-1)
-    n <- (((sum(table[cat1,])+sum(table[,cat1]))/2)/(m*(m-1)/2))*sqrt(m-1)
-
-}
+    #p <- (2*table[cat1,cat1]) / (2*table[cat1,cat1] + (sum(table[,cat1])-table[cat1,cat1])+(sum(table[cat1,])-table[cat1,cat1]))
+    p <- Agree::specific.agreement(table,cat1=cat1,cat2=NULL)
+    n <- ((table[cat1,cat1]+(sum(table[cat1,])-table[cat1,cat1]))/(m*(m-1)/2))*sqrt(m-1)
+    #verschil met eerdere simulatie komt doordat hier de offdiag means worden genomen en daar niet - dit nu uitgezet.
+  }
   #specific agreement versus cat2
   if(!is.null(cat1) & !is.null(cat2)){#if there is a cat2, then cat1 versus cat2
-    p <- (2*table[cat1,cat1]) / (2*table[cat1,cat1] + table[cat1,cat2]+ table[cat2,cat1])
-    #add adjustment for specific agreement
+    #p <- (2*table[cat1,cat1]) / (2*table[cat1,cat1] + table[cat1,cat2]+ table[cat2,cat1])
+    p <- Agree::specific.agreement(table,cat1=cat1,cat2=cat2)
     n <- ((((table[cat1,cat1]+table[cat1,cat2])+(table[cat1,cat1]+table[cat2,cat1]))/2) /(m*(m-1)/2))*sqrt(m-1)
-#    n <- (table[cat1,cat1]+ table[cat1,cat2] /(m*(m-1)/2))*sqrt(m-1)
   }
 
   #obtain CI
@@ -66,6 +64,8 @@ CIagreement <- function(data, level=0.95, correction="continuity", ratings=NULL,
     FCIlow <- ((2*n*p+(a*a)-1)-a*sqrt((a*a)-(2+(1/n))+4*p*(n*(1-p)+1)))/(2*((a*a)+n))
     FCIhigh <- ((2*n*p+(a*a)-1)+a*sqrt((a*a)-(2+(1/n))+4*p*(n*(1-p)+1)))/(2*((a*a)+n))
     CIagreement <-  c(CIlow=FCIlow, p=p, CIhigh=FCIhigh)
+
+
   }
   CIagreement
 }
