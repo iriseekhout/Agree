@@ -92,7 +92,7 @@ agreement.plusone <- function(table){
 #' @param table A data matrix or table with equal number of columns and rows.
 #'
 #' @return betweentable is the same as the input table, where the discordant cells are averaged to correct for random rater combinations.
-#' @return conditionaltable is a table with conditional agreement proportions
+#' @return conditionaltable is a table with conditional agreement proportions. On the diagonal the specific agreement proportions for each category are displayed.
 #' @export
 #'
 #' @examples
