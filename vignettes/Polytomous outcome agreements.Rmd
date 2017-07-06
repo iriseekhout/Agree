@@ -39,17 +39,11 @@ pander(sumtable(data1,offdiag = TRUE))
 ### Agreement
 From the agreement table we can calculate the agreement. And we can calculate the confidence interval around this agreement.
 ```{r}
-table1 <- sumtable(data1,offdiag = TRUE)
-agreement(table1)
-CIagreement(table1,m=4,n=nrow(data1))
+agreement(data1)
+CIagreement(data1,m=4,n=nrow(data1))
 
 ```
 
-For ordinal data it might also be useful to look at the agreement when they may be one category off. So the agreement plus or minus one category. 
-
-```{r}
-agreement.plusone(table1)
-```
 
 ### Specific agreement
 The specific agreement for polytomous data, can be defined in two ways: the agreement of for one category versus not that category (e.g. very satisfied versus all other categories) or the agreement for one category versus any other (e.g. very satistfied versus satisfied). The function below now returns the folowing output:
@@ -60,10 +54,38 @@ The specific agreement for polytomous data, can be defined in two ways: the agre
 - The specific agreement is in this function the agreement for one category versus all others.
 
 ```{r}
-specific.agreement(table1, cat1="satisfied")
+specific.agreement(data1, cat1="satisfied")
 CIagreement(data1, cat1="satisfied")
 
+
+specific.agreement(data1, cat1="satisfied", cat2="very satisfied")
+CIagreement(data1, cat1="satisfied", cat2="very satisfied")
+
+
+specific.agreement(data1, cat1="satisfied", cat2="neutral")
+CIagreement(data1, cat1="satisfied", cat2="neutral")
+
 ```
+
+
+###Conditional probability
+We can calulate the probability of any other outcome conditional on an specific outcome. 
+
+```{r}
+conditional.agreement(data1)
+```
+
+
+### Weighted agreement
+For ordinal data it might also be useful to look at the agreement when they may be one category off. So the agreement plus or minus one category. 
+
+```{r}
+weighted.agreement(data1)
+
+weighted.agreement(data1, weight=0.5)
+
+```
+
 
 
 ## nominal data example
@@ -71,7 +93,7 @@ For the nominal data example we use a dataset that was used in a paper by Fleis 
 
 ```{r}
 
-load("C:/Users/eekhouti/Github/Agree/data/diagnoses.rda")
+load("data/diagnoses.rda")
 data2 <- data.frame(lapply(diagnoses,as.factor))
 ```
 
@@ -87,20 +109,34 @@ pander(sumtable(data2,offdiag = TRUE))
 ### Agreement
 From the agreement table we can calculate the agreement. And we can calculate the confidence interval around this agreement.
 ```{r}
-table2 <- sumtable(data2,ratings = colnames(data2),levels=levels(data2[,1]),offdiag = TRUE)
-
-agreement(table2)
-CIagreement(agreement(table2),m=6,n=nrow(data2))
+agreement(data2)
+CIagreement(data2)
 ```
 
 ### Specific agreement
-The specific agreement for polytomous data, can be defined in two ways: the agreement of for one category versus not that category (e.g. Depression versus all other categories) or the agreement for one category versus any other (e.g. Depression versus Schizophrenia). The function below now returns the folowing output:
-
-- A table (i.e. "betweentable") that is the summed agreement table with averaged discordant cells, with an extra column containing the row sums and an extra row containing the column proportions. 
-- The proportion for each category, which is the column proportions from the between table, seperately returned. 
-- The proportions for each cell are returned in the cel.proportions table.
-- The specific agreement is in this function the agreement for one category versus all others.
+The specific agreement for polytomous data, can be defined in two ways: the agreement of for one category versus not that category (e.g. Depression versus all other categories) or the agreement for one category versus any other (e.g. Depression versus Schizophrenia). 
 ```{r}
-pander(specific.agreement2(table2))
+specific.agreement(data2, cat1="1. Depression")
+CIagreement(data2, cat1="1. Depression")
+
+specific.agreement(data2, cat1="2. Personality Disorder")
+CIagreement(data2, cat1="2. Personality Disorder")
+
+specific.agreement(data2, cat1="3. Schizophrenia")
+CIagreement(data2, cat1="3. Schizophrenia")
+
+specific.agreement(data2, cat1="4. Neurosis")
+CIagreement(data2, cat1="4. Neurosis")
+
+specific.agreement(data2, cat1="5. Other")
+CIagreement(data2, cat1="5. Other")
+
+```
+
+
+### Conditional agreement
+
+```{r}
+conditional.agreement(data2)
 ```
 
