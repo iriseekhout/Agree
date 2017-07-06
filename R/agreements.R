@@ -65,9 +65,9 @@ if(specific=="negative"){
 specific.agreement
 }
 
-#' Agreement plus/minus one category
+#' Weighted agreement
 #'
-#' The agreement between 2 or more raters when they may be one category off. Only relevant for ordinal rating scales with more than 2 Likert categories.
+#' The agreement between 2 or more raters when they may be one category off, that category is weighted by 1 by default. Only relevant for ordinal rating scales with more than 2 Likert categories.
 #'
 #' @param data A data matrix or table with equal number of columns and rows. Or a data frame that contains the scores for each rater in each column.
 #' @return An S3 object containing the proportion of agreement.
@@ -80,7 +80,7 @@ specific.agreement
 #'                  r4=factor(c(1,2,1,0,3,3,1,0,3,0,2,2,0,2,1)))
 #' table <- sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1", "2", "3"))
 #' agreement.plusone(table)
-agreement.plusone <- function(data, ratings=NULL, levels=NULL, offdiag=NULL){
+weighted.agreement <- function(data,weight=1, ratings=NULL, levels=NULL, offdiag=NULL){
   if(is.data.frame(data)){
     table <- Agree::sumtable(data,ratings=ratings,levels=levels, offdiag = TRUE)
   }
@@ -93,7 +93,7 @@ agreement.plusone <- function(data, ratings=NULL, levels=NULL, offdiag=NULL){
     agreeup[i] <- table[i,i + 1]
     agreelow[i] <- table[i + 1,i]
   }
-  agreement.plusone <-  (sum(diag(table),agreeup, agreelow) / sum(table))
+  agreement.plusone <-  (sum(diag(table),agreeup*weight, agreelow*weight) / sum(table))
   agreement.plusone
 }
 
