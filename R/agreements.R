@@ -49,7 +49,7 @@ agreement <- function(data, ratings=NULL, levels=NULL, offdiag=NULL){
 #'                  r4=factor(c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)))
 #' table <- sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1"))
 #' positive.agreement(table, specific="positive")
-positive.agreement <- function(data, specific="positive"){
+positive.agreement <- function(data, specific="positive", ratings=NULL, levels=NULL, offdiag=NULL){
   if(is.data.frame(data)){
     table <- Agree::sumtable(data,ratings=ratings,levels=levels, offdiag = TRUE)
   }
@@ -80,7 +80,7 @@ specific.agreement
 #'                  r4=factor(c(1,2,1,0,3,3,1,0,3,0,2,2,0,2,1)))
 #' table <- sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1", "2", "3"))
 #' agreement.plusone(table)
-agreement.plusone <- function(data){
+agreement.plusone <- function(data, ratings=NULL, levels=NULL, offdiag=NULL){
   if(is.data.frame(data)){
     table <- Agree::sumtable(data,ratings=ratings,levels=levels, offdiag = TRUE)
   }
@@ -113,7 +113,7 @@ agreement.plusone <- function(data){
 #'                  r4=factor(c(1,2,1,0,3,3,1,0,3,0,2,2,0,2,1)))
 #' table <- sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1", "2", "3"))
 #' specific.agreement2(table)
-conditional.agreement <- function(data){
+conditional.agreement <- function(data, ratings=NULL, levels=NULL, offdiag=NULL){
   if(is.data.frame(data)){
     table <- Agree::sumtable(data,ratings=ratings,levels=levels, offdiag = TRUE)
   }
