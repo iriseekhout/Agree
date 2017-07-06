@@ -3,8 +3,7 @@
 #'
 #' The proportion of overall agreement between 2 or more raters is calculated by INCLUDE FORMULA.
 #'
-#' @param table A data matrix or table with equal number of columns and rows.
-#'
+#' @param data A data matrix or table with equal number of columns and rows. Or a data frame that contains the scores for each rater in each column.
 #' @return An S3 object containing the proportion of overall agreement.
 #' @export
 #'
@@ -22,8 +21,13 @@
 #'                  r4=factor(c(1,2,1,0,3,3,1,0,3,0,2,2,0,2,1)))
 #' table <- sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1", "2", "3"))
 #' agreement(table)
-agreement <- function(table){
-  stopifnot(nrow(table)==ncol(table))
+agreement <- function(data, ratings=NULL, levels=NULL, offdiag=NULL){
+  if(is.data.frame(data)){
+    table <- Agree::sumtable(data,ratings=ratings,levels=levels, offdiag = TRUE)
+  }
+  if(nrow(data)==ncol(data)){
+    table <- data
+  }
   agreement <- sum(diag(table)/sum(table))
   agreement
 }
@@ -136,12 +140,11 @@ conditional.agreement <- function(table){
 }
 
 
-#' Specific agreement for more than 2 categories
+#' Specific agreement
 #'
-#' specific agreement when there are more than two categories (averages over discordant cells to correct for random rater combinations). INCLUDE FORMULAS.
-#' Specific agreement for one category versus the others, for example very satisfied verus rest.
+#' specific agreement (averages over discordant cells to correct for random rater combinations). INCLUDE FORMULAS. When there are 2 categories, this is equal to the postive/negative agreement. When there are more than two categories, one can either look at the agreement for one category versus the others, for example very satisfied verus rest or for one category versus one specific other categorie, for example very satisfies versus not satisfied.
 #'
-#' @param table A data matrix or table with equal number of columns and rows.
+#' @param data A data matrix or table with equal number of columns and rows. Or a data frame that contains the scores for each rater in each column.
 #' @param cat1 A character indicating the category for which specific agreement should be obtained.
 #' @param cat2 A character indicating the category to which the specific agreement should be compared, if left empty all other categories are used.
 #'
@@ -153,10 +156,16 @@ conditional.agreement <- function(table){
 #'                  r2=factor(c(1,1,1,0,3,3,1,0,1,0,2,2,0,2,1)),
 #'                  r3=factor(c(1,1,1,3,3,2,1,0,1,0,2,2,0,3,1)),
 #'                  r4=factor(c(1,2,1,0,3,3,1,0,3,0,2,2,0,2,1)))
-#' table <- sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1", "2", "3"))
-#' specific.agreement(table)
-specific.agreement <- function(table, cat1, cat2=NULL){
-  stopifnot(nrow(table)==ncol(table))
+#' x <- sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1", "2", "3"))
+#' specific.agreement(x)
+specific.agreement <- function(data, cat1, cat2=NULL, ratings=NULL, levels=NULL, offdiag=NULL){
+  if(is.data.frame(data)){
+    table <- Agree::sumtable(data,ratings=ratings,levels=levels, offdiag = TRUE)
+  }
+  if(nrow(data)==ncol(data)){
+    table <- data
+    if(is.null(colnames(table))){levels <- 1:nrow(table)}
+  }
   mat1 <- table*0
   if(is.null(colnames(table))){levels <- 1:nrow(table)}
   if(is.null(cat2)){ #if no cat2, then cat1 versus all others
