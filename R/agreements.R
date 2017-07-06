@@ -111,8 +111,7 @@ agreement.plusone <- function(data, ratings=NULL, levels=NULL, offdiag=NULL){
 #'                  r2=factor(c(1,1,1,0,3,3,1,0,1,0,2,2,0,2,1)),
 #'                  r3=factor(c(1,1,1,3,3,2,1,0,1,0,2,2,0,3,1)),
 #'                  r4=factor(c(1,2,1,0,3,3,1,0,3,0,2,2,0,2,1)))
-#' table <- sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1", "2", "3"))
-#' conditional.agreement(data)
+#' conditional.agreement(df)
 conditional.agreement <- function(data, ratings=NULL, levels=NULL, offdiag=NULL){
   if(is.data.frame(data)){
     table <- Agree::sumtable(data,ratings=ratings,levels=levels, offdiag = TRUE)
