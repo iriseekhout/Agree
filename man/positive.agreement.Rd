@@ -4,10 +4,11 @@
 \alias{positive.agreement}
 \title{positive agreement}
 \usage{
-positive.agreement(table, specific = "positive")
+positive.agreement(data, specific = "positive", ratings = NULL,
+  levels = NULL, offdiag = NULL)
 }
 \arguments{
-\item{table}{A 2 x 2 data matrix or table.}
+\item{data}{A data matrix or table with equal number of columns and rows. Or a data frame that contains the scores for each rater in each column.}
 
 \item{specific}{A character vector indicating whether the \code{"positive"} or \code{"negative"} agreements should be obtained.}
 }
@@ -15,7 +16,7 @@ positive.agreement(table, specific = "positive")
 An S3 object containing the proportion of positive (or negative) agreement.
 }
 \description{
-A function to obtain the positve or negative agreement between 2 or more raters when categories are dichotomous. INCLUDE FORMULAS.
+A function to obtain the positive or negative agreement between 2 or more raters when categories are dichotomous. INCLUDE FORMULAS.
 }
 \examples{
 #' df <- data.frame(r1=factor(c(1,0,1,0,0,1,1,0,0,0,1,1,0,1,1)),

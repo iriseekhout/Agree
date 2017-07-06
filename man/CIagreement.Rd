@@ -4,13 +4,11 @@
 \alias{CIagreement}
 \title{Confidence interval around the (specific) agreement}
 \usage{
-CIagreement(data, level = 0.95, correction = "continuity", ratings = NULL,
-  levels = NULL, cat1 = NULL, cat2 = NULL, m = NULL, n = NULL)
+CIagreement(data, interval = 0.95, ratings = NULL, levels = NULL,
+  cat1 = NULL, cat2 = NULL, m = NULL, n = NULL, b = 1000)
 }
 \arguments{
-\item{level}{Confidence level; default is 0.95.}
-
-\item{correction}{A character value indicating the method used for correction of the interval, options are "continuity" or "Fleis".}
+\item{interval}{Confidence level; default is 0.95.}
 
 \item{cat1}{A character indicating the category for which specific agreement should be obtained.}
 
@@ -20,7 +18,7 @@ CIagreement(data, level = 0.95, correction = "continuity", ratings = NULL,
 A vector giving the lower and upper confidence limit around the probability of specific agreement.
 }
 \description{
-The confidence interval estimated around the proportion of agreement between 2 or more raters. If cat1 is defined then specific agreement will be calculated. If cat1 = NULL overall agreement will be calculated.
+The confidence interval estimated around the proportion of agreement between 2 or more raters. If cat1 is defined then specific agreement will be calculated. If cat1 = NULL overall agreement will be calculated. For the overall agreement and specific agreement if the number of likert categories is 2, the confidence interval will be obtained with the formula (Fleis correction for the values close to 0 or 1 and continuity correction for the other end of the interval). When the number of categories is larger than 2, the bootstrapped confidence interval will be obtained.
 }
 \examples{
 df <- data.frame(r1=factor(c(1,0,1,0,0,1,1,0,0,0,1,1,0,1,1)),
