@@ -15,11 +15,12 @@ This document describes the use of the Agree package for two data examples dat a
 library(Agree)
 library(pander)
 ```
+
 ## Ordinal data example
 For the ordinal data example we use data from a study by Dikmans et al. (2015). This data is based on photographs’s of breasts of 50 women after breast reconstruction. The photographs are  independently scored by 5 surgeons, the patien, and three mothers. They each rated the quality of the reconstruction on a 5 point ordinal scale with the verbal anchors on the left side ‘very dissatisfied’ on the left end and on the right end ‘very satisfied’ on the right end. They specifically rated the volume, shape, symmetry, scars and nipple. In this paper we use the data of 4 surgeons because one surgeon had some missing values and we look at the rates for symmetry. Data set 1 is used for the example of ordinal categories.
 
 ```{r}
-load("C:/Users/eekhouti/Github/Agree/data/breast.rda")
+load("data/breast.rda")
 
 variable <- "symmetry"
 raters <- c("PCH1", "PCH2", "PCH3", "PCH4")
@@ -40,7 +41,7 @@ From the agreement table we can calculate the agreement. And we can calculate th
 ```{r}
 table1 <- sumtable(data1,offdiag = TRUE)
 agreement(table1)
-CIagreement(agreement(table1),m=4,n=nrow(data1))
+CIagreement(table1,m=4,n=nrow(data1))
 
 ```
 
@@ -48,7 +49,6 @@ For ordinal data it might also be useful to look at the agreement when they may 
 
 ```{r}
 agreement.plusone(table1)
-CIagreement(agreement.plusone(table1),m=4,n=nrow(data1))
 ```
 
 ### Specific agreement
@@ -60,7 +60,8 @@ The specific agreement for polytomous data, can be defined in two ways: the agre
 - The specific agreement is in this function the agreement for one category versus all others.
 
 ```{r}
-pander(specific.agreement2(table1))
+specific.agreement(table1, cat1="satisfied")
+CIagreement(data1, cat1="satisfied")
 
 ```
 

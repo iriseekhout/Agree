@@ -55,7 +55,8 @@ positive.agreement <- function(data, specific="positive"){
   }
   if(nrow(data)==ncol(data)){
     table <- data
-  }if(specific=="positive"){
+  }
+  if(specific=="positive"){
   specific.agreement <- (2*(table[1,1]))/((2*(table[1,1]))+(table[1,2])+(table[2,1]))
 }
 if(specific=="negative"){
