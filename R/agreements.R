@@ -146,8 +146,8 @@ conditional.agreement <- function(data, ratings=NULL, levels=NULL, offdiag=NULL)
   colnames(prop_agree_cat) <- c(paste(levels))
   specific.agreement <- diag(prop_agree_cat)
   cel.proportions <- prop_agree_cat
-  list(betweentable=betweentable, conditionaltable=cel.proportions)
-  cel.proportions
+  conditionaltable <- cbind(prevalence=rowSums(table),proportion=rowSums(table)/sum(rowSums(table)), cel.proportions)
+  conditionaltable
 }
 
 
