@@ -1,13 +1,20 @@
 ---
-title: "Specific agreement on dichotomous outcomes in the situation of more than two raters"
+title: "Specific agreement on dichotomous outcomes with more than two raters"
 author: "Iris Eekhout"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Agreement on dichotomous outcomes in the situation of more than two raters}
-  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
 
 This document describes the use of the Agree package for the data example that was used in the paper on specific agreement on dichotomous outcomes in the situation of more than two raters.  
 
