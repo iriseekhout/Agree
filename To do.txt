@@ -1,0 +1,8 @@
+#to do:
+
+- Vignette dichotomous agreement update
+- Toevoegen daarin van CI agreement simulatie
+- simulatie opnieuw even draaien, script daarvan opschonen === simulatie van data in aparte functie.
+- Vignette voor polytomous agreement checken met paper
+- nieuwe versie van package maken
+
