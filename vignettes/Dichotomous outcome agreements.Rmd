@@ -5,15 +5,13 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Agreement on dichotomous outcomes in the situation of more than two raters}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{knitr::knitr}
   %\VignetteEncoding{UTF-8}
 ---
 
 This document describes the use of the Agree package for the data example that was used in the paper on specific agreement on dichotomous outcomes in the situation of more than two raters.  
 
 ```{r}
-install.packages("devtools")
-devtools::install_github("iriseekhout/Agree")
 library(Agree)
 ```
 
@@ -21,7 +19,7 @@ library(Agree)
 For the data example we used data from a study by Dikmans et al. (2015). This data is based on photographs’s of breasts of 50 women after breast reconstruction. The photographs are  independently scored by 5 surgeons, the patient, and three mothers. They each rated the quality of the reconstruction on a 5 point ordinal scale with the verbal anchors on the left side ‘very dissatisfied’ on the left end and on the right end ‘very satisfied’ on the right end. They specifically rated the volume, shape, symmetry, scars and nipple. In this paper we use the data of 4 surgeons because one surgeon had some missing values and we look at the rates for symmetry. The satisfaction scores were dichotomized into satistified (scores 4 and 5) and not satistified (scores 1,2, and 3).
 
 ```{r}
-load("data/breast.rda")
+data(breast)
 variable <- "symmetry"
 raters <- c("PCH1", "PCH2", "PCH3", "PCH4")
 ratersvars <- paste(raters, variable, sep="_")
