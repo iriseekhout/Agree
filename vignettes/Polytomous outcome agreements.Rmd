@@ -26,14 +26,15 @@ variable <- "symmetry"
 raters <- c("PCH1", "PCH2", "PCH3", "PCH4")
 ratersvars <- paste(raters, variable, sep="_")
 data1 <- data.frame(breast[ratersvars])
+head(data1)
 ```
 
 ### Agreement table
 First the agreement table are summed for all rater combinations into one agreement table. Then the off diagonal cells are averaged to obtain symmetry agreement tables. 
 
 ```{r}
-pander(sumtable(data1,offdiag = FALSE))
-pander(sumtable(data1,offdiag = TRUE))
+sumtable(data1,offdiag = FALSE)
+sumtable(data1,offdiag = TRUE)
 ```
 
 ### Agreement
@@ -46,12 +47,8 @@ CIagreement(data1,m=4,n=nrow(data1))
 
 
 ### Specific agreement
-The specific agreement for polytomous data, can be defined in two ways: the agreement of for one category versus not that category (e.g. very satisfied versus all other categories) or the agreement for one category versus any other (e.g. very satistfied versus satisfied). The function below now returns the folowing output:
+The specific agreement for polytomous data, can be defined in two ways: the agreement of for one category versus not that category (e.g. very satisfied versus all other categories) or the agreement for one category versus any other (e.g. very satistfied versus satisfied). Below the Confidence intervals for the specific agreements are bootstrapped.
 
-- A table (i.e. "betweentable") that is the summed agreement table with averaged discordant cells, with an extra column containing the row sums and an extra row containing the column proportions. 
-- The proportion for each category, which is the column proportions from the between table, seperately returned. 
-- The proportions for each cell are returned in the cel.proportions table.
-- The specific agreement is in this function the agreement for one category versus all others.
 
 ```{r}
 specific.agreement(data1, cat1="satisfied")
@@ -77,7 +74,7 @@ conditional.agreement(data1)
 
 
 ### Weighted agreement
-For ordinal data it might also be useful to look at the agreement when they may be one category off. So the agreement plus or minus one category. 
+For ordinal data it might also be useful to look at the agreement when they may be one category off. So the agreement plus or minus one category, that categories is weighted (default weight=1). 
 
 ```{r}
 weighted.agreement(data1)
@@ -102,8 +99,8 @@ data2 <- data.frame(lapply(diagnoses,as.factor))
 First the agreement table are summed for all rater combinations into one agreement table. Then the off diagonal cells are averaged to obtain symmetry agreement tables. 
 
 ```{r}
-pander(sumtable(data2,offdiag = FALSE))
-pander(sumtable(data2,offdiag = TRUE))
+sumtable(data2,offdiag = FALSE)
+sumtable(data2,offdiag = TRUE)
 ```
 
 ### Agreement
@@ -114,7 +111,7 @@ CIagreement(data2)
 ```
 
 ### Specific agreement
-The specific agreement for polytomous data, can be defined in two ways: the agreement of for one category versus not that category (e.g. Depression versus all other categories) or the agreement for one category versus any other (e.g. Depression versus Schizophrenia). 
+The specific agreement for polytomous data, can be defined in two ways: the agreement of for one category versus not that category (e.g. Depression versus all other categories) or the agreement for one category versus any other (e.g. Depression versus Schizophrenia). The confidence intervals for specific agreement are bootstrapped.
 ```{r}
 specific.agreement(data2, cat1="1. Depression")
 CIagreement(data2, cat1="1. Depression")
