@@ -8,6 +8,12 @@ CIbootagreement(data, cat1 = NULL, cat2 = NULL, b = 1000,
   interval = 0.95)
 }
 \arguments{
+\item{data}{data.frame or table}
+
+\item{cat1}{A character indicating the category for which specific agreement should be obtained.}
+
+\item{cat2}{A character indicating the category to which the specific agreement should be compared, if left empty all other categories are used.}
+
 \item{b}{Number of bootstrap iterations.}
 
 \item{level}{Confidence level; default is 0.95.}
