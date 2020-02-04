@@ -2,10 +2,9 @@
 #'
 #' The confidence interval estimated around the proportion of agreement between 2 or more raters. If cat1 is defined then specific agreement will be calculated. If cat1 = NULL overall agreement will be calculated. For the overall agreement and specific agreement if the number of likert categories is 2, the confidence interval will be obtained with the formula (Fleis correction for the values close to 0 or 1 and continuity correction for the other end of the interval). When the number of categories is larger than 2, the bootstrapped confidence interval will be obtained.
 #'
-#' @param data
+#' @param data data.frame or table
 #' @param cat1 A character indicating the category for which specific agreement should be obtained.
 #' @param cat2 A character indicating the category to which the specific agreement should be compared, if left empty all other categories are used.
-
 #' @param interval Confidence level; default is 0.95.
 #'
 #' @return A vector giving the lower and upper confidence limit around the probability of specific agreement.
@@ -75,9 +74,9 @@ CIagreement <- function(data, interval=0.95, ratings=NULL, levels=NULL, cat1=NUL
 #'
 #' The confidence interval estimated around the proportion of agreement between 2 or more raters.
 #'
-#' @param data
-#' @param cat1
-#' @param cat2
+#' @param data data.frame or table
+#' @param cat1 A character indicating the category for which specific agreement should be obtained.
+#' @param cat2 A character indicating the category to which the specific agreement should be compared, if left empty all other categories are used.
 #' @param level Confidence level; default is 0.95.
 #' @param b Number of bootstrap iterations.
 #'

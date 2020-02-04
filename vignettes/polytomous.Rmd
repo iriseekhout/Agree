@@ -71,7 +71,7 @@ CIagreement(data1, cat1="satisfied", cat2="neutral")
 ```
 
 
-###Conditional probability
+### Conditional probability
 We can calulate the probability of any other outcome conditional on an specific outcome. 
 
 ```{r}

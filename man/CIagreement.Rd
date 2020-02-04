@@ -8,6 +8,8 @@ CIagreement(data, interval = 0.95, ratings = NULL, levels = NULL,
   cat1 = NULL, cat2 = NULL, m = NULL, n = NULL, b = 1000)
 }
 \arguments{
+\item{data}{data.frame or table}
+
 \item{interval}{Confidence level; default is 0.95.}
 
 \item{cat1}{A character indicating the category for which specific agreement should be obtained.}

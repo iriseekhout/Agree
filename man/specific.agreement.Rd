@@ -4,8 +4,8 @@
 \alias{specific.agreement}
 \title{Specific agreement}
 \usage{
-specific.agreement(data, cat1, cat2 = NULL, ratings = NULL, levels = NULL,
-  offdiag = NULL)
+specific.agreement(data, cat1, cat2 = NULL, ratings = NULL,
+  levels = NULL, offdiag = NULL)
 }
 \arguments{
 \item{data}{A data matrix or table with equal number of columns and rows. Or a data frame that contains the scores for each rater in each column.}

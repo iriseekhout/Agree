@@ -4,7 +4,8 @@
 \alias{conditional.agreement}
 \title{Conditional agreement for more than 2 categories}
 \usage{
-conditional.agreement(data, ratings = NULL, levels = NULL, offdiag = NULL)
+conditional.agreement(data, ratings = NULL, levels = NULL,
+  offdiag = NULL)
 }
 \arguments{
 \item{data}{A data matrix or table with equal number of columns and rows.}
