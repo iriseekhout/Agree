@@ -9,6 +9,7 @@
 #'
 #' @return Returns a contingency table, an object of class "table", an array of integer values.
 #' @export
+#' @importFrom utils combn
 #'
 #' @examples
 #' df <- data.frame(r1=factor(c(1,0,1,0,0,1,1,0,0,0,1,1,0,1,1)),

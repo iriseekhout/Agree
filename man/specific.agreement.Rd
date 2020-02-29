@@ -4,8 +4,7 @@
 \alias{specific.agreement}
 \title{Specific agreement}
 \usage{
-specific.agreement(data, cat1, cat2 = NULL, ratings = NULL,
-  levels = NULL, offdiag = NULL)
+specific.agreement(data, cat1, cat2 = NULL, ...)
 }
 \arguments{
 \item{data}{A data matrix or table with equal number of columns and rows. Or a data frame that contains the scores for each rater in each column.}
@@ -13,6 +12,8 @@ specific.agreement(data, cat1, cat2 = NULL, ratings = NULL,
 \item{cat1}{A character indicating the category for which specific agreement should be obtained.}
 
 \item{cat2}{A character indicating the category to which the specific agreement should be compared, if left empty all other categories are used.}
+
+\item{dots}{options for sumtable}
 }
 \value{
 An S3 object containing the proportion of specific agreement.
@@ -21,10 +22,10 @@ An S3 object containing the proportion of specific agreement.
 specific agreement (averages over discordant cells to correct for random rater combinations). INCLUDE FORMULAS. When there are 2 categories, this is equal to the postive/negative agreement. When there are more than two categories, one can either look at the agreement for one category versus the others, for example very satisfied verus rest or for one category versus one specific other categorie, for example very satisfies versus not satisfied.
 }
 \examples{
-#' df <- data.frame(r1=factor(c(1,2,2,0,3,3,1,0,3,0,2,2,0,3,1)),
+df <- data.frame(r1=factor(c(1,2,2,0,3,3,1,0,3,0,2,2,0,3,1)),
                  r2=factor(c(1,1,1,0,3,3,1,0,1,0,2,2,0,2,1)),
                  r3=factor(c(1,1,1,3,3,2,1,0,1,0,2,2,0,3,1)),
                  r4=factor(c(1,2,1,0,3,3,1,0,3,0,2,2,0,2,1)))
 x <- sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1", "2", "3"))
-specific.agreement(x)
+specific.agreement(x, cat1 = "1")
 }

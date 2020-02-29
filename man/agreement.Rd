@@ -4,10 +4,12 @@
 \alias{agreement}
 \title{Agreement}
 \usage{
-agreement(data, ratings = NULL, levels = NULL, offdiag = NULL)
+agreement(data, ...)
 }
 \arguments{
-\item{data}{A data matrix or table with equal number of columns and rows. Or a data frame that contains the scores for each rater in each column.}
+\item{data}{A data frame or table with equal number of columns and rows. Or a data frame that contains the scores for each rater in each column.}
+
+\item{dots}{options for sumtable if \code{data = data.frame}}
 }
 \value{
 An S3 object containing the proportion of overall agreement.

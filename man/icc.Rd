@@ -5,7 +5,7 @@
 \title{Intra class correlation for rater reliability}
 \usage{
 icc(data, method = c("oneway", "agreement", "consistency"),
-  cols = colnames(data), sem = TRUE, confint = FALSE, level = 0.95)
+  cols = colnames(data), sem = TRUE, confint = TRUE, alpha = 0.05)
 }
 \arguments{
 \item{data}{data.frame with repeated measures or observations in the columns and rated subjects in the rows}
@@ -16,7 +16,7 @@ icc(data, method = c("oneway", "agreement", "consistency"),
 
 \item{confint}{logical vector if confidence interval for icc should be computed (see details for formulas)}
 
-\item{level}{the confidence level required.}
+\item{alpha}{the confidence level required.}
 
 \item{icc}{icc method \code{icc = c("oneway", "agreement", "consistency")}, see details for explanatory formulas.}
 }
@@ -27,14 +27,12 @@ matrix with relevant output
 Intra class correlation for rater reliability
 }
 \examples{
-icc <- 2
 means <- c(1, rep(0,(5-1)))
 means <- c(rep(0, 5))
-means  <- means * 1
 cov <- matrix(0.7,5,5)
 diag(cov) <- 1 # large variance
 cov <- cov*1 # adjust variance to small, medium or large
 dat <- MASS::mvrnorm(means, cov, n=100)
 dat <- as.data.frame(dat)
-icc(dat)
+icc(dat, confint = TRUE)
 }

@@ -4,11 +4,12 @@
 \alias{conditional.agreement}
 \title{Conditional agreement for more than 2 categories}
 \usage{
-conditional.agreement(data, ratings = NULL, levels = NULL,
-  offdiag = NULL)
+conditional.agreement(data, ...)
 }
 \arguments{
 \item{data}{A data matrix or table with equal number of columns and rows.}
+
+\item{dots}{options for sumtable}
 }
 \value{
 conditionaltable is a table with conditional agreement proportions. On the diagonal the specific agreement proportions for each category are displayed.
@@ -17,7 +18,7 @@ conditionaltable is a table with conditional agreement proportions. On the diago
 Conditional agreement when there are more than two categories (averages over discordant cells to correct for random rater combinations). INCLUDE FORMULAS.
 }
 \examples{
-#' df <- data.frame(r1=factor(c(1,2,2,0,3,3,1,0,3,0,2,2,0,3,1)),
+df <- data.frame(r1=factor(c(1,2,2,0,3,3,1,0,3,0,2,2,0,3,1)),
                  r2=factor(c(1,1,1,0,3,3,1,0,1,0,2,2,0,2,1)),
                  r3=factor(c(1,1,1,3,3,2,1,0,1,0,2,2,0,3,1)),
                  r4=factor(c(1,2,1,0,3,3,1,0,3,0,2,2,0,2,1)))
