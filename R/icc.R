@@ -36,7 +36,7 @@ icc <- function(data,
 
   ICC <- matrix(NA, nrow = 3, ncol = 7)
   rownames(ICC) <- c("oneway", "agreement", "consistency")
-  colnames(ICC) <- c("icc", "icc_low", "icc_high", "sem", "varpat", "varobs", "varerr")
+  colnames(ICC) <- c("icc", "lower", "upper", "sem", "varpat", "varobs", "varerr")
 
   if("oneway" %in% method){
   REMLmodel_oneway <- lmer(score ~ (1|id), data=data1, REML = T) # one way
@@ -62,8 +62,8 @@ icc <- function(data,
   F_oU <- F_o * qf(1 - alpha/2, dfod, dfon)
   L_o <- (F_oL - 1)/(F_oL + (k - 1))
   U_o <- (F_oU - 1)/(F_oU + k - 1)
-  ICC["oneway", "icc_low"] <- L_o
-  ICC["oneway", "icc_high"] <- U_o
+  ICC["oneway", "lower"] <- L_o
+  ICC["oneway", "upper"] <- U_o
   }
 
   if("agreement" %in% method){
@@ -100,8 +100,8 @@ icc <- function(data,
                                                  k - n) * varerr_agr + n * F3L * MSB)
 
 
-  ICC["agreement", "icc_low"] <- L3
-  ICC["agreement", "icc_high"] <- U3
+  ICC["agreement", "lower"] <- L3
+  ICC["agreement", "upper"] <- U3
 
 
   }
@@ -130,8 +130,8 @@ icc <- function(data,
   F3U <- F_c * qf(1 - alpha/2, df21d, df21n)
   L_c <- (F3L - 1)/(F3L + k - 1)
   U_c <- (F3U - 1)/(F3U + k - 1)
-  ICC["consistency", "icc_low"] <- L_c
-  ICC["consistency", "icc_high"] <- U_c
+  ICC["consistency", "lower"] <- L_c
+  ICC["consistency", "upper"] <- U_c
   }
 
 
@@ -143,11 +143,11 @@ icc <- function(data,
     return(ICC[method, c("icc")])
   }
   if(confint == TRUE & sem == TRUE & var == FALSE){
-    return(ICC[method, c("icc", "icc_low", "icc_high", "sem")])
+    return(ICC[method, c("icc", "lower", "upper", "sem")])
   }
 
   if(confint == TRUE & sem == FALSE & var == FALSE){
-    return(ICC[method, c("icc",  "icc_low", "icc_high")])
+    return(ICC[method, c("icc",  "lower", "upper")])
   }
   if(confint == FALSE & sem == TRUE & var == TRUE){
     return(ICC[method, c("icc", "sem", "varpat", "varobs", "varerr")])
@@ -156,11 +156,11 @@ icc <- function(data,
     return(ICC[method, c("icc", "varpat", "varobs", "varerr")])
   }
   if(confint == TRUE & sem == TRUE & var == TRUE){
-    return(ICC[method, c("icc", "icc_low", "icc_high", "sem", "varpat", "varobs", "varerr")])
+    return(ICC[method, c("icc", "lower", "upper", "sem", "varpat", "varobs", "varerr")])
   }
 
   if(confint == TRUE & sem == FALSE & var == TRUE){
-    return(ICC[method, c("icc",  "icc_low", "icc_high", "varpat", "varobs", "varerr")])
+    return(ICC[method, c("icc",  "lower", "upper", "varpat", "varobs", "varerr")])
   }
 
 }
