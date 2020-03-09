@@ -3,9 +3,10 @@
 #' @param data data.frame with repeated measures or observations in the columns and rated subjects in the rows
 #' @param icc icc method \code{icc = c("oneway", "agreement", "consistency")}, see details for explanatory formulas.
 #' @param cols column names used for the repeated measures, default \code{cols = colnames(data)}
-#' @param sem logical vector if sem should be returned
-#' @param confint logical vector if confidence interval for icc should be computed (see details for formulas)
+#' @param sem logical vector if sem are returned.
+#' @param confint logical vector if confidence interval for icc are computed (see details for formulas).
 #' @param alpha the confidence level required.
+#' @param var logical vector if variances are returned.
 #' @importFrom dplyr %>% mutate
 #' @importFrom tidyr pivot_longer
 #' @importFrom lme4 lmer VarCorr
@@ -14,20 +15,18 @@
 #' @export
 #'
 #' @examples
-#' means <- c(1, rep(0,(5-1)))
-#' means <- c(rep(0, 5))
-#' cov <- matrix(0.7,5,5)
-#' diag(cov) <- 1 # large variance
-#' cov <- cov*1 # adjust variance to small, medium or large
-#' dat <- MASS::mvrnorm(means, cov, n=100)
-#' dat <- as.data.frame(dat)
-#' icc(dat, confint = TRUE)
+#' mam <- breast[,c("Mam1_totalscoreLikertscale","Mam2_totalscoreLikertscale","Mam3_totalscoreLikertscale")]
+#' icc(data = mam, confint = TRUE, var = TRUE)
+#' pch <- breast[,c("PCH1_totalscoreLikertscale", "PCH2_totalscoreLikertscale","PCH3_totalscoreLikertscale","PCH4_totalscoreLikertscale","PCH5_totalscoreLikertscale")]
+#' icc(data = pch)
+#' icc(data = pch, confint = FALSE, var = TRUE)
 icc <- function(data,
                 method = c("oneway", "agreement", "consistency"),
                 cols = colnames(data),
                 sem = TRUE,
                 confint = TRUE,
-                alpha = 0.05){
+                alpha = 0.05,
+                var = FALSE){
 
   k <- ncol(data)
   n <- nrow(data)
@@ -35,9 +34,9 @@ icc <- function(data,
     mutate(id = 1:nrow(data)) %>% #add id column
     pivot_longer(cols = cols, names_to = "observer", values_to = "score")
 
-  ICC <- matrix(NA, nrow = 3, ncol = 4)
+  ICC <- matrix(NA, nrow = 3, ncol = 7)
   rownames(ICC) <- c("oneway", "agreement", "consistency")
-  colnames(ICC) <- c("icc", "icc_low", "icc_high", "sem")
+  colnames(ICC) <- c("icc", "icc_low", "icc_high", "sem", "varpat", "varobs", "varerr")
 
   if("oneway" %in% method){
   REMLmodel_oneway <- lmer(score ~ (1|id), data=data1, REML = T) # one way
@@ -45,7 +44,8 @@ icc <- function(data,
   # variance components
   varpat_oneway <- as.data.frame(VarCorr(REMLmodel_oneway))[1,4] #deze valt veel lager uit dan de varpat in beide andere modellen.
   varerr_oneway <- as.data.frame(VarCorr(REMLmodel_oneway))[2,4] #bevat error en obs (= varobs_agr + varerr_agr)
-
+  ICC["oneway", "varpat"] <- varpat_oneway
+  ICC["oneway", "varerr"] <- varerr_oneway
 
   # compute ICC one way: ICC 1,1
   icc_o <- varpat_oneway/(varpat_oneway + varerr_oneway)
@@ -73,6 +73,9 @@ icc <- function(data,
   varpat_agr <- as.data.frame(VarCorr(REMLmodel_agr))[1,4]
   varobs_agr <- as.data.frame(VarCorr(REMLmodel_agr))[2,4] #is 0 als er geen variatie tussen raters is.
   varerr_agr <- as.data.frame(VarCorr(REMLmodel_agr))[3,4]
+  ICC["agreement", "varpat"] <- varpat_agr
+  ICC["agreement", "varerr"] <- varerr_agr
+  ICC["agreement", "varobs"] <- varobs_agr
 
   # compute ICC agreement: ICC 2,1
   icc_a <- varpat_agr/(varpat_agr + varobs_agr + varerr_agr)
@@ -86,8 +89,7 @@ icc <- function(data,
 
   vn <- (k - 1) * (n - 1) * ((k * icc_a * F_a1 + n *
                                      (1 + (k - 1) * icc_a) - k * icc_a))^2
-  vd <- (n - 1) * k^2 * icc_a^2 * F_a1^2 + (n * (1 +
-                                                         (k - 1) * icc_a) - k * icc_a)^2
+  vd <- (n - 1) * k^2 * icc_a^2 * F_a1^2 + (n * (1 + (k - 1) * icc_a) - k * icc_a)^2
   v <- vn/vd
   F3U <- qf(1 - alpha/2, n - 1, v)
   F3L <- qf(1 - alpha/2, v, n - 1)
@@ -111,6 +113,8 @@ icc <- function(data,
   # variance components
   varpat_cons <- as.data.frame(VarCorr(REMLmodel_cons))[1,4]
   varerr_cons <- as.data.frame(VarCorr(REMLmodel_cons))[2,4]
+  ICC["consistency", "varpat"] <- varpat_cons
+  ICC["consistency", "varerr"] <- varerr_cons
 
   # compute ICC consistency: ICC 3,1
   icc_c <- varpat_cons/(varpat_cons + varerr_cons)
@@ -132,18 +136,31 @@ icc <- function(data,
 
 
 
-  if(confint == FALSE & sem == TRUE){
+  if(confint == FALSE & sem == TRUE & var == FALSE){
     return(ICC[method, c("icc", "sem")])
   }
-  if(confint == FALSE & sem == FALSE){
+  if(confint == FALSE & sem == FALSE & var == FALSE){
     return(ICC[method, c("icc")])
   }
-  if(confint == TRUE & sem == TRUE){
+  if(confint == TRUE & sem == TRUE & var == FALSE){
     return(ICC[method, c("icc", "icc_low", "icc_high", "sem")])
   }
 
-  if(confint == TRUE & sem == FALSE){
+  if(confint == TRUE & sem == FALSE & var == FALSE){
     return(ICC[method, c("icc",  "icc_low", "icc_high")])
+  }
+  if(confint == FALSE & sem == TRUE & var == TRUE){
+    return(ICC[method, c("icc", "sem", "varpat", "varobs", "varerr")])
+  }
+  if(confint == FALSE & sem == FALSE & var == TRUE){
+    return(ICC[method, c("icc", "varpat", "varobs", "varerr")])
+  }
+  if(confint == TRUE & sem == TRUE & var == TRUE){
+    return(ICC[method, c("icc", "icc_low", "icc_high", "sem", "varpat", "varobs", "varerr")])
+  }
+
+  if(confint == TRUE & sem == FALSE & var == TRUE){
+    return(ICC[method, c("icc",  "icc_low", "icc_high", "varpat", "varobs", "varerr")])
   }
 
 }
