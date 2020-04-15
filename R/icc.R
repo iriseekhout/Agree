@@ -38,17 +38,20 @@ icc <- function(data,
   rownames(ICC) <- c("oneway", "agreement", "consistency")
   colnames(ICC) <- c("icc", "lower", "upper", "sem", "varpat", "varobs", "varerr")
 
-  if("oneway" %in% method){
-  REMLmodel_oneway <- lmer(score ~ (1|id), data=data1, REML = T) # one way
+  REML_model <- lmer(score ~ (1|id) + (1|observer), data1, REML = T)
+  vc <- as.data.frame(lme4::VarCorr(REML_model))
 
-  # variance components
-  varpat_oneway <- as.data.frame(VarCorr(REMLmodel_oneway))[1,4] #deze valt veel lager uit dan de varpat in beide andere modellen.
-  varerr_oneway <- as.data.frame(VarCorr(REMLmodel_oneway))[2,4] #bevat error en obs (= varobs_agr + varerr_agr)
+  if("oneway" %in% method){
+  nom <- ((k * vc[1,4]+vc[3,4]) - (vc[3,4]+vc[2,4]))
+  varpat_oneway <- nom/k
+  denom <- ((k * vc[1,4]+vc[3,4]) + (k-1) * (vc[3,4]+vc[2,4]) )
+  varerr_oneway <- (denom - nom)/k
+
   ICC["oneway", "varpat"] <- varpat_oneway
   ICC["oneway", "varerr"] <- varerr_oneway
 
-  # compute ICC one way: ICC 1,1
-  icc_o <- varpat_oneway/(varpat_oneway + varerr_oneway)
+  icc_o <- varpat_oneway / (varpat_oneway + varerr_oneway)
+
   # compute SEM one way
   sem_o <- sqrt(varerr_oneway)
   ICC["oneway", "icc"] <- icc_o
@@ -58,8 +61,8 @@ icc <- function(data,
   F_o <- (k * varpat_oneway + varerr_oneway)/varerr_oneway
   dfon <- n - 1
   dfod <- n * (k - 1)
-  F_oL <- F_o/qf(1 - alpha/2, dfon, dfod)
-  F_oU <- F_o * qf(1 - alpha/2, dfod, dfon)
+  F_oL <- F_o/qf(1 - alpha, dfon, dfod) #or alpha/2?not dividing by 2 is shrout fleis
+  F_oU <- F_o * qf(1 - alpha, dfod, dfon) #or alpha/2?
   L_o <- (F_oL - 1)/(F_oL + (k - 1))
   U_o <- (F_oU - 1)/(F_oU + k - 1)
   ICC["oneway", "lower"] <- L_o
@@ -67,12 +70,11 @@ icc <- function(data,
   }
 
   if("agreement" %in% method){
-  # Two way agreement: ICC 2,1 (random; agreement)
-  REMLmodel_agr <- lmer(score ~ (1|id) + (1|observer), data1, REML = T) # two way agreement
   # variance components
-  varpat_agr <- as.data.frame(VarCorr(REMLmodel_agr))[1,4]
-  varobs_agr <- as.data.frame(VarCorr(REMLmodel_agr))[2,4] #is 0 als er geen variatie tussen raters is.
-  varerr_agr <- as.data.frame(VarCorr(REMLmodel_agr))[3,4]
+  varpat_agr <- vc[1,4]
+  varobs_agr <- vc[2,4]
+  varerr_agr <- vc[3,4]
+
   ICC["agreement", "varpat"] <- varpat_agr
   ICC["agreement", "varerr"] <- varerr_agr
   ICC["agreement", "varobs"] <- varobs_agr
@@ -91,8 +93,8 @@ icc <- function(data,
                                      (1 + (k - 1) * icc_a) - k * icc_a))^2
   vd <- (n - 1) * k^2 * icc_a^2 * F_a1^2 + (n * (1 + (k - 1) * icc_a) - k * icc_a)^2
   v <- vn/vd
-  F3U <- qf(1 - alpha/2, n - 1, v)
-  F3L <- qf(1 - alpha/2, v, n - 1)
+  F3U <- qf(1 - alpha, n - 1, v)#or alpha/2?not dividing by 2 is shrout fleis
+  F3L <- qf(1 - alpha, v, n - 1)#or alpha/2?
   L3 <- n * (MSB - F3U * varerr_agr)/(F3U * (k * (n * varobs_agr + varerr_agr) + (k *
                                                         n - k - n) * varerr_agr) + n * MSB)#
 
@@ -108,11 +110,11 @@ icc <- function(data,
 
   if("consistency" %in% method){
   # Two way consistency: ICC 3,1  (fixed; consistency)
-  REMLmodel_cons <- lmer(score ~ observer + (1|id), data1, REML = T) # two way consistency
+  #REMLmodel_cons <- lmer(score ~ observer + (1|id), data1, REML = T) # two way consistency
+# variance components
+  varpat_cons <- vc[1,4]
+  varerr_cons <- vc[3,4]
 
-  # variance components
-  varpat_cons <- as.data.frame(VarCorr(REMLmodel_cons))[1,4]
-  varerr_cons <- as.data.frame(VarCorr(REMLmodel_cons))[2,4]
   ICC["consistency", "varpat"] <- varpat_cons
   ICC["consistency", "varerr"] <- varerr_cons
 
@@ -126,8 +128,8 @@ icc <- function(data,
   F_c <- (k * varpat_cons + varerr_cons)/varerr_cons
   df21n <- n - 1
   df21d <- (n - 1) * (k - 1)
-  F3L <- F_c/qf(1 - alpha/2, df21n, df21d)
-  F3U <- F_c * qf(1 - alpha/2, df21d, df21n)
+  F3L <- F_c/qf(1 - alpha, df21n, df21d) #or alpha/2? not dividing by 2 is shrout fleis
+  F3U <- F_c * qf(1 - alpha, df21d, df21n)#or alpha/2?
   L_c <- (F3L - 1)/(F3L + k - 1)
   U_c <- (F3U - 1)/(F3U + k - 1)
   ICC["consistency", "lower"] <- L_c
