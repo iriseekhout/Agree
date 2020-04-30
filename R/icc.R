@@ -61,8 +61,8 @@ icc <- function(data,
   F_o <- (k * varpat_oneway + varerr_oneway)/varerr_oneway
   dfon <- n - 1
   dfod <- n * (k - 1)
-  F_oL <- F_o/qf(1 - alpha, dfon, dfod) #or alpha/2?not dividing by 2 is shrout fleis
-  F_oU <- F_o * qf(1 - alpha, dfod, dfon) #or alpha/2?
+  F_oL <- F_o/qf(1 - alpha/2, dfon, dfod) #or alpha/2?not dividing by 2 is shrout fleis
+  F_oU <- F_o * qf(1 - alpha/2, dfod, dfon) #or alpha/2?
   L_o <- (F_oL - 1)/(F_oL + (k - 1))
   U_o <- (F_oU - 1)/(F_oU + k - 1)
   ICC["oneway", "lower"] <- L_o
@@ -93,8 +93,8 @@ icc <- function(data,
                                      (1 + (k - 1) * icc_a) - k * icc_a))^2
   vd <- (n - 1) * k^2 * icc_a^2 * F_a1^2 + (n * (1 + (k - 1) * icc_a) - k * icc_a)^2
   v <- vn/vd
-  F3U <- qf(1 - alpha, n - 1, v)#or alpha/2?not dividing by 2 is shrout fleis
-  F3L <- qf(1 - alpha, v, n - 1)#or alpha/2?
+  F3U <- qf(1 - alpha/2, n - 1, v)#or alpha/2?not dividing by 2 is shrout fleis
+  F3L <- qf(1 - alpha/2, v, n - 1)#or alpha/2?
   L3 <- n * (MSB - F3U * varerr_agr)/(F3U * (k * (n * varobs_agr + varerr_agr) + (k *
                                                         n - k - n) * varerr_agr) + n * MSB)#
 
@@ -128,8 +128,8 @@ icc <- function(data,
   F_c <- (k * varpat_cons + varerr_cons)/varerr_cons
   df21n <- n - 1
   df21d <- (n - 1) * (k - 1)
-  F3L <- F_c/qf(1 - alpha, df21n, df21d) #or alpha/2? not dividing by 2 is shrout fleis
-  F3U <- F_c * qf(1 - alpha, df21d, df21n)#or alpha/2?
+  F3L <- F_c/qf(1 - alpha/2, df21n, df21d) #or alpha/2? not dividing by 2 is shrout fleis
+  F3U <- F_c * qf(1 - alpha/2, df21d, df21n)#or alpha/2?
   L_c <- (F3L - 1)/(F3L + k - 1)
   U_c <- (F3U - 1)/(F3U + k - 1)
   ICC["consistency", "lower"] <- L_c
