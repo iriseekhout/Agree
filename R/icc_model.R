@@ -35,7 +35,19 @@ icc_model <- function(data, cols = colnames(data), alpha = 0.05){
   icc_a <- varpat_agr/(varpat_agr + varobs_agr + varerr_agr)
   sem_a <- sqrt(varobs_agr + varerr_agr)
   MSB <-  (k * varpat_agr + varerr_agr)
+  MSBt <- 1 +(k - 1)*icc_a #test
+  MSEt <- 1-icc_a #test
   F_a1 <- (n * varobs_agr + varerr_agr)/varerr_agr
+
+  Fa1 <- MSBt/MSEt #test
+  Fl <- qf(alpha/2, df1= (n-1) ,df2=n(k-1))
+  Fu <- qf(1-(alpha/2), df1=(n-1) , df2=n(k-1))
+
+  l_a <- (Fa1/Fu -1)/(Fa1/Fu+k-1) #test
+  u_a <- (Fa1/Fl -1)/(Fa1/Fl+k-1) #test
+  #where Fl and Fu are the ˛=2 and the 1  ˛=2th quantiles of the F -distribution    with degrees of freedom
+  # N  1 and N.k  1/, respectively.
+
   vn <- (k - 1) * (n - 1) * ((k * icc_a * F_a1 + n *
                                 (1 + (k - 1) * icc_a) - k * icc_a))^2
   vd <- (n - 1) * k^2 * icc_a^2 * F_a1^2 + (n * (1 + (k - 1) * icc_a) - k * icc_a)^2
@@ -74,8 +86,8 @@ icc_model <- function(data, cols = colnames(data), alpha = 0.05){
       varerr_agr = varerr_agr,
       icc_a = icc_a,
       sem_a = sem_a,
-      L_a = L_a,
-      U_a = U_a,
+      L_a = l_a, #use upper case L for PSYCH version
+      U_a = u_a, #use upper case U for PSYCH version
       varpat_cons = varpat_cons,
       varerr_cons = varerr_cons,
       icc_c = icc_c,
