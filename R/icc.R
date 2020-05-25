@@ -39,11 +39,11 @@ icc <- function(data,
 
   icc_calculation <- icc_model(data, cols = cols, alpha = alpha)
   if("oneway" %in% method){
-  #nom <- ((k * vc[1,4]+vc[3,4]) - (vc[3,4]+vc[2,4]))
-  #varpat_oneway <- nom/k
+  ##nom <- ((k * vc[1,4]+vc[3,4]) - (vc[3,4]+vc[2,4]))
+  ##varpat_oneway <- nom/k
   #varpat_oneway <- ((k * vc[1,4]) - vc[2,4]) / k
-  #denom <- ((k * vc[1,4]+vc[3,4]) + (k-1) * (vc[3,4]+vc[2,4]) )
-  #varerr_oneway <- (denom - nom)/k
+  ##denom <- ((k * vc[1,4]+vc[3,4]) + (k-1) * (vc[3,4]+vc[2,4]) )
+  ##varerr_oneway <- (denom - nom)/k
   #varerr_oneway <- (vc[2,4] + vc[3,4])
 
   ICC["oneway", "varpat"] <- icc_calculation$varpat_oneway
