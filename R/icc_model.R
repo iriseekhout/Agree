@@ -11,7 +11,6 @@ icc_model <- function(data, cols = colnames(data), alpha = 0.05){
   data1 <- data.frame(data) %>%
     mutate(id = 1:nrow(data)) %>% #add id column
     pivot_longer(cols = cols, names_to = "observer", values_to = "score")
-
   REML_model <- lmer(score ~ (1|id) + (1|observer), data1, REML = T)
   vc <- as.data.frame(lme4::VarCorr(REML_model))
 
