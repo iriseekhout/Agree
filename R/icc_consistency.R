@@ -2,11 +2,10 @@
 #'
 #' @param model merMod object result from \code{icc_model()}.
 #' @param alpha confidence interval level, default \code{alpha = 0.05}.
+#' @details lmer(score ~ observer + (1|id), data1, REML = T)
 #' @importFrom lme4 ngrps VarCorr
 #' @return
 #' @export
-#'
-#' @examples
 icc_consistency <- function(model, alpha = 0.05){
   k <- lme4::ngrps(model)[2]
   n <- lme4::ngrps(model)[1]
