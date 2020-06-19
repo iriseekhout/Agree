@@ -4,8 +4,17 @@
 \alias{CIagreement}
 \title{Confidence interval around the (specific) agreement}
 \usage{
-CIagreement(data, interval = 0.95, ratings = NULL, levels = NULL,
-  cat1 = NULL, cat2 = NULL, m = NULL, n = NULL, b = 1000)
+CIagreement(
+  data,
+  interval = 0.95,
+  ratings = NULL,
+  levels = NULL,
+  cat1 = NULL,
+  cat2 = NULL,
+  m = NULL,
+  n = NULL,
+  b = 1000
+)
 }
 \arguments{
 \item{data}{data.frame or table}

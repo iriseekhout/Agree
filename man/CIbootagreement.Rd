@@ -4,8 +4,7 @@
 \alias{CIbootagreement}
 \title{Bootstrapped confidence interval around the Agreement}
 \usage{
-CIbootagreement(data, cat1 = NULL, cat2 = NULL, b = 1000,
-  interval = 0.95)
+CIbootagreement(data, cat1 = NULL, cat2 = NULL, b = 1000, interval = 0.95)
 }
 \arguments{
 \item{data}{data.frame or table}

@@ -4,19 +4,34 @@
 \alias{icc}
 \title{Intra class correlation for rater reliability}
 \usage{
-icc(data, method = c("oneway", "agreement", "consistency"),
-  cols = colnames(data), sem = TRUE, confint = TRUE, alpha = 0.05)
+icc(
+  data,
+  method = c("oneway", "agreement", "consistency"),
+  cols = colnames(data),
+  sem = TRUE,
+  confint = TRUE,
+  alpha = 0.05,
+  var = FALSE,
+  boot = FALSE,
+  b = 1000
+)
 }
 \arguments{
 \item{data}{data.frame with repeated measures or observations in the columns and rated subjects in the rows}
 
 \item{cols}{column names used for the repeated measures, default \code{cols = colnames(data)}}
 
-\item{sem}{logical vector if sem should be returned}
+\item{sem}{logical vector if sem are returned.}
 
-\item{confint}{logical vector if confidence interval for icc should be computed (see details for formulas)}
+\item{confint}{logical vector if confidence interval for icc are computed (see details for formulas).}
 
 \item{alpha}{the confidence level required.}
+
+\item{var}{logical vector if variances are returned.}
+
+\item{boot}{logical vector if bootstrapped CI is returned for the ICC agreement.}
+
+\item{b}{number of bootstrap replications default \code{b = 1000}.}
 
 \item{icc}{icc method \code{icc = c("oneway", "agreement", "consistency")}, see details for explanatory formulas.}
 }
@@ -27,12 +42,9 @@ matrix with relevant output
 Intra class correlation for rater reliability
 }
 \examples{
-means <- c(1, rep(0,(5-1)))
-means <- c(rep(0, 5))
-cov <- matrix(0.7,5,5)
-diag(cov) <- 1 # large variance
-cov <- cov*1 # adjust variance to small, medium or large
-dat <- MASS::mvrnorm(means, cov, n=100)
-dat <- as.data.frame(dat)
-icc(dat, confint = TRUE)
+mam <- breast[,c("Mam1_totalscoreLikertscale","Mam2_totalscoreLikertscale","Mam3_totalscoreLikertscale")]
+icc(data = mam, confint = TRUE, var = TRUE)
+pch <- breast[,c("PCH1_totalscoreLikertscale", "PCH2_totalscoreLikertscale","PCH3_totalscoreLikertscale","PCH4_totalscoreLikertscale","PCH5_totalscoreLikertscale")]
+icc(data = pch)
+icc(data = pch, confint = FALSE, var = TRUE)
 }
