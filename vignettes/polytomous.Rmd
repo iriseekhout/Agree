@@ -97,7 +97,7 @@ For the nominal data example we use a dataset that was used in a paper by Fleis 
 ```{r}
 
 data(diagnoses)
-data2 <- data.frame(lapply(diagnoses,as.factor))
+data2 <- data.frame(lapply(diagnoses,as.factor), stringsAsFactors = TRUE)
 ```
 
 

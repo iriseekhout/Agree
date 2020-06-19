@@ -34,8 +34,9 @@ data1 <- data.frame(breast[ratersvars])
  for (r in 1:length(ratersvars)){
     data1[ratersvars[r]] <- ifelse(data1[ratersvars[r]]=="very satisfied"|data1[ratersvars[r]]=="satisfied","satisfied","not satisfied")
  }
-data1 <- data.frame(apply(data1[ratersvars],2,as.factor))
+data1 <- data.frame(apply(data1[ratersvars], 2, as.factor), stringsAsFactors = TRUE)
 head(data1)
+str(data1)
 ```
 
 ### Agreement table
