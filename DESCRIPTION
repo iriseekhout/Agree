@@ -1,6 +1,6 @@
 Package: Agree
 Title: Agreement between multiple raters for multiple likert answer categories.
-Version: 0.1.2
+Version: 0.1.3
 Authors@R: person("Iris", "Eekhout", email = "iris.eekhout@tno.nl", role = c("aut", "cre"))
 Description: The agreement between multiple raters can be obained for a variable
     rated by 2 or more Likert answer categories. The confidence interval around the
