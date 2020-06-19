@@ -36,25 +36,22 @@ icc <- function(data,
   rownames(ICC) <- c("oneway", "agreement", "consistency")
   colnames(ICC) <- c("icc", "lower", "upper", "sem", "varpat", "varobs", "varerr")
 
+  model <- icc_model(data = data, cols = cols)
 
-  icc_calculation <- icc_model(data, cols = cols, alpha = alpha)
+
   if("oneway" %in% method){
-  ##nom <- ((k * vc[1,4]+vc[3,4]) - (vc[3,4]+vc[2,4]))
-  ##varpat_oneway <- nom/k
-  #varpat_oneway <- ((k * vc[1,4]) - vc[2,4]) / k
-  ##denom <- ((k * vc[1,4]+vc[3,4]) + (k-1) * (vc[3,4]+vc[2,4]) )
-  ##varerr_oneway <- (denom - nom)/k
-  #varerr_oneway <- (vc[2,4] + vc[3,4])
 
-  ICC["oneway", "varpat"] <- icc_calculation$varpat_oneway
-  ICC["oneway", "varerr"] <- icc_calculation$varerr_oneway
+  icc_ow <- icc_oneway(model, alpha = alpha)
+
+  ICC["oneway", "varpat"] <- icc_ow$varpat_oneway
+  ICC["oneway", "varerr"] <- icc_ow$varerr_oneway
 
   #icc_o <- varpat_oneway / (varpat_oneway + varerr_oneway)
 
   # compute SEM one way
   #sem_o <- sqrt(varerr_oneway)
-  ICC["oneway", "icc"] <- icc_calculation$icc_o
-  ICC["oneway", "sem"] <- icc_calculation$sem_o
+  ICC["oneway", "icc"] <- icc_ow$icc_o
+  ICC["oneway", "sem"] <- icc_ow$sem_o
 
   #ci (from psych package)
   #F_o <- (k * varpat_oneway + varerr_oneway)/varerr_oneway
@@ -64,26 +61,29 @@ icc <- function(data,
   #F_oU <- F_o * qf(1 - alpha/2, dfod, dfon) #or alpha/2?
   #L_o <- (F_oL - 1)/(F_oL + (k - 1))
   #U_o <- (F_oU - 1)/(F_oU + k - 1)
-  ICC["oneway", "lower"] <- icc_calculation$L_o
-  ICC["oneway", "upper"] <- icc_calculation$U_o
+  ICC["oneway", "lower"] <- icc_ow$L_o
+  ICC["oneway", "upper"] <- icc_ow$U_o
   }
 
   if("agreement" %in% method){
+
+    icc_am <- icc_agreement(model, alpha = alpha)
+
   # variance components
   #varpat_agr <- vc[1,4]
   #varobs_agr <- vc[2,4]
   #varerr_agr <- vc[3,4]
 
-  ICC["agreement", "varpat"] <- icc_calculation$varpat_agr
-  ICC["agreement", "varerr"] <- icc_calculation$varerr_agr
-  ICC["agreement", "varobs"] <- icc_calculation$varobs_agr
+  ICC["agreement", "varpat"] <- icc_am$varpat_agr
+  ICC["agreement", "varerr"] <- icc_am$varerr_agr
+  ICC["agreement", "varobs"] <- icc_am$varobs_agr
 
   # compute ICC agreement: ICC 2,1
   #icc_a <- varpat_agr/(varpat_agr + varobs_agr + varerr_agr)
   # compute SEM agreement
   #sem_a <- sqrt(varobs_agr + varerr_agr)
-  ICC["agreement", "icc"] <- icc_calculation$icc_a
-  ICC["agreement", "sem"] <- icc_calculation$sem_a
+  ICC["agreement", "icc"] <- icc_am$icc_a
+  ICC["agreement", "sem"] <- icc_am$sem_a
 
   #MSB <-  (k * varpat_agr + varerr_agr)
   #F_a1 <- (n * varobs_agr + varerr_agr)/varerr_agr
@@ -99,12 +99,12 @@ icc <- function(data,
   #U3 <- n * (F3L * MSB - varerr_agr)/(k * (n * varobs_agr + varerr_agr) + (k * n -
   #                                               k - n) * varerr_agr + n * F3L * MSB)
 
-  ICC["agreement", "lower"] <- icc_calculation$L_a
-  ICC["agreement", "upper"] <- icc_calculation$U_a
+  ICC["agreement", "lower"] <- icc_am$L_a
+  ICC["agreement", "upper"] <- icc_am$U_a
   #}
   if(boot){
     icc_a_boot <- function(data,x) {
-      icc_model(data[x,],cols = cols)$icc_a}
+      icc_agreement(model = icc_model(data[x,],cols = cols))$icc_a}
     res1a <- boot::boot(data,icc_a_boot, R = b)
     BCI_a <-  quantile(res1a$t,c(alpha/2,(1-alpha/2)), na.rm=TRUE)
     L_a <- BCI_a[1]
@@ -118,21 +118,23 @@ icc <- function(data,
   }
 
   if("consistency" %in% method){
+
+    icc_cs <- icc_consistency(model, alpha = alpha)
   # Two way consistency: ICC 3,1  (fixed; consistency)
   #REMLmodel_cons <- lmer(score ~ observer + (1|id), data1, REML = T) # two way consistency
 # variance components
   #varpat_cons <- vc[1,4]
   #varerr_cons <- vc[3,4]
 
-  ICC["consistency", "varpat"] <- icc_calculation$varpat_cons
-  ICC["consistency", "varerr"] <- icc_calculation$varerr_cons
+  ICC["consistency", "varpat"] <- icc_cs$varpat_cons
+  ICC["consistency", "varerr"] <- icc_cs$varerr_cons
 
   # compute ICC consistency: ICC 3,1
   #icc_c <- varpat_cons/(varpat_cons + varerr_cons)
   # compute SEM consistency
   #sem_c <- sqrt(varerr_cons)
-  ICC["consistency", "icc"] <- icc_calculation$icc_c
-  ICC["consistency", "sem"] <- icc_calculation$sem_c
+  ICC["consistency", "icc"] <- icc_cs$icc_c
+  ICC["consistency", "sem"] <- icc_cs$sem_c
 
   #F_c <- (k * varpat_cons + varerr_cons)/varerr_cons
   #df21n <- n - 1
@@ -141,8 +143,8 @@ icc <- function(data,
   #F3U <- F_c * qf(1 - alpha/2, df21d, df21n)#or alpha/2?
   #L_c <- (F3L - 1)/(F3L + k - 1)
   #U_c <- (F3U - 1)/(F3U + k - 1)
-  ICC["consistency", "lower"] <- icc_calculation$L_c
-  ICC["consistency", "upper"] <- icc_calculation$U_c
+  ICC["consistency", "lower"] <- icc_cs$L_c
+  ICC["consistency", "upper"] <- icc_cs$U_c
   }
 
 
