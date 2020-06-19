@@ -11,7 +11,7 @@ positive.agreement(data, specific = "positive", ...)
 
 \item{specific}{A character vector indicating whether the \code{"positive"} or \code{"negative"} agreements should be obtained.}
 
-\item{dots}{optoins for sumtable.}
+\item{\dots}{optoins for sumtable.}
 }
 \value{
 An S3 object containing the proportion of positive (or negative) agreement.

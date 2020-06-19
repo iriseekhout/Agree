@@ -17,13 +17,19 @@ icc(
 )
 }
 \arguments{
-\item{data}{data.frame with repeated measures or observations in the columns and rated subjects in the rows}
+\item{data}{data.frame with repeated measures or observations in the columns
+and rated subjects in the rows}
 
-\item{cols}{column names used for the repeated measures, default \code{cols = colnames(data)}}
+\item{method}{icc method \code{icc = c("oneway", "agreement",
+"consistency")}, see details for explanatory formulas.}
+
+\item{cols}{column names used for the repeated measures, default \code{cols =
+colnames(data)}}
 
 \item{sem}{logical vector if sem are returned.}
 
-\item{confint}{logical vector if confidence interval for icc are computed (see details for formulas).}
+\item{confint}{logical vector if confidence interval for icc are computed
+(see details for formulas).}
 
 \item{alpha}{the confidence level required.}
 
@@ -32,8 +38,6 @@ icc(
 \item{boot}{logical vector if bootstrapped CI is returned for the ICC agreement.}
 
 \item{b}{number of bootstrap replications default \code{b = 1000}.}
-
-\item{icc}{icc method \code{icc = c("oneway", "agreement", "consistency")}, see details for explanatory formulas.}
 }
 \value{
 matrix with relevant output
@@ -42,9 +46,13 @@ matrix with relevant output
 Intra class correlation for rater reliability
 }
 \examples{
-mam <- breast[,c("Mam1_totalscoreLikertscale","Mam2_totalscoreLikertscale","Mam3_totalscoreLikertscale")]
+mam <-
+breast[,c("Mam1_totalscoreLikertscale","Mam2_totalscoreLikertscale",
+"Mam3_totalscoreLikertscale")]
 icc(data = mam, confint = TRUE, var = TRUE)
-pch <- breast[,c("PCH1_totalscoreLikertscale", "PCH2_totalscoreLikertscale","PCH3_totalscoreLikertscale","PCH4_totalscoreLikertscale","PCH5_totalscoreLikertscale")]
+pch <- breast[,c("PCH1_totalscoreLikertscale",
+"PCH2_totalscoreLikertscale","PCH3_totalscoreLikertscale",
+"PCH4_totalscoreLikertscale","PCH5_totalscoreLikertscale")]
 icc(data = pch)
 icc(data = pch, confint = FALSE, var = TRUE)
 }

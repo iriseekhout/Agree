@@ -9,7 +9,7 @@ conditional.agreement(data, ...)
 \arguments{
 \item{data}{A data matrix or table with equal number of columns and rows.}
 
-\item{dots}{options for sumtable}
+\item{\dots}{options for sumtable}
 }
 \value{
 conditionaltable is a table with conditional agreement proportions. On the diagonal the specific agreement proportions for each category are displayed.

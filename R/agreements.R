@@ -3,7 +3,7 @@
 #' The proportion of overall agreement between 2 or more raters is calculated by INCLUDE FORMULA.
 #'
 #' @param data A data frame or table with equal number of columns and rows. Or a data frame that contains the scores for each rater in each column.
-#' @param dots options for sumtable if \code{data = data.frame}
+#' @param \dots options for sumtable if \code{data = data.frame}
 #' @return An S3 object containing the proportion of overall agreement.
 #' @export
 #'
@@ -38,7 +38,7 @@ agreement <- function(data, ...){
 #'
 #' @param data A data matrix or table with equal number of columns and rows. Or a data frame that contains the scores for each rater in each column.
 #' @param specific A character vector indicating whether the \code{"positive"} or \code{"negative"} agreements should be obtained.
-#' @param dots optoins for sumtable.
+#' @param \dots optoins for sumtable.
 #'
 #' @return An S3 object containing the proportion of positive (or negative) agreement.
 #' @export
@@ -52,7 +52,7 @@ agreement <- function(data, ...){
 #' positive.agreement(table, specific="positive")
 positive.agreement <- function(data, specific="positive", ...){
   if(is.data.frame(data)){
-    table <- Agree::sumtable(data,...)
+    table <- Agree::sumtable(data, ...)
   }
   if(nrow(data)==ncol(data)){
     table <- data
@@ -71,7 +71,8 @@ specific.agreement
 #' The agreement between 2 or more raters when they may be one category off, that category is weighted by 1 by default. Only relevant for ordinal rating scales with more than 2 Likert categories.
 #'
 #' @param data A data matrix or table with equal number of columns and rows. Or a data frame that contains the scores for each rater in each column.
-#' @param dots options for sumtable
+#' @param weight weight for the one-off category, defaul \code{weight = 1}
+#' @param \dots options for sumtable
 #' @return An S3 object containing the proportion of agreement.
 #' @export
 #'
@@ -82,9 +83,9 @@ specific.agreement
 #'                  r4=factor(c(1,2,1,0,3,3,1,0,3,0,2,2,0,2,1)))
 #' table <- sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1", "2", "3"))
 #' weighted.agreement(table)
-weighted.agreement <- function(data,weight=1, ...){
+weighted.agreement <- function(data, weight=1, ...){
   if(is.data.frame(data)){
-    table <- Agree::sumtable(data,...)
+    table <- Agree::sumtable(data, ...)
   }
   if(nrow(data)==ncol(data)){
     table <- data
@@ -105,7 +106,7 @@ weighted.agreement <- function(data,weight=1, ...){
 #' Conditional agreement when there are more than two categories (averages over discordant cells to correct for random rater combinations). INCLUDE FORMULAS.
 #'
 #' @param data A data matrix or table with equal number of columns and rows.
-#' @param dots options for sumtable
+#' @param \dots options for sumtable
 #' @return conditionaltable is a table with conditional agreement proportions. On the diagonal the specific agreement proportions for each category are displayed.
 #' @export
 #'
@@ -117,7 +118,7 @@ weighted.agreement <- function(data,weight=1, ...){
 #' conditional.agreement(df)
 conditional.agreement <- function(data, ...){
   if(is.data.frame(data)){
-    table <- Agree::sumtable(data,...)
+    table <- Agree::sumtable(data, ...)
   }
   if(nrow(data)==ncol(data)){
     table <- data
@@ -161,7 +162,7 @@ conditional.agreement <- function(data, ...){
 #' @param data A data matrix or table with equal number of columns and rows. Or a data frame that contains the scores for each rater in each column.
 #' @param cat1 A character indicating the category for which specific agreement should be obtained.
 #' @param cat2 A character indicating the category to which the specific agreement should be compared, if left empty all other categories are used.
-#' @param dots options for sumtable
+#' @param \dots options for sumtable
 #'
 #' @return An S3 object containing the proportion of specific agreement.
 #' @export
@@ -175,7 +176,7 @@ conditional.agreement <- function(data, ...){
 #' specific.agreement(x, cat1 = "1")
 specific.agreement <- function(data, cat1, cat2=NULL, ...){
   if(is.data.frame(data)){
-    table <- Agree::sumtable(data,...)
+    table <- Agree::sumtable(data, ...)
   }
   if(nrow(data)==ncol(data)){
     table <- data

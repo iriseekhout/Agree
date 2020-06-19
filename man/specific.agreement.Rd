@@ -13,7 +13,7 @@ specific.agreement(data, cat1, cat2 = NULL, ...)
 
 \item{cat2}{A character indicating the category to which the specific agreement should be compared, if left empty all other categories are used.}
 
-\item{dots}{options for sumtable}
+\item{\dots}{options for sumtable}
 }
 \value{
 An S3 object containing the proportion of specific agreement.

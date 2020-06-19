@@ -1,10 +1,14 @@
 #' Intra class correlation for rater reliability
 #'
-#' @param data data.frame with repeated measures or observations in the columns and rated subjects in the rows
-#' @param icc icc method \code{icc = c("oneway", "agreement", "consistency")}, see details for explanatory formulas.
-#' @param cols column names used for the repeated measures, default \code{cols = colnames(data)}
+#' @param data data.frame with repeated measures or observations in the columns
+#'   and rated subjects in the rows
+#' @param method icc method \code{icc = c("oneway", "agreement",
+#'   "consistency")}, see details for explanatory formulas.
+#' @param cols column names used for the repeated measures, default \code{cols =
+#'   colnames(data)}
 #' @param sem logical vector if sem are returned.
-#' @param confint logical vector if confidence interval for icc are computed (see details for formulas).
+#' @param confint logical vector if confidence interval for icc are computed
+#'   (see details for formulas).
 #' @param alpha the confidence level required.
 #' @param var logical vector if variances are returned.
 #' @param boot logical vector if bootstrapped CI is returned for the ICC agreement.
@@ -13,13 +17,18 @@
 #' @importFrom tidyr pivot_longer
 #' @importFrom lme4 lmer VarCorr
 #' @importFrom stats qf qnorm quantile
+#' @importFrom boot boot
 #' @return matrix with relevant output
 #' @export
 #'
 #' @examples
-#' mam <- breast[,c("Mam1_totalscoreLikertscale","Mam2_totalscoreLikertscale","Mam3_totalscoreLikertscale")]
+#' mam <-
+#' breast[,c("Mam1_totalscoreLikertscale","Mam2_totalscoreLikertscale",
+#' "Mam3_totalscoreLikertscale")]
 #' icc(data = mam, confint = TRUE, var = TRUE)
-#' pch <- breast[,c("PCH1_totalscoreLikertscale", "PCH2_totalscoreLikertscale","PCH3_totalscoreLikertscale","PCH4_totalscoreLikertscale","PCH5_totalscoreLikertscale")]
+#' pch <- breast[,c("PCH1_totalscoreLikertscale",
+#' "PCH2_totalscoreLikertscale","PCH3_totalscoreLikertscale",
+#' "PCH4_totalscoreLikertscale","PCH5_totalscoreLikertscale")]
 #' icc(data = pch)
 #' icc(data = pch, confint = FALSE, var = TRUE)
 icc <- function(data,

@@ -17,3 +17,6 @@ icc_consistency(model, alpha = 0.05)
 \description{
 ICC consistency
 }
+\details{
+lmer(score ~ observer + (1|id), data1, REML = T)
+}

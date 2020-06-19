@@ -9,7 +9,9 @@ weighted.agreement(data, weight = 1, ...)
 \arguments{
 \item{data}{A data matrix or table with equal number of columns and rows. Or a data frame that contains the scores for each rater in each column.}
 
-\item{dots}{options for sumtable}
+\item{weight}{weight for the one-off category, defaul \code{weight = 1}}
+
+\item{\dots}{options for sumtable}
 }
 \value{
 An S3 object containing the proportion of agreement.
