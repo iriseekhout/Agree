@@ -11,7 +11,6 @@
 #' @return
 #' @export
 #'
-#' @examples
 icc_model <- function(data, cols = colnames(data)){
   k <- length(cols)
   n <- nrow(data)
