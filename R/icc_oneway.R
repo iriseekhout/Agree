@@ -20,8 +20,8 @@ icc_oneway <- function(model, alpha = 0.05){
   F_o <- (k * varpat_oneway + varerr_oneway)/varerr_oneway
   dfon <- n - 1
   dfod <- n * (k - 1)
-  F_oL <- F_o/qf(1 - alpha/2, dfon, dfod) #or alpha/2?not dividing by 2 is shrout fleis
-  F_oU <- F_o * qf(1 - alpha/2, dfod, dfon) #or alpha/2?
+  F_oL <- F_o/qf(1 - alpha, dfon, dfod) #or alpha/2?not dividing by 2 is shrout fleis
+  F_oU <- F_o * qf(1 - alpha, dfod, dfon) #or alpha/2?
   L_o <- (F_oL - 1)/(F_oL + (k - 1))
   U_o <- (F_oU - 1)/(F_oU + k - 1)
 
