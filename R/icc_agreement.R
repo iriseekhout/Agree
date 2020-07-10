@@ -26,8 +26,8 @@ icc_agreement <- function(model, alpha = 0.05){
   EMS <- #changed after Shrout and Fleis check
 
   Fa1 <- MSBt/MSEt #test
-  Fl <- qf(alpha, df1= (n-1) ,df2=n*(k-1))
-  Fu <- qf(1-(alpha), df1=(n-1) , df2=n*(k-1))
+  Fl <- qf(alpha/2, df1= (n-1) ,df2=n*(k-1))
+  Fu <- qf(1-(alpha/2), df1=(n-1) , df2=n*(k-1))
 
   l_a <- (Fa1/Fu -1)/(Fa1/Fu+k-1) #test
   u_a <- (Fa1/Fl -1)/(Fa1/Fl+k-1) #test
@@ -41,8 +41,8 @@ icc_agreement <- function(model, alpha = 0.05){
   vn <- (k - 1) * (n - 1) * (k * icc_a * F_a1 + n * (1 + (k - 1) * icc_a) - k * icc_a)^2 #checked with shrout fleis.
   vd <- (n - 1) * k^2 * icc_a^2 * F_a1^2 + (n * (1 + (k - 1) * icc_a) - k * icc_a)^2 #checked with shrout fleis.
   v <- vn/vd #checked with shrout fleis.
-  F3U <- qf(1 - alpha, n - 1, v)#Shrout and fleis checked
-  F3L <- qf(1 - alpha, v, n - 1)##checked with shrout fleis.
+  F3U <- qf(1 - alpha/2, n - 1, v)#Shrout and fleis checked
+  F3L <- qf(1 - alpha/2, v, n - 1)##checked with shrout fleis.
   L_a <- (n * (MSB - F3U * varerr_agr))/
     (F3U * (k * (n * varobs_agr + varerr_agr) + (k * n - k - n) * varerr_agr) + n * MSB)##checked with shrout fleis.
 

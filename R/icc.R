@@ -47,11 +47,9 @@ icc <- function(data,
 
   model <- icc_model(data = data, cols = cols)
 
-
   if("oneway" %in% method){
 
   icc_ow <- icc_oneway(model, alpha = alpha)
-
   ICC["oneway", "varpat"] <- icc_ow$varpat_oneway
   ICC["oneway", "varerr"] <- icc_ow$varerr_oneway
 

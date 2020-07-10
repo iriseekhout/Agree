@@ -19,8 +19,8 @@ icc_consistency <- function(model, alpha = 0.05){
   F_c <- (k * varpat_cons + varerr_cons)/varerr_cons
   df21n <- n - 1
   df21d <- (n - 1) * (k - 1)
-  F3L <- F_c/qf(1 - alpha, df21n, df21d) #or alpha/2? not dividing by 2 is shrout fleis
-  F3U <- F_c * qf(1 - alpha, df21d, df21n)#or alpha/2?
+  F3L <- F_c/qf(1 - alpha/2, df21n, df21d) #or alpha/2? not dividing by 2 is shrout fleis
+  F3U <- F_c * qf(1 - alpha/2, df21d, df21n)#or alpha/2?
   L_c <- (F3L - 1)/(F3L + k - 1)
   U_c <- (F3U - 1)/(F3U + k - 1)
 
