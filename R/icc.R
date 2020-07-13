@@ -11,13 +11,10 @@
 #'   (see details for formulas).
 #' @param alpha the confidence level required.
 #' @param var logical vector if variances are returned.
-#' @param boot logical vector if bootstrapped CI is returned for the ICC agreement.
-#' @param b number of bootstrap replications default \code{b = 1000}.
 #' @importFrom dplyr %>% mutate
 #' @importFrom tidyr pivot_longer
 #' @importFrom lme4 lmer VarCorr
 #' @importFrom stats qf qnorm quantile
-#' @importFrom boot boot
 #' @return matrix with relevant output
 #' @export
 #'
@@ -37,9 +34,7 @@ icc <- function(data,
                 sem = TRUE,
                 confint = TRUE,
                 alpha = 0.05,
-                var = FALSE,
-                boot = FALSE,
-                b = 1000){
+                var = FALSE){
 
   ICC <- matrix(NA, nrow = 3, ncol = 7)
   rownames(ICC) <- c("oneway", "agreement", "consistency")
@@ -109,18 +104,18 @@ icc <- function(data,
   ICC["agreement", "lower"] <- icc_am$L_a
   ICC["agreement", "upper"] <- icc_am$U_a
   #}
-  if(boot){
-    icc_a_boot <- function(data,x) {
-      icc_agreement(model = icc_model(data[x,],cols = cols))$icc_a}
-    res1a <- boot::boot(data,icc_a_boot, R = b)
-    BCI_a <-  quantile(res1a$t,c(alpha/2,(1-alpha/2)), na.rm=TRUE)
-    L_a <- BCI_a[1]
-    U_a <- BCI_a[2]
+ # if(boot){
+#    icc_a_boot <- function(data,x) {
+#      icc_agreement(model = icc_model(data[x,],cols = cols))$icc_a}
+#    res1a <- boot::boot(data,icc_a_boot, R = b)
+#    BCI_a <-  quantile(res1a$t,c(alpha/2,(1-alpha/2)), na.rm=TRUE)
+#    L_a <- BCI_a[1]
+#    U_a <- BCI_a[2]
 
-    ICC["agreement", "lower"] <- L_a
-    ICC["agreement", "upper"] <- U_a
+  #  ICC["agreement", "lower"] <- L_a
+  #  ICC["agreement", "upper"] <- U_a
 
-  }
+  #}
 
   }
 

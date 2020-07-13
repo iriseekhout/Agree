@@ -11,9 +11,7 @@ icc(
   sem = TRUE,
   confint = TRUE,
   alpha = 0.05,
-  var = FALSE,
-  boot = FALSE,
-  b = 1000
+  var = FALSE
 )
 }
 \arguments{
@@ -34,10 +32,6 @@ colnames(data)}}
 \item{alpha}{the confidence level required.}
 
 \item{var}{logical vector if variances are returned.}
-
-\item{boot}{logical vector if bootstrapped CI is returned for the ICC agreement.}
-
-\item{b}{number of bootstrap replications default \code{b = 1000}.}
 }
 \value{
 matrix with relevant output
