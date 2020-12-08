@@ -25,10 +25,11 @@
 #' sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1", "2", "3"))
 sumtable <- function(df, ratings=NULL, levels=NULL, offdiag=NULL){
   stopifnot(is.data.frame(df))
+  df <- as.data.frame(df)
   if(is.null(ratings)){ratings=colnames(df)}
   stopifnot(is.character(ratings))
   stopifnot(all(purrr::map_chr(df[ratings], class)=="factor"))
-  if(is.null(levels)){levels=levels(df[,ratings[1]])}
+  if(is.null(levels)){levels=levels(unlist(df[,ratings[1]]))}
   if(is.null(offdiag)){if(length(levels==2)){offdiag=FALSE}
                      if(length(levels>3)){offdiag=TRUE}}
 
