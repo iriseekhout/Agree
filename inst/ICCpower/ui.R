@@ -12,53 +12,114 @@
 # Define UI for application that draws a histogram
 ui <- navbarPage(
     theme = shinytheme("cerulean"), collapsible = TRUE,
-    "ICC power",
-    #simulation page ----
-    tabPanel("Simulate",
+    "ICC power      ",
+    tabPanel("Simulation",
              sidebarLayout(
-
+            # MSE ratio's paper
                  sidebarPanel( #shinyjs::useShinyjs(),
-                               tags$h2("Study Design"),
-                               tags$p("Select study design options"),
-                               radioButtons("icc",
-                                         label = "Type of ICC",
-                                         choices = c("ICConeway", "ICCagreement", "ICCconsistency")),
-                               numericInput("correlation",
-                                            label = "Expected correlation between raters",
-                                            value = 0.7,
-                                            min = 0, max = 1),
-                               numericInput("variance",
-                                            label = "Expected variance in scores",
-                                            value = 1),
-                               numericInput("mean",
-                                            label = "Expected mean of score",
-                                            value = 1,
-                                            ),
-                               sliderInput("k",
-                                           label = "number of raters",
-                                           min = 1, max = 20,
-                                           value = c(2, 10),
-                                           step = 1),
-                               sliderInput("n",
-                                           label = "sample size",
-                                           min = 0, max = 1000,
-                                           value = c(10, 200)),
-                               numericInput("nlength",
-                                            "steps in sample size sequence")
+                     tags$h2("Study Design"),
+                     tags$p("Select study design options"),
+                     radioButtons("icc",
+                                  label = "Type of ICC",
+                                  choices = c("oneway", "agr", "cons")),
+                     radioButtons("correlation",
+                                  label = "Expected correlation between raters",
+                                  choices = c(0.6, 0.7, 0.8),
+                                  selected = 0.7),
+                     radioButtons("variance",
+                                  label = "Expected variance in scores",
+                                  choices = c(1, 10, 100)),
+                     radioButtons("systdif",
+                                  label = "1 or 2 raters with systematic differences",
+                                  choices = c(1,2)),
+                     radioButtons("startn",
+                                 label = "Sample size to start with",
+                                 choices = c(10,25,50,100,200)),
 
-                              div(id = "main_start0",
-                                   textOutput("agemos")
-                               )%>% shinyjs::hidden(),
-                               #tags$br(),
-                               #actionButton("start", "Start"),
-                               #tags$br(),
-                               #tags$br()
-                               width = 3),
+                     radioButtons("startk",
+                                  label = "Raters to start with",
+                                  choices = c(2,3,4,5,6)),
+                     #              div(id = "main_start0",
+                     #     textOutput("agemos")
+                     # )%>% shinyjs::hidden(),
+                     # #tags$br(),
+                     #actionButton("start", "Start"),
+                     #tags$br(),
+                     #tags$br()
+                     width = 3),
 
                  mainPanel(
-
+                     #textOutput("variableselection"),
+                     #dataTableOutput("ratdf_k"),
+                     fluidRow(
+                         box(width = 12,
+                             h2("Visualisation of precision of ICC and SEM"),
+                             p("The plots below show the precision in terms of mean squared error (MSE) for different combinations of sample size (n) and number of raters (k)."))
+                     ),
+                     fluidRow(
+                         shinydashboard::box(plotOutput("simresulticc")),
+                         shinydashboard::box(plotOutput("simresultsem"))
+                     ),
+                     fluidRow(
+                       box(width = 12,
+                           h2("Visualisation of MSE ratio's for ICC"),
+                           p("The plots below show the required increase in sample size (left) or number of raters(right), when a similar precision of a higher number of raters (left) or sample size (right) is wanted."))
+                     ),
+                     fluidRow(
+                         shinydashboard::box(plotOutput("mseratio_n")),
+                         shinydashboard::box(plotOutput("mseratio_k"))
+                     )
+                 )
              )
     ),
+    tabPanel("Background"),
+    tabPanel("About")
+    #     #simulation page ----
+    # tabPanel("Simulate",
+    #          sidebarLayout(
+    #
+    #              sidebarPanel( #shinyjs::useShinyjs(),
+    #                            tags$h2("Study Design"),
+    #                            tags$p("Select study design options"),
+    #                            radioButtons("icc",
+    #                                      label = "Type of ICC",
+    #                                      choices = c("ICConeway", "ICCagreement", "ICCconsistency")),
+    #                            numericInput("correlation",
+    #                                         label = "Expected correlation between raters",
+    #                                         value = 0.7,
+    #                                         min = 0, max = 1),
+    #                            numericInput("variance",
+    #                                         label = "Expected variance in scores",
+    #                                         value = 1),
+    #                            numericInput("mean",
+    #                                         label = "Expected mean of score",
+    #                                         value = 1,
+    #                                         ),
+    #                            sliderInput("k",
+    #                                        label = "number of raters",
+    #                                        min = 1, max = 20,
+    #                                        value = c(2, 10),
+    #                                        step = 1),
+    #                            sliderInput("n",
+    #                                        label = "sample size",
+    #                                        min = 0, max = 1000,
+    #                                        value = c(10, 200)),
+    #                            numericInput("nlength",
+    #                                         "steps in sample size sequence")
+    #
+    #                           div(id = "main_start0",
+    #                                textOutput("agemos")
+    #                            )%>% shinyjs::hidden(),
+    #                            #tags$br(),
+    #                            #actionButton("start", "Start"),
+    #                            #tags$br(),
+    #                            #tags$br()
+    #                            width = 3),
+    #
+    #              mainPanel(
+    #
+    #          )
+    # ),
     #result page ----
     # tabPanel("D-score",
     #          div(id = "results",
@@ -87,7 +148,7 @@ ui <- navbarPage(
     # tabPanel("Settings",
     #          ##add choice of itembank
     #          fluidRow(
-    #              box(with = 12,
+    #              box(width = 12,
     #                  tags$h3("Itembank selection"),
     #                  tags$p("Select one of the available itembanks in the box below. The GSED LF is the GSED long form database, with directly observed items. The GSED SF is the GSED short form, with caregiver reported items. The GCGD 165 is an itembank with 165, mostly directly observed, items selected by the Global Child Development Group. Van Wiechen is the Dutch Developmental Inventory (Dutch questions)"),
     #                  selectInput("itembank",
@@ -121,7 +182,8 @@ ui <- navbarPage(
     #              )
     #          )
     # ),
-    # #info page ----
+     #info page ----
+ #   tabPanel("Information")
     # navbarMenu("Background",
     #            #checklist info ----
     #            tabPanel("Itembanks"),
@@ -149,6 +211,6 @@ ui <- navbarPage(
     #                  tags$div("The data and instrument content and information was developed by the GSED consortium.")
     #              )
     #          )
- )
+ #)
 
 )

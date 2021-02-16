@@ -1,8 +1,10 @@
 ---
-title: "Specific agreement on polytomous outcomes with more than two raters"
+title: "Agreement for polytomous outcomes"
 author: "Iris Eekhout"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: pdf_document
+bibliography: [references.bib]
+biblio-style: apalike
 vignette: >
   %\VignetteIndexEntry{Agreement for polytomous outcomes}
   %\VignetteEngine{knitr::rmarkdown}
@@ -11,19 +13,20 @@ vignette: >
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
+  echo = TRUE
+  )
+library(kableExtra)
+library(knitr)
 ```
 
-This document describes the use of the Agree package for two data examples dat are used in the paper on specific agreement on polytomous outcomes in the situation of more than two raters. The first data example is an example of ordinal ratings and the second example of nominal rating. 
+This document describes the use of the Agree package for two data examples that are used in the paper on specific agreement on polytomous outcomes in the situation of more than two raters [@devet2018]. The first data example is an example of ordinal ratings and the second example of nominal rating. 
 
 ```{r}
 library(Agree)
 ```
 
 ## Ordinal data example
-For the ordinal data example we use data from a study by Dikmans et al. (2015). This data is based on photographs’s of breasts of 50 women after breast reconstruction. The photographs are  independently scored by 5 surgeons, the patien, and three mothers. They each rated the quality of the reconstruction on a 5 point ordinal scale with the verbal anchors on the left side ‘very dissatisfied’ on the left end and on the right end ‘very satisfied’ on the right end. They specifically rated the volume, shape, symmetry, scars and nipple. In this paper we use the data of 4 surgeons because one surgeon had some missing values and we look at the rates for symmetry. Data set 1 is used for the example of ordinal categories.
+For the ordinal data example we use data from a study by @dikmans2017. This data is based on photographs of breasts of 50 women after breast reconstruction. The photographs are  independently scored by 5 surgeons, the patients, and three mothers. They each rated the quality of the reconstruction on a 5 point ordinal scale with the verbal anchors on the left side ‘very dissatisfied’ on the left end and on the right end ‘very satisfied’ on the right end. They specifically rated the volume, shape, symmetry, scars and nipple. In this paper we use the data of 4 surgeons because one surgeon had some missing values and we look at the rates for symmetry. Data set 1 is used for the example of ordinal categories.
 
 ```{r}
 data(breast)
@@ -32,21 +35,26 @@ variable <- "symmetry"
 raters <- c("PCH1", "PCH2", "PCH3", "PCH4")
 ratersvars <- paste(raters, variable, sep="_")
 data1 <- data.frame(breast[ratersvars])
-head(data1)
+
+data1 %>% head()
+
 ```
 
 ### Agreement table
 First the agreement table are summed for all rater combinations into one agreement table. Then the off diagonal cells are averaged to obtain symmetry agreement tables. 
 
 ```{r}
-sumtable(data1,offdiag = FALSE)
-sumtable(data1,offdiag = TRUE)
+
+sumtable(data1,offdiag = FALSE) %>% kable()
+
+sumtable(data1,offdiag = TRUE) %>% kable()
 ```
 
 ### Agreement
 From the agreement table we can calculate the agreement. And we can calculate the confidence interval around this agreement.
 ```{r}
 agreement(data1)
+
 CIagreement(data1,m=4,n=nrow(data1))
 
 ```
@@ -75,7 +83,7 @@ CIagreement(data1, cat1="satisfied", cat2="neutral")
 We can calulate the probability of any other outcome conditional on an specific outcome. 
 
 ```{r}
-conditional.agreement(data1)
+conditional.agreement(data1) %>% kable()
 ```
 
 
@@ -92,12 +100,20 @@ weighted.agreement(data1, weight=0.5)
 
 
 ## nominal data example
-For the nominal data example we use a dataset that was used in a paper by Fleis (1971), which originated from Sandifer et al. In this data patients are diagnosed in 5 categories: Depession, Personality Disorder, Schizophrenia, Neurois, and Other by 6 raters. 
+For the nominal data example we use a data set that was used in a paper by @fleis1971. In this data patients are diagnosed in 5 categories: Depression, Personality Disorder, Schizophrenia, Neurosis, and Other by 6 raters. 
 
 ```{r}
 
-data(diagnoses)
+data(diagnoses) 
 data2 <- data.frame(lapply(diagnoses,as.factor), stringsAsFactors = TRUE)
+
+ levels(data2$rater1) <- c("Depression", "Pers disord.", "Schizophrenia", "Neurosis", "Other")
+ levels(data2$rater2) <- c("Depression", "Pers disord.", "Schizophrenia", "Neurosis", "Other")
+ levels(data2$rater3) <- c("Depression", "Pers disord.", "Schizophrenia", "Neurosis", "Other")
+ levels(data2$rater4) <- c("Depression", "Pers disord.", "Schizophrenia", "Neurosis", "Other")
+ levels(data2$rater5) <- c("Depression", "Pers disord.", "Schizophrenia", "Neurosis", "Other")
+
+
 ```
 
 
@@ -105,8 +121,8 @@ data2 <- data.frame(lapply(diagnoses,as.factor), stringsAsFactors = TRUE)
 First the agreement table are summed for all rater combinations into one agreement table. Then the off diagonal cells are averaged to obtain symmetry agreement tables. 
 
 ```{r}
-sumtable(data2,offdiag = FALSE)
-sumtable(data2,offdiag = TRUE)
+sumtable(data2,offdiag = FALSE) %>% kable()
+sumtable(data2,offdiag = TRUE) %>% kable()
 ```
 
 ### Agreement
@@ -119,20 +135,20 @@ CIagreement(data2)
 ### Specific agreement
 The specific agreement for polytomous data, can be defined in two ways: the agreement of for one category versus not that category (e.g. Depression versus all other categories) or the agreement for one category versus any other (e.g. Depression versus Schizophrenia). The confidence intervals for specific agreement are bootstrapped.
 ```{r}
-specific.agreement(data2, cat1="1. Depression")
-CIagreement(data2, cat1="1. Depression")
+specific.agreement(data2, cat1="Depression")
+CIagreement(data2, cat1="Depression")
 
-specific.agreement(data2, cat1="2. Personality Disorder")
-CIagreement(data2, cat1="2. Personality Disorder")
+specific.agreement(data2, cat1="Pers disord.")
+CIagreement(data2, cat1="Pers disord.")
 
-specific.agreement(data2, cat1="3. Schizophrenia")
-CIagreement(data2, cat1="3. Schizophrenia")
+specific.agreement(data2, cat1="Schizophrenia")
+CIagreement(data2, cat1="Schizophrenia")
 
-specific.agreement(data2, cat1="4. Neurosis")
-CIagreement(data2, cat1="4. Neurosis")
+specific.agreement(data2, cat1="Neurosis")
+CIagreement(data2, cat1="Neurosis")
 
-specific.agreement(data2, cat1="5. Other")
-CIagreement(data2, cat1="5. Other")
+specific.agreement(data2, cat1="Other")
+CIagreement(data2, cat1="Other")
 
 ```
 
@@ -140,6 +156,7 @@ CIagreement(data2, cat1="5. Other")
 ### Conditional agreement
 
 ```{r}
-conditional.agreement(data2)
+conditional.agreement(data2) %>% kable()
 ```
 
+## References
