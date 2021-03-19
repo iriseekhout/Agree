@@ -14,46 +14,98 @@ library(MASS)
 shinyServer(function(input, output, session) {
 
 
-
-
     ## show results for MSE current contitions
     disdat <- reactive({
 
-        output_mse %>%
-        mutate(n = factor(n),
+        Agree::simoutput %>%
+        mutate(n = as.numeric(n),
                k = factor(k)) %>%
-        filter(cor == !!input$correlation &
+        dplyr::filter(cor == !!input$correlation &
                variance == !!input$variance &
-               type == !!input$icc &
-               sk == !!input$systdif)
-    })
+               method == !!input$method &
+               deviation == !!input$systdif)
+
+        })
 
     output$variableselection <- renderText(
-        paste("cor", input$correlation, "var", input$variance, "type", input$icc, "sk", input$systdif, "n", input$startn, "k", input$startk)
+        paste("Input ICC:", input$correlation, "Variance:", input$variance, "Method:", input$method, "Raters with deviation:", input$systdif)
     )
 
     output$table <- renderDataTable(
         disdat()
     )
 
-    output$simresulticc <- renderPlot({
-        ggplot(disdat(), aes(x = k, y = icc, group = n, color = n))+
-        geom_line() +
-        ylab("MSE for ICC") +
-        xlab("Raters (k)")+
-        theme(text = element_text(size = 16))
+    output$biasicc <- renderPlot({
+        ggplot(disdat(), aes(x = n, y = bias_icc, group = k, color = k))+
+            geom_line(size = 1) +
+            ylab("Bias for ICC") +
+        xlab("Sample size (n)")+
+        theme(text = element_text(size = 16))+
+            scale_color_manual(name = "Raters (k)", values = ratercolors)+
+            ggtitle(paste("ICC method =", input$method), subtitle = paste("correlation:", input$correlation, "variance:", input$variance, "deviate raters:", input$systdif))
     })
 
-    output$simresultsem <-
+    output$biassem <-
         renderPlot({
-            ggplot(disdat(), aes(x = k, y = sem, group = n, color = n))+
-            geom_line() +
-            ylab("MSE for SEM") +
-            xlab("Raters (k)")+
-                theme(text = element_text(size = 16))
+            ggplot(disdat(), aes(x = n, y = bias_sem, group = k, color = k))+
+                geom_line(size = 1) +
+                ylab("Bias for SEM") +
+            xlab("Sample size (n)")+
+                theme(text = element_text(size = 16))+
+                scale_color_manual(name = "Raters (k)", values = ratercolors)+
+                ggtitle(paste("ICC method =", input$method), subtitle = paste("correlation:", input$correlation, "variance:", input$variance, "deviate raters:", input$systdif))
         })
 
 
+    output$mseicc <- renderPlot({
+        ggplot(disdat(), aes(x = n, y = mse_icc, group = k, color = k))+
+            geom_line(size = 1) +
+            ylab("MSE for ICC") +
+            xlab("Sample size (n)")+
+            theme(text = element_text(size = 16))+
+            scale_color_manual(name = "Raters (k)", values = ratercolors)+
+            ggtitle(paste("ICC method =", input$method), subtitle = paste("correlation:", input$correlation, "variance:", input$variance, "deviate raters:", input$systdif))
+    })
+
+    output$msesem <-
+        renderPlot({
+            ggplot(disdat(), aes(x = n, y = mse_sem, group = k, color = k))+
+                geom_line(size = 1) +
+                ylab("MSE for SEM") +
+                xlab("Sample size (n)")+
+                theme(text = element_text(size = 16))+
+                scale_color_manual(name = "Raters (k)", values = ratercolors)+
+                ggtitle(paste("ICC method =", input$method), subtitle = paste("correlation:", input$correlation, "variance:", input$variance, "deviate raters:", input$systdif))
+        })
+
+
+    output$covicc <- renderPlot({
+        ggplot(disdat(), aes(x = n, y = cov_icc, group = n))+
+            geom_point(aes(group = k, color = k), stroke = 3,, size = 2, pch = 3)+
+                geom_line(size = 1) +
+            ylab("Coverage for ICC") +
+            xlab("Sample size (n)")+
+            ylim(0.9,1)+
+            theme(text = element_text(size = 16))+
+            scale_color_manual(name = "Raters (k)", values = ratercolors)+
+            ggtitle(paste("ICC method =", input$method), subtitle = paste("correlation:", input$correlation, "variance:", input$variance, "deviate raters:", input$systdif))
+    })
+
+    output$widthicc <- renderPlot({
+        ggplot(disdat(), aes(x = n, y = width_icc, group = k, color = k))+
+            geom_line(size = 1) +
+            ylab("95% CI width for ICC") +
+            xlab("Sample size (n)")+
+            theme(text = element_text(size = 16))+
+            scale_color_manual(name = "Raters (k)", values = ratercolors)+
+            ggtitle(paste("ICC method =", input$method), subtitle = paste("correlation:", input$correlation, "variance:", input$variance, "deviate raters:", input$systdif))
+    })
+
+
+
+
+
+    ### update later.
     ## calculate MSE ratio's with settings.
     ratdat_n <- reactive({
             disdat2 <- output_mse %>%

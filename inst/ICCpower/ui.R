@@ -13,15 +13,17 @@
 ui <- navbarPage(
     theme = shinytheme("cerulean"), collapsible = TRUE,
     "ICC power      ",
+   # tabPanel("Welcome"
+    #       ),
     tabPanel("Simulation",
              sidebarLayout(
             # MSE ratio's paper
                  sidebarPanel( #shinyjs::useShinyjs(),
                      tags$h2("Study Design"),
                      tags$p("Select study design options"),
-                     radioButtons("icc",
+                     radioButtons("method",
                                   label = "Type of ICC",
-                                  choices = c("oneway", "agr", "cons")),
+                                  choices = c("oneway", "agreement", "consistency")),
                      radioButtons("correlation",
                                   label = "Expected correlation between raters",
                                   choices = c(0.6, 0.7, 0.8),
@@ -30,15 +32,8 @@ ui <- navbarPage(
                                   label = "Expected variance in scores",
                                   choices = c(1, 10, 100)),
                      radioButtons("systdif",
-                                  label = "1 or 2 raters with systematic differences",
-                                  choices = c(1,2)),
-                     radioButtons("startn",
-                                 label = "Sample size to start with",
-                                 choices = c(10,25,50,100,200)),
-
-                     radioButtons("startk",
-                                  label = "Raters to start with",
-                                  choices = c(2,3,4,5,6)),
+                                  label = "0, 1 or 2 raters with systematic differences",
+                                  choices = c(0,1,2)),
                      #              div(id = "main_start0",
                      #     textOutput("agemos")
                      # )%>% shinyjs::hidden(),
@@ -49,31 +44,64 @@ ui <- navbarPage(
                      width = 3),
 
                  mainPanel(
-                     #textOutput("variableselection"),
                      #dataTableOutput("ratdf_k"),
                      fluidRow(
                          box(width = 12,
-                             h2("Visualisation of precision of ICC and SEM"),
-                             p("The plots below show the precision in terms of mean squared error (MSE) for different combinations of sample size (n) and number of raters (k)."))
+                             h1("Visualisation of simulation results"),
+                             p("The input parameter can be selected from the left-hand panel. For simulations results shown below, the following input paramers are selected:"),
+                             textOutput("variableselection"))
                      ),
-                     fluidRow(
-                         shinydashboard::box(plotOutput("simresulticc")),
-                         shinydashboard::box(plotOutput("simresultsem"))
+                     fluidRow(width = 12,
+                               box(width = 12,
+                                   h1("Results for ICC estimations"),
+                                   p("")),
+                         tabBox(
+                             width = 10,
+                             # The id lets us use input$tabset1 on the server to find the current tab
+                             id = "icc",
+                             tabPanel("Bias for ICC", plotOutput("biasicc")),
+                             tabPanel("MSE for ICC", plotOutput("mseicc")),
+                             tabPanel("Coverage of CI for ICC", plotOutput("covicc")),
+                             tabPanel("Width of CI for ICC", plotOutput("widthicc"))
+                         )),
+                     fluidRow(width = 12,
+                              box(width = 12,
+                                  h1("Results for SEM estimations"),
+                                  p("")),
+                         tabBox(width = 10,
+                             #side = "right",
+                             tabPanel( "Bias for SEM", plotOutput("biassem")),
+                             tabPanel("MSE for SEM", plotOutput("msesem"))
+                         )
                      ),
-                     fluidRow(
-                       box(width = 12,
-                           h2("Visualisation of MSE ratio's for ICC"),
-                           p("The plots below show the required increase in sample size (left) or number of raters(right), when a similar precision of a higher number of raters (left) or sample size (right) is wanted."))
-                     ),
-                     fluidRow(
-                         shinydashboard::box(plotOutput("mseratio_n")),
-                         shinydashboard::box(plotOutput("mseratio_k"))
-                     )
+                     #fluidRow(
+                     #  box(width = 12,
+                     #      h2("Visualisation of MSE ratio's for ICC"),
+                     #      p("The plots below show the required increase in sample size (left) or number of raters(right), when a similar precision of a higher number of raters (left) or sample size (right) is wanted."))
+                     #),
+                     #fluidRow(
+                     #    shinydashboard::box(plotOutput("mseratio_n")),
+                     #    shinydashboard::box(plotOutput("mseratio_k"))
+                     #)
                  )
              )
     ),
-    tabPanel("Background"),
-    tabPanel("About")
+    tabPanel("Design estimation",
+             p("On this page add the MSE ratio's to estimate the effect of increasing rater's on sample size / precision etc.")),
+    tabPanel("Background",
+             p("On this page add background info on calculations, links to package and documentation.")),
+    tabPanel("About",
+             fluidRow(box(#tags$h1("About"),
+                          width = 12,
+                         # box(width= 300,
+                         #     tags$a(img(src="TNO_zwart.jpg", width="10%"),href="https://www.tno.nl/nl/"),
+                         #     tags$h4("Department Child Health")),
+                          box(width= 10,
+                              tags$h4("Iris Eekhout"),
+                              tags$div("Email: iris.eekhout@tno.nl"),
+                              tags$div("Website: ",tags$a("www.iriseekhout.com", href="https://www.iriseekhout.com")),
+                              tags$div("Github: ", tags$a("iriseekhout", href="https://github.com/iriseekhout")
+                              )))))
     #     #simulation page ----
     # tabPanel("Simulate",
     #          sidebarLayout(
