@@ -6,3 +6,4 @@
 ^results$
 ^data-raw$
 ^.*/.stackdump
+*.txt

@@ -16,13 +16,14 @@ knitr::opts_chunk$set(
   echo = TRUE
 )
 library(knitr)
-library(kableExtra)
 ```
 
 This document describes the use of the Agree package for the data example that was used in the paper on specific agreement on dichotomous outcomes in the situation of more than two raters. The method was fully explained an described in @devet2017.
 
 ```{r}
 library(Agree)
+library(kableExtra)
+
 ```
 
 ## Description of data example

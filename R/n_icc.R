@@ -12,8 +12,8 @@ n_icc <- function(beta = 0.8,
                   icc,
                   icc_lower
 ){
-  za <- qnorm(alpha, lower = FALSE)
-  zb <- qnorm(beta, lower = TRUE)
+  za <- qnorm(alpha, lower.tail = FALSE)
+  zb <- qnorm(beta, lower.tail = TRUE)
   Fp <- (1+(k-1)*icc)/(1-icc)
   Fpo <- (1+(k-1)*icc_lower)/(1-icc_lower)
   n <- 1 + ((2*(zb + za)^2 *3)/ ((log(Fp/Fpo))^2 *(k-1)))

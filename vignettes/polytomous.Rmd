@@ -15,7 +15,6 @@ vignette: >
 knitr::opts_chunk$set(
   echo = TRUE
   )
-library(kableExtra)
 library(knitr)
 ```
 
@@ -23,6 +22,8 @@ This document describes the use of the Agree package for two data examples that 
 
 ```{r}
 library(Agree)
+library(kableExtra)
+
 ```
 
 ## Ordinal data example
