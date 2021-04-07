@@ -16,13 +16,14 @@ knitr::opts_chunk$set(
   echo = TRUE
   )
 library(knitr)
+library(dplyr)
+library(tidyr)
 ```
 
 This document describes the use of the Agree package for two data examples that are used in the paper on specific agreement on polytomous outcomes in the situation of more than two raters [@devet2018]. The first data example is an example of ordinal ratings and the second example of nominal rating. 
 
 ```{r}
 library(Agree)
-library(kableExtra)
 
 ```
 
@@ -56,7 +57,7 @@ From the agreement table we can calculate the agreement. And we can calculate th
 ```{r}
 agreement(data1)
 
-CIagreement(data1,m=4,n=nrow(data1))
+agreement(data1, confint = TRUE)
 
 ```
 
@@ -66,16 +67,13 @@ The specific agreement for polytomous data, can be defined in two ways: the agre
 
 
 ```{r}
-specific.agreement(data1, cat1="satisfied")
-CIagreement(data1, cat1="satisfied")
+agreement(data1, specific="satisfied", confint = TRUE)
 
 
-specific.agreement(data1, cat1="satisfied", cat2="very satisfied")
-CIagreement(data1, cat1="satisfied", cat2="very satisfied")
+agreement(data1, specific=c("satisfied", "very satisfied"), confint = TRUE)
 
 
-specific.agreement(data1, cat1="satisfied", cat2="neutral")
-CIagreement(data1, cat1="satisfied", cat2="neutral")
+agreement(data1, specific= c("satisfied","neutral"), confint = TRUE)
 
 ```
 
@@ -129,27 +127,21 @@ sumtable(data2,offdiag = TRUE) %>% kable()
 ### Agreement
 From the agreement table we can calculate the agreement. And we can calculate the confidence interval around this agreement.
 ```{r}
-agreement(data2)
-CIagreement(data2)
+agreement(data2, confint = TRUE)
 ```
 
 ### Specific agreement
 The specific agreement for polytomous data, can be defined in two ways: the agreement of for one category versus not that category (e.g. Depression versus all other categories) or the agreement for one category versus any other (e.g. Depression versus Schizophrenia). The confidence intervals for specific agreement are bootstrapped.
 ```{r}
-specific.agreement(data2, cat1="Depression")
-CIagreement(data2, cat1="Depression")
+agreement(data2, specific="Depression", confint = TRUE)
 
-specific.agreement(data2, cat1="Pers disord.")
-CIagreement(data2, cat1="Pers disord.")
+agreement(data2, specific="Pers disord.", confint = TRUE)
 
-specific.agreement(data2, cat1="Schizophrenia")
-CIagreement(data2, cat1="Schizophrenia")
+agreement(data2, specific="Schizophrenia", confint = TRUE)
 
-specific.agreement(data2, cat1="Neurosis")
-CIagreement(data2, cat1="Neurosis")
+agreement(data2, specific="Neurosis", confint = TRUE)
 
-specific.agreement(data2, cat1="Other")
-CIagreement(data2, cat1="Other")
+agreement(data2, specific="Other", confint = TRUE)
 
 ```
 

@@ -16,13 +16,14 @@ knitr::opts_chunk$set(
   echo = TRUE
 )
 library(knitr)
+library(dplyr)
+library(tidyr)
 ```
 
 This document describes the use of the Agree package for the data example that was used in the paper on specific agreement on dichotomous outcomes in the situation of more than two raters. The method was fully explained an described in @devet2017.
 
 ```{r}
 library(Agree)
-library(kableExtra)
 
 ```
 
@@ -56,7 +57,7 @@ sumtable(data1,offdiag = TRUE) %>% kable()
 From the agreement table we can calculate the agreement. And we can calculate the confidence interval around this agreement.
 ```{r}
 agreement(data1)
-CIagreement(data1,m=4,n=nrow(data1))
+agreement(data1, confint = TRUE)
 
 ```
 
@@ -64,12 +65,10 @@ CIagreement(data1,m=4,n=nrow(data1))
 ### Specific agreement
 The specific agreement for dichotomous data can be evaluated for the satisfied scores and for the not satisfied scores. 
 ```{r}
-specific.agreement(data1, cat1="satisfied")
-CIagreement(data1, cat1="satisfied")
+agreement(data1, specific="satisfied", confint = TRUE)
 
 
-specific.agreement(data1, cat1="not satisfied")
-CIagreement(data1, cat1="not satisfied")
+agreement(data1, specific="not satisfied", confint = TRUE)
 
 ```
 
