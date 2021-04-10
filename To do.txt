@@ -1,13 +1,11 @@
 #to do:
 
-- Toevoegen daarin van CI agreement simulatie
-- simulatie opnieuw even draaien, script daarvan opschonen === simulatie van data in aparte functie.
-- Vignette voor polytomous agreement checken met paper
-- nieuwe versie van package maken
-- update package fix documentation - warnings when build check is done
-- check confidencen interval in simulation
-- check ci calculation for kappa - different from psych intervals
-- add documentation for datasets
-- add bootci function to empirically test confidence intervals.
-- Built vignette voor icc's
+- 1/ Simulatie van ordinale data in sim_rates functie vangen. script goed checken. >> in progress.
+- 2/ Toevoegen daarin van CI agreement simulatie
+- 3/ check ci calculation for kappa - different from psych intervals
+- 4/ check confidencen interval in simulation
+- 5/ simulatie opnieuw even draaien, script daarvan opschonen === simulatie van data in aparte functie. >> zie to do #1
+- 6/ Vignette voor polytomous agreement checken met paper
+- 7/ Make vignette voor icc's add details to function documentations
+- 8/ Make ICC power app.
 
