@@ -76,7 +76,6 @@
 #' Fleis (1971). In this data patients are diagnosed in 5 categories:
 #' Depression, Personality Disorder, Schizophrenia, Neurosis, and Other by six
 #' raters.
-.
 #'
 #' @format A data frame with 30 rows and 6 variables:
 #' \describe{

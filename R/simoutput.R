@@ -1,0 +1,33 @@
+#' simoutput
+#'
+#' Output results for the simulation for different icc methods under various
+#' conditions to investigate the sample size and number of raters requirements
+#' for ICC and SEM calculations.
+#'
+#' @format A data frame with 2280 rows and 22 variables:
+#' \describe{
+#'   \item{n}{condition parameter: sample size}
+#'   \item{cor}{condition parameter: raw correlation between raters}
+#'   \item{k}{condition parameter: number of raters}
+#'   \item{variance}{condition parameter: variance between patients}
+#'   \item{deviation}{condition parameter: k raters with systematic deviation}
+#'   \item{method}{condition parameter: icc method}
+#'   \item{set}{condition parameter: simultion iteration (averaged)}
+#'   \item{icc}{output parameter: average icc}
+#'   \item{lower}{output parameter: average lower bound of CI for icc}
+#'   \item{upper}{output parameter: average upper bound of CI for icc}
+#'   \item{sem}{output parameter: average sem}
+#'   \item{varpat}{output parameter: variance between patients}
+#'   \item{varobs}{output parameter: variance between raters}
+#'   \item{varerr}{output parameter: residual variance}
+#'   \item{Ticc}{empirical population parameter: icc}
+#'   \item{Tsem}{empirical population parameter: sem}
+#'   \item{bias_icc}{result parameter: average bias for icc}
+#'   \item{bias_sem}{result parameter: average bias for sem}
+#'   \item{mse_icc}{result parameter: mean squared error for icc}
+#'   \item{mse_sem}{result parameter: mean squared error for sem}
+#'   \item{cov_icc}{result parameter: coverage of CI for icc}
+#'   \item{width_icc}{result parameter: width of CI for icc}
+#' }
+#' @source data-raw/R/simoutput.R
+"simoutput"
