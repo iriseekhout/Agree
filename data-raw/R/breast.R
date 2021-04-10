@@ -1,6 +1,6 @@
 #import breast data
 
-dat1 <- read.delim("C:/Users/eekhouti/Github/Agree/data-raw/data/Data validatiestudie versie 3.txt",dec=",")
+dat1 <- read.delim("data-raw/data/Data validatiestudie versie 3.txt",dec=",")
 dat1[dat1==9999]<- NA  ## 9999 is missing hercoderen
 dat1[dat1==8888]<- NA  ## 9999 is missing hercoderen
 dat1[dat1==6]<- NA  ## 6 is missing hercoderen
@@ -21,9 +21,9 @@ for(k in variables_available) {
   dat1[,paste(raters_available,k,sep="_")] <- data.frame(lapply(dat1[,paste(raters_available,k,sep="_")],levelnames))
 }
 
-breast <- dat1
+breast <- dat1[,1:55]
 
-save("breast", file = file.path("C:/Users/eekhouti/Github/Agree/data/breast.rda"),
+save("breast", file = file.path("data/breast.rda"),
      compress = "xz")
 rm(dat1)
 head(breast)
