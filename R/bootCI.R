@@ -1,0 +1,35 @@
+#' bootCI
+#'
+#' @param data data.frame for which the bootstraps need to be performed to obtain
+#' confidence intervals.
+#' @param b number of bootstrap replications
+#' @param alpha level of Confidence interval, default \code{alpha = 0.05}
+#' @param fun function to estimate parameter for which the CI is determined.
+#' @param \dots additional parameters for function
+#' @importFrom boot boot
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' agreement(diagnoses)
+#' bootCI(data = diagnoses, fun = agreement)
+#' agreement(diagnoses, specific = "4. Neurosis")
+#' bootCI(data = diagnoses, fun = agreement, specific = "4. Neurosis")
+bootCI <- function(data,
+                   b=1000,
+                   alpha=0.05,
+                   fun,
+                   ...){
+  stopifnot(alpha>=0|alpha<=1)
+
+
+
+    boot.fun <- function(data,x) {
+      fun(data[x,], ...)
+      }
+  res1a <- boot::boot(data,boot.fun,b)
+  BCI <-  quantile(res1a$t,c((alpha)/2,(1-alpha)+((alpha)/2)), na.rm=TRUE)    # Bootstrapped confidence interval of Light's kappa
+  names(BCI) <- c("lower", "upper")
+  BCI
+}
