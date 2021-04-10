@@ -31,14 +31,20 @@ kappa <-
   function(data,
            confint = FALSE,
            alpha = 0.05,
-           k = ncol(data),
-           n = nrow(data),
+           k = NULL,
+           n = NULL,
            ...){
     if(is.data.frame(data)){
       table <- Agree::sumtable(data,...)
+      k <- ncol(data)
+      n <- nrow(data)
     }
     if(nrow(data)==ncol(data)){
       table <- data
+     # if(confint & (is.null(k) | is.null(n))){
+      #  warning("Confidence intervals cannot be computed, k and n are missing.")
+      #  confint <- FALSE
+      #}
     }
 
     #formula for kappa = (p0 - pe) / (1-pe)
@@ -54,35 +60,26 @@ kappa <-
     kappa <- (po - pe)/(1 - pe)
     names(kappa) <- "kappa"
 
-    ## General CI function:
-    ci <- function(p, n, alpha) {
-      a <- qnorm(1 - ((alpha) / 2))
-      CCI <-
-        p + c(-(a * (sqrt(1 / n * (
-          p * (1 - p)
-        ))) - 1 / (2 * n)), 0, (a * (sqrt(1 / n * (
-          p * (1 - p)
-        ))) + 1 / (2 * n))) #continuity
-      FCIlow <-
-        ((2 * n * p + (a * a) - 1) - a * sqrt((a * a) - (2 + (1 / n)) + 4 * p *
-                                                (n * (1 - p) + 1))) / (2 * ((a * a) + n)) #Fleis
-      FCIhigh <-
-        ((2 * n * p + (a * a) - 1) + a * sqrt((a * a) - (2 + (1 / n)) + 4 * p *
-                                                (n * (1 - p) + 1))) / (2 * ((a * a) + n))#Fleis
-      if (p < 0.5) {
-        CI <-  c(FCIlow, CCI[3])
-      }
-      if (p >= 0.5) {
-        CI <-  c(CCI[1], FCIhigh)
-      }
-      names(CI) <- c("lower", "upper")
-      CI
-    }
+    #based on Variance:
+    #n_ad <- n*sqrt(k-1) #adjusted n for multiple raters
+    im <- diag(1, ncol(table), nrow(table)) #identity matrix
+    Variance <-(1 / (tot * (1 - pe) ^ 4)) * (sum(diag(x * (im * (1 - pe) -
+                (outer(rs, cs, FUN = "+")) * (1 - po))^2)) + (1 - po)^2 * (sum(x *
+                (outer(cs, rs, FUN = "+"))^2) - sum(diag(x * (outer(cs, rs, FUN = "+"))^2))) - (po *
+                pe - 2 * pe + po)^2)
+
 
     if(confint){
-      n <- n*sqrt(k-1) #n for CI for overall agreement
-      CI <- ci(p = kappa, n = n, alpha = alpha)
-      # kappa <- c(kappa, CI) #ci disabled for publication - first check if correct.
+      #via variance computation
+     # if(k == 2){
+      CI <- c(lower = kappa - qnorm(1-(alpha/2)) * sqrt(Variance),
+              upper = kappa + qnorm(1-(alpha/2)) * sqrt(Variance))
+       kappa <- c(kappa, CI) #ci disabled for publication - first check if correct.
+      #}
+      #if(k > 2 ){
+      #  warning("Confidence intervals for more than 2 rater cannot be estimated directly for kappa. Use bootCI for bootstrapped intervals.")
+      #}
+
     }
 
 
@@ -92,3 +89,5 @@ kappa <-
     return(kappa)
 
   }
+
+# Notes: CI tested - if computed as CI for p-value, the intervals are off. I am now using Ci via variance computation. The totals (n) is computed from the table sum. When compared to bootstrap with bootCI the intervals are sometimes shifted to the right - can be problematic. Needs more testing to be sure. If you want to be conservative - use bootCI.

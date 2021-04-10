@@ -4,7 +4,7 @@
 \alias{kappa}
 \title{Kappa for agreement with multiple raters}
 \usage{
-kappa(data, confint = FALSE, alpha = 0.05, k = ncol(data), n = nrow(data), ...)
+kappa(data, confint = FALSE, alpha = 0.05, k = NULL, n = NULL, ...)
 }
 \arguments{
 \item{data}{A data frame or table with equal number of columns and rows. Or a data frame that contains the scores for each rater in each column.}
