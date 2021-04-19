@@ -1,11 +1,12 @@
 #' Kappa for agreement with multiple raters
 #'
-#' @param data A data frame or table with equal number of columns and rows. Or a data frame that contains the scores for each rater in each column.
+#' @param data A `data.frame` or table with equal number of columns and rows. Or
+#' `data.frame` that contains the scores for each rater in each column.
 #' @param confint Logical indicator for confidence interval
-#' @param alpha Confidence level, default = 0.05.
-#' @param k number of raters; default \code{k = ncol(data)}
-#' @param n sample size; default \code{n = nrow(data)}
-#' @param \dots options for sumtable if \code{data = data.frame}
+#' @param alpha Confidence interval level, default = 0.05.
+#' @param k number of raters; default `k = ncol(data)`.
+#' @param n sample size; default `n = nrow(data)`.
+#' @param \dots options for sumtable if `is.data.frame(data)`
 #'
 #' @return
 #' @export

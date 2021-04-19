@@ -2,30 +2,23 @@
 #'
 #' @param data data.frame with repeated measures or observations in the columns
 #'   and rated subjects in the rows
-#' @param method icc method \code{icc = c("oneway", "agreement",
-#'   "consistency")}, see details for explanatory formulas.
-#' @param cols column names used for the repeated measures, default \code{cols =
-#'   colnames(data)}
-#' @param sem logical vector if sem are returned.
-#' @param confint logical vector if confidence interval for icc are computed
-#'   (see details for formulas).
-#' @param alpha the confidence level required.
-#' @param var logical vector if variances are returned.
-#' @importFrom dplyr %>% mutate
-#' @importFrom tidyr pivot_longer
-#' @importFrom lme4 lmer VarCorr
-#' @importFrom stats qf qnorm quantile
+#' @param method type of ICC that is returned, options are:
+#' `c("oneway", "agreement", "consistency")`, the default returns all.
+#' @param cols column names used for the repeated measures, default uses
+#' `cols = colnames(data)`
+#' @param sem logical vector if standard error of measurement is returned.
+#' @param confint logical vector if confidence interval for ICC is returned.
+#' @param alpha the confidence level required, default `alpha = 0.05`.
+#' @param var logical vector if variance estimates are returned.
 #' @return matrix with relevant output
 #' @export
-#'
+#' @seealso [icc_agreement()] [icc_oneway()] [icc_consistency()]
 #' @examples
 #' mam <-
-#' breast[,c("Mam1_totalscoreLikertscale","Mam2_totalscoreLikertscale",
-#' "Mam3_totalscoreLikertscale")]
+#' breast[,c("Mam1_score","Mam2_score", "Mam3_score")]
 #' icc(data = mam, confint = TRUE, var = TRUE)
-#' pch <- breast[,c("PCH1_totalscoreLikertscale",
-#' "PCH2_totalscoreLikertscale","PCH3_totalscoreLikertscale",
-#' "PCH4_totalscoreLikertscale","PCH5_totalscoreLikertscale")]
+#' pch <- breast[,c("PCH1_score", "PCH2_score","PCH3_score",
+#' "PCH4_score","PCH5_score")]
 #' icc(data = pch)
 #' icc(data = pch, confint = FALSE, var = TRUE)
 icc <- function(data,

@@ -7,17 +7,18 @@
 kappa(data, confint = FALSE, alpha = 0.05, k = NULL, n = NULL, ...)
 }
 \arguments{
-\item{data}{A data frame or table with equal number of columns and rows. Or a data frame that contains the scores for each rater in each column.}
+\item{data}{A `data.frame` or table with equal number of columns and rows. Or
+`data.frame` that contains the scores for each rater in each column.}
 
 \item{confint}{Logical indicator for confidence interval}
 
-\item{alpha}{Confidence level, default = 0.05.}
+\item{alpha}{Confidence interval level, default = 0.05.}
 
-\item{k}{number of raters; default \code{k = ncol(data)}}
+\item{k}{number of raters; default `k = ncol(data)`.}
 
-\item{n}{sample size; default \code{n = nrow(data)}}
+\item{n}{sample size; default `n = nrow(data)`.}
 
-\item{\dots}{options for sumtable if \code{data = data.frame}}
+\item{\dots}{options for sumtable if `is.data.frame(data)`}
 }
 \value{
 

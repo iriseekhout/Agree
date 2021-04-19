@@ -17,9 +17,20 @@ n_icc(beta = 0.8, alpha = 0.05, k = 3, icc, icc_lower)
 
 \item{icc_lower}{lower limit of the reliability coefficient icc}
 }
-\value{
-
-}
 \description{
 Sample size for ICC
+}
+\details{
+Calculate the sample size for achieving a certain lower limit of the
+confidence interval derived by the F procedure. This method is developed for
+the ICC type consistency.
+}
+\examples{
+n_icc(icc = 0.7, icc_lower = 0.6, k = 4)
+n_icc(icc = 0.7, icc_lower = 0.6, k = 2)
+n_icc(icc = 0.7, icc_lower = 0.6, k = 3)
+}
+\references{
+Zou, G.Y. (2012) Sample size formulas for estimating intraclass correlation
+coefficients with precision and assurance. Statistics in medicine, 31, 3971-3981.
 }

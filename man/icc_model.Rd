@@ -7,13 +7,17 @@
 icc_model(data, cols = colnames(data))
 }
 \arguments{
-\item{data}{data.frame with observerd in the columns and subjects in the rows}
+\item{data}{data.frame with a column for each observer/rater and a row per
+rated subject.}
 
-\item{cols}{character vector with the column names to be used as observers.}
+\item{cols}{character vector with the column names to be used as observers.
+Default is `cols = colnames(data)`.}
 }
 \value{
 
 }
 \description{
-Calculate model for the ICC estimations. The basic model contains a random intercept for the id-level and a random intercept for the observer level. For the ICC calculations, different variance and error components are used.
+Calculate model for the ICC estimations. The basic model contains a random
+intercept for the id-level and a random intercept for the observer level.
+For each ICC type, different variance components are used.
 }

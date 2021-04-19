@@ -18,20 +18,19 @@ icc(
 \item{data}{data.frame with repeated measures or observations in the columns
 and rated subjects in the rows}
 
-\item{method}{icc method \code{icc = c("oneway", "agreement",
-"consistency")}, see details for explanatory formulas.}
+\item{method}{type of ICC that is returned, options are:
+`c("oneway", "agreement", "consistency")`, the default returns all.}
 
-\item{cols}{column names used for the repeated measures, default \code{cols =
-colnames(data)}}
+\item{cols}{column names used for the repeated measures, default uses
+`cols = colnames(data)`}
 
-\item{sem}{logical vector if sem are returned.}
+\item{sem}{logical vector if standard error of measurement is returned.}
 
-\item{confint}{logical vector if confidence interval for icc are computed
-(see details for formulas).}
+\item{confint}{logical vector if confidence interval for ICC is returned.}
 
-\item{alpha}{the confidence level required.}
+\item{alpha}{the confidence level required, default `alpha = 0.05`.}
 
-\item{var}{logical vector if variances are returned.}
+\item{var}{logical vector if variance estimates are returned.}
 }
 \value{
 matrix with relevant output
@@ -41,12 +40,13 @@ Intra class correlation for rater reliability
 }
 \examples{
 mam <-
-breast[,c("Mam1_totalscoreLikertscale","Mam2_totalscoreLikertscale",
-"Mam3_totalscoreLikertscale")]
+breast[,c("Mam1_score","Mam2_score", "Mam3_score")]
 icc(data = mam, confint = TRUE, var = TRUE)
-pch <- breast[,c("PCH1_totalscoreLikertscale",
-"PCH2_totalscoreLikertscale","PCH3_totalscoreLikertscale",
-"PCH4_totalscoreLikertscale","PCH5_totalscoreLikertscale")]
+pch <- breast[,c("PCH1_score", "PCH2_score","PCH3_score",
+"PCH4_score","PCH5_score")]
 icc(data = pch)
 icc(data = pch, confint = FALSE, var = TRUE)
+}
+\seealso{
+[icc_agreement()] [icc_oneway()] [icc_consistency()]
 }

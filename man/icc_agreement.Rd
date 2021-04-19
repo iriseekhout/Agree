@@ -7,13 +7,37 @@
 icc_agreement(model, alpha = 0.05)
 }
 \arguments{
-\item{model}{merMod object result from \code{icc_model()}.}
+\item{model}{merMod object result from `icc_model()`.}
 
-\item{alpha}{confidence interval level, default \code{alpha = 0.05}.}
+\item{alpha}{confidence interval level, default `alpha = 0.05`.}
 }
 \value{
 
 }
 \description{
-ICC agreement
+The intraclass correlations (ICC) of agreement for rater reliability using
+the variance estimates from a linear mixed model. The function returns the
+icc, standard error of measurment (sem) and confidence intervals for icc.
+}
+\details{
+The icc type agreement is the variance between the subjects divided by the sum
+of the subject variance, rater variance and the residual variance. The ICC for
+agreement generalizes to other raters within a population (Shrout & Fleiss,
+1979). The `icc_model()` function is used to compute the variances.
+This is a `lmer` model with a random slope for the subjects as well as for
+the raters. The sem is the square root of the sum of the rater variance and
+the error variance.
+The confidence intervals are approximated to account for the three independent
+variance components, as defined by Satterthwaite (1946) & Fleiss and Shrout (1978).
+}
+\references{
+Fleiss, J. L., & Shrout, P. E. Approximate interval estimation for a certain
+intraclass correlation coefficient. Psychometrika, 1978, 43, 259-262.
+Satterthwaite, F. E. An approximate distribution of estimates of variance
+components. Biometrics, 1946, 2, 110-114.
+Shrout, P.E. & Fleiss, J.L. (1979) Intraclass Correlations: Uses in Assessing
+Rater Reliability. Psychological Bulletin, 87(2), 420-428.
+}
+\author{
+Iris Eekhout
 }

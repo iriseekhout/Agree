@@ -7,16 +7,36 @@
 icc_consistency(model, alpha = 0.05)
 }
 \arguments{
-\item{model}{merMod object result from \code{icc_model()}.}
+\item{model}{merMod object result from `icc_model()`.}
 
-\item{alpha}{confidence interval level, default \code{alpha = 0.05}.}
+\item{alpha}{confidence interval level, default `alpha = 0.05`.}
 }
 \value{
 
 }
 \description{
-ICC consistency
+The intraclass correlations (ICC) of consistency for rater reliability using
+the variance estimates from a linear mixed model. The function returns the
+ICC, standard error of measurment (sem) and confidence intervals for ICC.
 }
 \details{
-lmer(score ~ observer + (1|id), data1, REML = T)
+The ICC type consistency is the variance between the subjects divided by the sum
+of the subject variance and the residual variance. The subject variance and
+error variance are adjusted for the rater variance, but the rater variance is
+not used to calculate the ICC. The ICC for consistency generalizes only to
+the fixed set of raters in the data (Shrout & Fleiss,
+1979). The `icc_model()` function is used to compute the variances.
+This is a `lmer` model with a random slope for the subjects as well as for
+the raters. The sem is the square root of the sum of the rater variance and
+the error variance.
+The confidence are computed with the exact F method. F = (k * subject variance +
+error variance)/ error variance, with df1 = n - 1 and df2 = (n - 1) * (k - 1)
+(Shrout & Fleiss, 1979).
+}
+\references{
+Fleiss, J. L., & Shrout, P. E. Approximate interval estimation for a certain
+intraclass correlation coefficient. Psychometrika, 1978, 43, 259-262.
+}
+\author{
+Iris Eekhout
 }

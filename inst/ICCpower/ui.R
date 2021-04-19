@@ -11,29 +11,35 @@
 
 # Define UI for application that draws a histogram
 ui <- navbarPage(
-    theme = shinytheme("cerulean"), collapsible = TRUE,
+    theme = shinytheme("cerulean"),
+    collapsible = TRUE,
     "ICC power      ",
-   # tabPanel("Welcome"
+    # tabPanel("Welcome"
     #       ),
     tabPanel("Simulation",
              sidebarLayout(
-            # MSE ratio's paper
-                 sidebarPanel( #shinyjs::useShinyjs(),
+                 # MSE ratio's paper
+                 sidebarPanel(
+                     #shinyjs::useShinyjs(),
                      tags$h2("Study Design"),
                      tags$p("Select study design options"),
-                     radioButtons("method",
-                                  label = "Type of ICC",
-                                  choices = c("oneway", "agreement", "consistency")),
-                     radioButtons("correlation",
-                                  label = "Expected correlation between raters",
-                                  choices = c(0.6, 0.7, 0.8),
-                                  selected = 0.7),
+                     radioButtons(
+                         "method",
+                         label = "Type of ICC",
+                         choices = c("oneway", "agreement", "consistency")
+                     ),
+                     radioButtons(
+                         "correlation",
+                         label = "Expected correlation between raters",
+                         choices = c(0.6, 0.7, 0.8),
+                         selected = 0.7
+                     ),
                      radioButtons("variance",
                                   label = "Expected variance in scores",
                                   choices = c(1, 10, 100)),
                      radioButtons("systdif",
                                   label = "0, 1 or 2 raters with systematic differences",
-                                  choices = c(0,1,2)),
+                                  choices = c(0, 1, 2)),
                      #              div(id = "main_start0",
                      #     textOutput("agemos")
                      # )%>% shinyjs::hidden(),
@@ -41,20 +47,24 @@ ui <- navbarPage(
                      #actionButton("start", "Start"),
                      #tags$br(),
                      #tags$br()
-                     width = 3),
+                     width = 3
+                 ),
 
                  mainPanel(
                      #dataTableOutput("ratdf_k"),
+                     fluidRow(box(
+                         width = 12,
+                         h1("Visualisation of simulation results"),
+                         p(
+                             "The input parameter can be selected from the left-hand panel. For simulations results shown below, the following input paramers are selected:"
+                         ),
+                         textOutput("variableselection")
+                     )),
                      fluidRow(
+                         width = 12,
                          box(width = 12,
-                             h1("Visualisation of simulation results"),
-                             p("The input parameter can be selected from the left-hand panel. For simulations results shown below, the following input paramers are selected:"),
-                             textOutput("variableselection"))
-                     ),
-                     fluidRow(width = 12,
-                               box(width = 12,
-                                   h1("Results for ICC estimations"),
-                                   p("")),
+                             h1("Results for ICC estimations"),
+                             p("")),
                          tabBox(
                              width = 10,
                              # The id lets us use input$tabset1 on the server to find the current tab
@@ -63,14 +73,17 @@ ui <- navbarPage(
                              tabPanel("MSE for ICC", plotOutput("mseicc")),
                              tabPanel("Coverage of CI for ICC", plotOutput("covicc")),
                              tabPanel("Width of CI for ICC", plotOutput("widthicc"))
-                         )),
-                     fluidRow(width = 12,
-                              box(width = 12,
-                                  h1("Results for SEM estimations"),
-                                  p("")),
-                         tabBox(width = 10,
+                         )
+                     ),
+                     fluidRow(
+                         width = 12,
+                         box(width = 12,
+                             h1("Results for SEM estimations"),
+                             p("")),
+                         tabBox(
+                             width = 10,
                              #side = "right",
-                             tabPanel( "Bias for SEM", plotOutput("biassem")),
+                             tabPanel("Bias for SEM", plotOutput("biassem")),
                              tabPanel("MSE for SEM", plotOutput("msesem"))
                          )
                      ),
@@ -84,24 +97,291 @@ ui <- navbarPage(
                      #    shinydashboard::box(plotOutput("mseratio_k"))
                      #)
                  )
-             )
+             )),
+    tabPanel(
+        "Design estimation",
+        p(
+            "On this page add the MSE ratio's to estimate the effect of increasing rater's on sample size / precision etc."
+        ),
+
+        sidebarLayout(
+            # MSE ratio's paper
+            sidebarPanel(
+                tags$h2("Study Design"),
+                tags$p(
+                    "First indicate the approach for the power calculation. Then, depending on the method, parts of the study study design can be specified."
+                ),
+
+                # hiertussen nog een conditionele vraag over wel van de onderste drie parameters onderzocht moet worden. Voor welke design parameter wil je het effect op de sample size bekijken? Afhankelijk van dit antwoord, worden de andere twee vast gezet voor beide scenarios - wel gekozen maar gelijk over de twee scenarios, de ander kan dan varieren tussen referentie en goal. Deze input werkt ook in de interpretatie die in een textoutput moet komen.
+                radioButtons(
+                    "power",
+                    label = "Calculate power parameters by",
+                    choices = c("MSE ratio", "CI width", "CI lower"),
+                    selected = "0",
+                    inline = TRUE
+                ),
+                #input power ci lower ----
+                conditionalPanel(
+                    condition = "output.powercilow",
+                    sliderInput(
+                        "icc_e",
+                        label = "Expected ICC",
+                        min = 0.1,
+                        max = 1,
+                        value = 0.7
+                    ),
+                    sliderInput(
+                        "cilower",
+                        label = "Lower end of the 95% Confidence interval for ICC (needs to be lower than expected ICC)",
+                        min = 0.1,
+                        max = 1,
+                        value = 0.55
+                    ),
+                    sliderInput(
+                        "raterrange",
+                        label = "Number of raters",
+                        min = 1,
+                        max = 99,
+                        step = 1,
+                        value = c(2, 6)
+                    )
+
+                ),
+                #input power ci width ----
+                conditionalPanel(
+                    condition = "output.powerci",
+                    checkboxGroupInput(
+                        "method_iccrg",
+                        label = "Type of ICC",
+                        choices = c("oneway", "agreement", "consistency"),
+                        inline = TRUE
+                    ),
+                    checkboxGroupInput(
+                        "correlation_iccrg",
+                        label = "Expected correlation between raters",
+                        choices = c(0.6, 0.7, 0.8),
+                        selected = c(0.6, 0.7, 0.8),
+                        inline = TRUE
+                    ),
+                    checkboxGroupInput(
+                        "variance_iccrg",
+                        label = "Expected variance in scores",
+                        choices = c(1, 10, 100),
+                        selected = 1,
+                        inline = TRUE
+                    ),
+                    radioButtons(
+                        "systdif_iccrg",
+                        label = "0, 1 or 2 raters with systematic differences",
+                        choices = c(0, 1, 2),
+                        inline = TRUE
+                    ),
+                    sliderInput(
+                        "ciwidth",
+                        label = "Width of the 95% Confidence interval for ICC",
+                        min = 0.1,
+                        max = 1,
+                        value = 0.3
+                    )
+
+                ),
+                #input power mse ratio ----
+                conditionalPanel(
+                    condition = "output.powermse",
+                    p(
+                        "Either sample size or number of raters can be varied between the reference and goal. For that condition the MSE ratio is calculated. The MSE ratio can be used to estimate the required sample size/rater increase to reach the goal."
+                    ),
+                    selectInput(
+                        "design",
+                        label = "Design aspect to vary between reference and goal",
+                        choices = c("sample size", "raters"),
+                        selected = character(0)
+                    ),
+                    #vary for raters ----
+                    conditionalPanel(
+                        condition = "output.designk",
+                        checkboxGroupInput(
+                            "method_iccrg",
+                            label = "Type of ICC",
+                            choices = c("oneway", "agreement", "consistency"),
+                            selected = "agreement",
+                            inline = TRUE
+                        ),
+                        checkboxGroupInput(
+                            "correlation_iccrg",
+                            label = "Expected correlation between raters",
+                            choices = c(0.6, 0.7, 0.8),
+                            selected = c(0.6, 0.7, 0.8),
+                            inline = TRUE
+                        ),
+                        checkboxGroupInput(
+                            "variance_iccrg",
+                            label = "Expected variance in scores",
+                            choices = c(1, 10, 100),
+                            selected = 1,
+                            inline = TRUE
+                        ),
+
+                        radioButtons(
+                            "systdif_iccrg",
+                            label = "0, 1 or 2 raters with systematic differences",
+                            choices = c(0, 1, 2),
+                            inline = TRUE
+                        ),
+                        radioButtons(
+                            "n_iccrg",
+                            label = "Sample size",
+                            choices = c(10, 20, 25, 30, 40, 50, 100, 200),
+                            selected = "50",
+                            inline = TRUE
+                        ),
+                        radioButtons(
+                            "k_iccr",
+                            label = "number of raters in reference",
+                            choices = c(2, 3, 4, 5, 6),
+                            selected = "2",
+                            inline = TRUE
+                        ),
+                        radioButtons(
+                            "k_iccg",
+                            label = "number of raters for goal",
+                            choices = c(2, 3, 4, 5, 6),
+                            selected = "3",
+                            inline = TRUE
+                        )
+
+                    ),
+                    #vary for sample size ----
+                    conditionalPanel(
+                        condition = "output.designn",
+                        checkboxGroupInput(
+                            "method_iccrg",
+                            label = "Type of ICC",
+                            choices = c("oneway", "agreement", "consistency"),
+                            inline = TRUE
+                        ),
+                        checkboxGroupInput(
+                            "correlation_iccrg",
+                            label = "Expected correlation between raters",
+                            choices = c(0.6, 0.7, 0.8),
+                            selected = c(0.6, 0.7, 0.8),
+                            inline = TRUE
+                        ),
+                        checkboxGroupInput(
+                            "variance_iccrg",
+                            label = "Expected variance in scores",
+                            choices = c(1, 10, 100),
+                            selected = 1,
+                            inline = TRUE
+                        ),
+
+                        radioButtons(
+                            "systdif_iccrg",
+                            label = "0, 1 or 2 raters with systematic differences",
+                            choices = c(0, 1, 2),
+                            inline = TRUE
+                        ),
+                        radioButtons(
+                            "k_iccrg",
+                            label = "number of raters",
+                            choices = c(2, 3, 4, 5, 6),
+                            inline = TRUE
+                        ),
+                        radioButtons(
+                            "n_iccr",
+                            label = "Sample size in reference",
+                            choices = c(10, 20, 25, 30, 40, 50, 100, 200),
+                            selected = "50",
+                            inline = TRUE
+                        ),
+                        radioButtons(
+                            "n_iccg",
+                            label = "Sample size goal",
+                            choices = c(10, 20, 25, 30, 40, 50, 100, 200),
+                            selected = "100",
+                            inline = TRUE
+                        ),
+                    )
+                )
+            ),
+            # power outputs ----
+            mainPanel(
+                h2("Power estimations"),
+                div(
+                    p("On this page power calculations can be performed using three different strategies."
+                    ),
+                    br(),
+                    strong("MSE ratio: "),
+                    "the MSE ratio procedure uses the simulation study to estimate to what extend a current reference design needs to be updated to achieve a similar precision as a goal design.",
+                    br(),
+                    strong("CI width:"),
+                    "the CI width procedure also uses teh simulations study. The specified width of the confidence interval is used to determine what conditions of raters and sample size can achieve that CI width under the referenced design conditions.",
+                    br(),
+                    strong("CI lower: "),
+                    "the CI lower procedure uses a formula presented in Zou (2011) to estimate the sample size required given the icc, lower limit of the icc and the number of raters. With this method it is possible to give a range of rater numbers in order to visualise the required sample size for different rater conditions."
+                ), em("Note that this method was developed for the ICC for consistency."),
+                conditionalPanel(
+                    condition = "output.powermse",
+                    fluidRow(
+                        h3("Power by MSE"),
+                        p("The figure below shows the confidence interval computed via the mean squared error for the reference situation and the goal scenario."),
+                        plotOutput("mseratio_icc")),
+                    fluidRow(
+                        h3("MSE ratio"),
+                        p( "The MSE ratio relates directly to the sample size. The Mean squared error is a combination of the squared standard error and the squared bias. In the situation of virtually no bias, the square root of the MSE equals the standard error. The standard error decreases by the square root of the sample size. Accordingly, the MSE is directly related to the sample size; the MSE decreases by the sample size."
+                        ),
+                        h3("Simulation results"),
+                        p(
+                            "The simulation results can be used to compare different study design scenario's. By computing the ratio of the MSE in two different scenarios, let's say a reference and a goal scenario, the ratio indicates the required ratio difference in sample for the scenario's to achieve equal precision."
+                        ),
+                        ##hier dan nog uitleg toevoegen over hoe de MSE ratio geinterpreteerd moet worden. Dit moet helemaal geleid worden met de input parameters.
+                        h3("Interpreting MSE ratio"),
+                        textOutput("MSEratio")
+                    )
+                ),
+                conditionalPanel(condition = "output.powerci",
+                                 fluidRow(
+                                     h2("Power by Confidence interval width"),
+                                     p("The plot below shows the conditions for sample size and rater combinations that satisfy the confidence interval width requirement, given the scenario specified."),
+                                     #plotOutput("widthcond"),
+                                     plotlyOutput("widthmap")
+                                 )),
+                conditionalPanel(condition = "output.powercilow",
+                                 h2("Power by lower end of Confidence Interval"),
+                                 p("The plot below shows the required sample size for the number of raters on the x-axis that are needed for the scenario with a given ICC to obtain a confidence interval with a lower end as indicated."),
+                                 fluidRow(plotlyOutput("n_icc_plot"))),
+
+            )
+        )
     ),
-    tabPanel("Design estimation",
-             p("On this page add the MSE ratio's to estimate the effect of increasing rater's on sample size / precision etc.")),
-    tabPanel("Background",
-             p("On this page add background info on calculations, links to package and documentation.")),
+
+    tabPanel(
+        "Background",
+        p(
+            "On this page add background info on calculations, links to package and documentation."
+        )
+    ),
     tabPanel("About",
-             fluidRow(box(#tags$h1("About"),
-                          width = 12,
-                         # box(width= 300,
-                         #     tags$a(img(src="TNO_zwart.jpg", width="10%"),href="https://www.tno.nl/nl/"),
-                         #     tags$h4("Department Child Health")),
-                          box(width= 10,
-                              tags$h4("Iris Eekhout"),
-                              tags$div("Email: iris.eekhout@tno.nl"),
-                              tags$div("Website: ",tags$a("www.iriseekhout.com", href="https://www.iriseekhout.com")),
-                              tags$div("Github: ", tags$a("iriseekhout", href="https://github.com/iriseekhout")
-                              )))))
+             fluidRow(box(
+                 #tags$h1("About"),
+                 width = 12,
+                 # box(width= 300,
+                 #     tags$a(img(src="TNO_zwart.jpg", width="10%"),href="https://www.tno.nl/nl/"),
+                 #     tags$h4("Department Child Health")),
+                 box(
+                     width = 10,
+                     tags$h4("Iris Eekhout"),
+                     tags$div("Email: iris.eekhout@tno.nl"),
+                     tags$div(
+                         "Website: ",
+                         tags$a("www.iriseekhout.com", href = "https://www.iriseekhout.com")
+                     ),
+                     tags$div(
+                         "Github: ",
+                         tags$a("iriseekhout", href = "https://github.com/iriseekhout")
+                     )
+                 )
+             )))
     #     #simulation page ----
     # tabPanel("Simulate",
     #          sidebarLayout(
@@ -210,8 +490,8 @@ ui <- navbarPage(
     #              )
     #          )
     # ),
-     #info page ----
- #   tabPanel("Information")
+    #info page ----
+    #   tabPanel("Information")
     # navbarMenu("Background",
     #            #checklist info ----
     #            tabPanel("Itembanks"),
@@ -239,6 +519,6 @@ ui <- navbarPage(
     #                  tags$div("The data and instrument content and information was developed by the GSED consortium.")
     #              )
     #          )
- #)
+    #)
 
 )

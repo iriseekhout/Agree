@@ -2,10 +2,9 @@
 
 - 1/ Simulatie van ordinale data in sim_rates functie vangen. script goed checken. >> in progress.
 - 2/ Toevoegen daarin van CI agreement simulatie
-- 3/ check ci calculation for kappa - different from psych intervals
-- 4/ check confidencen interval in simulation
-- 5/ simulatie opnieuw even draaien, script daarvan opschonen === simulatie van data in aparte functie. >> zie to do #1
-- 6/ Vignette voor polytomous agreement checken met paper
-- 7/ Make vignette voor icc's add details to function documentations
-- 8/ Make ICC power app.
-
+- 3/ check ci calculation for kappa - different from psych intervals >> done >> see Check_kappa_CI.R
+- 4/ simulatie opnieuw even draaien, script daarvan opschonen == simulatie van data in aparte functie. >> zie to do #1
+- 5/ Vignette voor polytomous agreement checken met paper
+- 6/ Make vignette voor icc's add details to function documentations >> in progress - documentation updated.
+- 7/ Make ICC power app. >> done - draft version
+- 8/ Update Vignettes with app improvements and update to website.

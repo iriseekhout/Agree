@@ -7,13 +7,39 @@
 icc_oneway(model, alpha = 0.05)
 }
 \arguments{
-\item{model}{merMod object result from \code{icc_model()}.}
+\item{model}{`merMod` object result from `icc_model`.}
 
-\item{alpha}{confidence interval level, default \code{alpha = 0.05}.}
+\item{alpha}{confidence interval level, default `alpha = 0.05`.}
 }
 \value{
-a list with parameter estimates.
+a `list` with parameter estimates.
 }
 \description{
-A function that computes the one-way ICC, with the corresponding standard error of measurement, sem. And the confidence intervals. see details for more information.
+A function that computes the one-way intraclass correlations (ICC), with the
+corresponding standard error of measurement, sem, and the confidence
+intervals, using the variance estimates from a linear mixed model.
+See details for more information.
+}
+\details{
+The ICC type oneway is the variance between the subjects divided by the sum
+of the subject variance and the residual variance (total variance in a oneway
+model. Each subject is rated by a different set of raters, that are randomly
+selected from a larger population of judges (Shrout & Fleiss, 1979). The `icc_oneway()` uses the
+`icc_model()` function to compute the variances. This is a `lmer` model with
+random slope for the subjects as well as the raters. The rater variance is
+not used for the ICC oneway and is subtracted from the sum of subject variance
+over the raters, which is then averaged. The error variance is computed as the
+sum of the residual variance and the rater variance from the `icc_model`.
+Accordingly, the rater variance is part of the error variance. The standard
+error of measurement is the square root of this error variance.
+The confidence are computed with the exact F method. F = (k * subject variance +
+error variance)/ error variance, with df1 = n - 1 and df2 = n * (k - 1)
+(Shrout & Fleiss, 1979).
+}
+\references{
+Shrout, P.E. & Fleiss, J.L. (1979) Intraclass Correlations: Uses in Assessing
+Rater Reliability. Psychological Bulletin, 87(2), 420-428.
+}
+\author{
+Iris Eekhout
 }
