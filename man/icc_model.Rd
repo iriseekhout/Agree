@@ -14,7 +14,7 @@ rated subject.}
 Default is `cols = colnames(data)`.}
 }
 \value{
-
+`lmer`model object
 }
 \description{
 Calculate model for the ICC estimations. The basic model contains a random

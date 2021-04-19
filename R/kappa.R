@@ -7,8 +7,9 @@
 #' @param k number of raters; default `k = ncol(data)`.
 #' @param n sample size; default `n = nrow(data)`.
 #' @param \dots options for sumtable if `is.data.frame(data)`
+#' @importFrom stats qnorm
 #'
-#' @return
+#' @return vector
 #' @export
 #' @examples
 #' df <- data.frame(r1=factor(c(1,0,1,0,0,1,1,0,0,0,1,1,0,1,1)),

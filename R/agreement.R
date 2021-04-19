@@ -27,6 +27,7 @@
 #' @param \dots options for sumtable if \code{data = data.frame}
 #' @return An S3 object containing the proportion of overall agreement.
 #' @export
+#' @importFrom stats quantile
 #'
 #' @examples
 #' #dichotomous

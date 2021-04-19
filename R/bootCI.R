@@ -7,10 +7,8 @@
 #' @param fun function to estimate parameter for which the CI is determined.
 #' @param \dots additional parameters for function
 #' @importFrom boot boot
-#'
-#' @return
+#' @return named vector with confidence interval levels
 #' @export
-#'
 #' @examples
 #' agreement(diagnoses)
 #' bootCI(data = diagnoses, fun = agreement)
@@ -22,9 +20,6 @@ bootCI <- function(data,
                    fun,
                    ...){
   stopifnot(alpha>=0|alpha<=1)
-
-
-
     boot.fun <- function(data,x) {
       fun(data[x,], ...)
       }

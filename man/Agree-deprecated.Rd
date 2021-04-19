@@ -14,8 +14,6 @@ specific.agreement(data, cat1, cat2 = NULL, ...)
 CIagreement(
   data,
   interval = 0.95,
-  ratings = NULL,
-  levels = NULL,
   cat1 = NULL,
   cat2 = NULL,
   m = NULL,

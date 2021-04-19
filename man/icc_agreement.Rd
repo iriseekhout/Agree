@@ -12,7 +12,7 @@ icc_agreement(model, alpha = 0.05)
 \item{alpha}{confidence interval level, default `alpha = 0.05`.}
 }
 \value{
-
+list
 }
 \description{
 The intraclass correlations (ICC) of agreement for rater reliability using

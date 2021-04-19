@@ -9,7 +9,7 @@
 #' @return An S3 object containing the proportion of positive (or negative) agreement.
 #'
 #' @name positive.agreement-deprecated
-#' @usage positive.agreement(data, cat1)
+#' @usage positive.agreement(data, specific, ...)
 #' @seealso \code{\link{Agree-deprecated}}
 #' @keywords internal
 NULL
@@ -35,7 +35,7 @@ positive.agreement <- function(data, specific="positive", ...){
 #'
 #' @return An S3 object containing the proportion of specific agreement.
 #' @name specific.agreement-deprecated
-#' @usage specific.agreement(data, cat1)
+#' @usage specific.agreement(data, cat1, cat2, ...)
 #' @seealso \code{\link{Agree-deprecated}}
 #' @keywords internal
 NULL
@@ -58,10 +58,13 @@ specific.agreement <- function(data, cat1, cat2=NULL, ...){
 #' @param cat1 A character indicating the category for which specific agreement should be obtained.
 #' @param cat2 A character indicating the category to which the specific agreement should be compared, if left empty all other categories are used.
 #' @param interval Confidence level; default is 0.95.
+#' @param m number of categories
+#' @param n sample size
+#' @param b number of boostrap iterations
 #'
 #' @return A vector giving the lower and upper confidence limit around the probability of specific agreement.
 #' @name CIagreement-deprecated
-#' @usage CIagreement(data)
+#' @usage CIagreement(data, interval=0.95, cat1=NULL, cat2=NULL,m=NULL,n=NULL,b=1000)
 #' @seealso \code{\link{Agree-deprecated}}
 #' @keywords internal
 NULL
@@ -70,13 +73,13 @@ NULL
 #' For \code{CIagreement}, use \code{\link{agreement}}.
 #'
 #' @export
- CIagreement <- function(data, interval=0.95, ratings=NULL, levels=NULL, cat1=NULL, cat2=NULL,m=NULL,n=NULL,b=1000){
+ CIagreement <- function(data, interval=0.95, cat1=NULL, cat2=NULL,m=NULL,n=NULL,b=1000){
 
  .Deprecated("agreement")
 
   stopifnot(interval>=0|interval<=1)
   if(is.data.frame(data)){
-    table <- Agree::sumtable(data,ratings=ratings,levels=levels, offdiag = TRUE)
+    table <- Agree::sumtable(data, offdiag = TRUE)
     m=ncol(data)
     n=nrow(data)
   }

@@ -11,8 +11,8 @@
 #'
 #' @importFrom lme4 lmer
 #' @importFrom tidyr pivot_longer
-#' @importFrom dplyr %>%
-#' @return
+#' @importFrom dplyr %>% mutate
+#' @return `lmer`model object
 #' @export
 #'
 icc_model <- function(data, cols = colnames(data)){

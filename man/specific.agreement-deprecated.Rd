@@ -4,7 +4,7 @@
 \alias{specific.agreement-deprecated}
 \title{Specific agreement-deprecated}
 \usage{
-specific.agreement(data, cat1)
+specific.agreement(data, cat1, cat2, ...)
 }
 \arguments{
 \item{data}{A data matrix or table with equal number of columns and rows. Or a data frame that contains the scores for each rater in each column.}

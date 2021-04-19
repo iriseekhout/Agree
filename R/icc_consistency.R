@@ -7,7 +7,7 @@
 #' @param model merMod object result from `icc_model()`.
 #' @param alpha confidence interval level, default `alpha = 0.05`.
 #' @importFrom lme4 ngrps VarCorr
-#' @return
+#' @return list
 #' @export
 #' @details
 #' The ICC type consistency is the variance between the subjects divided by the sum

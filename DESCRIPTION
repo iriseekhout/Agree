@@ -14,4 +14,4 @@ RoxygenNote: 7.1.1
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
-Imports: dplyr, lme4, tidyr, boot
+Imports: dplyr, lme4, tidyr, boot, stats

@@ -21,7 +21,7 @@ kappa(data, confint = FALSE, alpha = 0.05, k = NULL, n = NULL, ...)
 \item{\dots}{options for sumtable if `is.data.frame(data)`}
 }
 \value{
-
+vector
 }
 \description{
 Kappa for agreement with multiple raters

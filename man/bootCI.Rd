@@ -19,7 +19,7 @@ confidence intervals.}
 \item{\dots}{additional parameters for function}
 }
 \value{
-
+named vector with confidence interval levels
 }
 \description{
 bootCI

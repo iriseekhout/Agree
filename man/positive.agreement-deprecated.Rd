@@ -4,7 +4,7 @@
 \alias{positive.agreement-deprecated}
 \title{positive agreement-deprecated}
 \usage{
-positive.agreement(data, cat1)
+positive.agreement(data, specific, ...)
 }
 \arguments{
 \item{data}{A data matrix or table with equal number of columns and rows. Or a data frame that contains the scores for each rater in each column.}

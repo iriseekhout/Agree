@@ -4,7 +4,7 @@
 \alias{CIagreement-deprecated}
 \title{Confidence interval around the (specific) agreement}
 \usage{
-CIagreement(data)
+CIagreement(data, interval=0.95, cat1=NULL, cat2=NULL,m=NULL,n=NULL,b=1000)
 }
 \arguments{
 \item{data}{data.frame or table}
@@ -14,6 +14,12 @@ CIagreement(data)
 \item{cat2}{A character indicating the category to which the specific agreement should be compared, if left empty all other categories are used.}
 
 \item{interval}{Confidence level; default is 0.95.}
+
+\item{m}{number of categories}
+
+\item{n}{sample size}
+
+\item{b}{number of boostrap iterations}
 }
 \value{
 A vector giving the lower and upper confidence limit around the probability of specific agreement.

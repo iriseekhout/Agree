@@ -7,8 +7,9 @@
 #' @param model merMod object result from `icc_model()`.
 #' @param alpha confidence interval level, default `alpha = 0.05`.
 #' @importFrom lme4 ngrps VarCorr
+#' @importFrom stats qf
 #'
-#' @return
+#' @return list
 #' @export
 #' @details
 #' The icc type agreement is the variance between the subjects divided by the sum
