@@ -99,7 +99,7 @@ kappa <-
                 (outer(cs, rs, FUN = "+"))^2) - sum(diag(x * (outer(cs, rs, FUN = "+"))^2))) - (po *
                 pe - 2 * pe + po)^2)
     Varweight <- (1/(tot * (1 - wpc)^4)) * (sum(x * (w * (1 - wpc) -
-                                                   (colw %+% t(roww)) * (1 - wpo))^2) - (wpo * wpc - 2 *
+                                                       (outer(colw, roww, FUN = "+")) * (1 - wpo))^2) - (wpo * wpc - 2 *
                                                                                            wpc + wpo)^2)
     if (sum(diag(w)) > 0) {
       wkappa <- (wpo - wpc)/(1 - wpc)
