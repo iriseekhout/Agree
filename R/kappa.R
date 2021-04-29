@@ -101,6 +101,15 @@ kappa <-
     Varweight <- (1/(tot * (1 - wpc)^4)) * (sum(x * (w * (1 - wpc) -
                                                        (outer(colw, roww, FUN = "+")) * (1 - wpo))^2) - (wpo * wpc - 2 *
                                                                                            wpc + wpo)^2)
+    if(Variance < 0){
+      warning("The scores have no variance")
+      Variance <- 0
+    }
+    if(Varweight < 0){
+      warning("The weighted scores have no variance")
+      Varweight <- 0
+    }
+
     if (sum(diag(w)) > 0) {
       wkappa <- (wpo - wpc)/(1 - wpc)
     }
