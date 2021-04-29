@@ -101,7 +101,7 @@ kappa <-
     Varweight <- (1/(tot * (1 - wpc)^4)) * (sum(x * (w * (1 - wpc) -
                                                    (colw %+% t(roww)) * (1 - wpo))^2) - (wpo * wpc - 2 *
                                                                                            wpc + wpo)^2)
-    if (tr(w) > 0) {
+    if (sum(diag(w)) > 0) {
       wkappa <- (wpo - wpc)/(1 - wpc)
     }
     else {
