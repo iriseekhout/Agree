@@ -4,11 +4,21 @@
 \alias{kappa}
 \title{Kappa for agreement with multiple raters}
 \usage{
-kappa(data, confint = FALSE, alpha = 0.05, k = NULL, n = NULL, ...)
+kappa(
+  data,
+  weight = NULL,
+  confint = FALSE,
+  alpha = 0.05,
+  k = NULL,
+  n = NULL,
+  ...
+)
 }
 \arguments{
 \item{data}{A `data.frame` or table with equal number of columns and rows. Or
 `data.frame` that contains the scores for each rater in each column.}
+
+\item{weight}{matrix of weights for the weighed kappa.}
 
 \item{confint}{Logical indicator for confidence interval}
 
@@ -24,7 +34,9 @@ kappa(data, confint = FALSE, alpha = 0.05, k = NULL, n = NULL, ...)
 vector
 }
 \description{
-Kappa for agreement with multiple raters
+Cohen's kappa and weighed kappa for multiple raters, adapted from the
+`psych::cohen.kappa` function (Revelle, 2020). Light's method is used to
+combine the scores from multiple raters.
 }
 \examples{
 df <- data.frame(r1=factor(c(1,0,1,0,0,1,1,0,0,0,1,1,0,1,1)),
@@ -44,4 +56,11 @@ kappa(df)
 kappa(table)
 kappa(df, confint = TRUE)
 kappa(table)
+}
+\references{
+Revelle, W. (2020) psych: Procedures for Personality and Psychological Research,
+Northwestern University, Evanston, Illinois, USA,
+https://CRAN.R-project.org/package=psych Version = 2.0.12,.
+Light, R. J. (1971) Measures of response agreement for qualitative data: Some
+generalizations and alternatives, Psychological Bulletin, 76, 365-377.
 }

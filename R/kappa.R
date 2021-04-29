@@ -2,12 +2,23 @@
 #'
 #' @param data A `data.frame` or table with equal number of columns and rows. Or
 #' `data.frame` that contains the scores for each rater in each column.
+#' @param weight matrix of weights for the weighed kappa.
 #' @param confint Logical indicator for confidence interval
 #' @param alpha Confidence interval level, default = 0.05.
 #' @param k number of raters; default `k = ncol(data)`.
 #' @param n sample size; default `n = nrow(data)`.
 #' @param \dots options for sumtable if `is.data.frame(data)`
 #' @importFrom stats qnorm
+#' @description
+#' Cohen's kappa and weighed kappa for multiple raters, adapted from the
+#' `psych::cohen.kappa` function (Revelle, 2020). Light's method is used to
+#' combine the scores from multiple raters.
+#' @references
+#' Revelle, W. (2020) psych: Procedures for Personality and Psychological Research,
+#' Northwestern University, Evanston, Illinois, USA,
+#' https://CRAN.R-project.org/package=psych Version = 2.0.12,.
+#' Light, R. J. (1971) Measures of response agreement for qualitative data: Some
+#' generalizations and alternatives, Psychological Bulletin, 76, 365-377.
 #'
 #' @return vector
 #' @export
@@ -31,6 +42,7 @@
 #' kappa(table)
 kappa <-
   function(data,
+           weight = NULL,
            confint = FALSE,
            alpha = 0.05,
            k = NULL,
@@ -60,7 +72,24 @@ kappa <-
     po <- sum(diag(x)) #is equal to agreement(table)
     pe <- sum(diag(prob))
     kappa <- (po - pe)/(1 - pe)
-    names(kappa) <- "kappa"
+
+    w <- weight
+    #weighted kappa
+    if (is.null(weight)) {
+      w <- matrix(0, ncol = ncol(table), nrow = nrow(table))
+      w[] <- abs((col(w) - row(w)))^2
+      w <- 1 - w/(ncol(table) - 1)^2
+    }
+    colnames(w) <- rownames(w) <- colnames(table)
+    weighted.prob <- w * prob
+    weighted.obser <- w * x
+    wpo <- sum(weighted.obser)
+    wpc <- sum(weighted.prob)
+    colw <- colSums(w * cs)
+    roww <- rowSums(w * rs)
+    if ((!is.null(n)) & (tot == 1))
+      tot <- n
+
 
     #based on Variance:
     #n_ad <- n*sqrt(k-1) #adjusted n for multiple raters
@@ -69,18 +98,29 @@ kappa <-
                 (outer(rs, cs, FUN = "+")) * (1 - po))^2)) + (1 - po)^2 * (sum(x *
                 (outer(cs, rs, FUN = "+"))^2) - sum(diag(x * (outer(cs, rs, FUN = "+"))^2))) - (po *
                 pe - 2 * pe + po)^2)
+    Varweight <- (1/(tot * (1 - wpc)^4)) * (sum(x * (w * (1 - wpc) -
+                                                   (colw %+% t(roww)) * (1 - wpo))^2) - (wpo * wpc - 2 *
+                                                                                           wpc + wpo)^2)
+    if (tr(w) > 0) {
+      wkappa <- (wpo - wpc)/(1 - wpc)
+    }
+    else {
+      wkappa <- 1 - wpo/wpc
+    }
 
+
+    kappa_res <- c("kappa" = kappa, "weighted kappa" = wkappa)
 
     if(confint){
-      #via variance computation
-     # if(k == 2){
-      CI <- c(lower = kappa - qnorm(1-(alpha/2)) * sqrt(Variance),
+       CI <- c(lower = kappa - qnorm(1-(alpha/2)) * sqrt(Variance),
               upper = kappa + qnorm(1-(alpha/2)) * sqrt(Variance))
-       kappa <- c(kappa, CI) #ci disabled for publication - first check if correct.
-      #}
-      #if(k > 2 ){
-      #  warning("Confidence intervals for more than 2 rater cannot be estimated directly for kappa. Use bootCI for bootstrapped intervals.")
-      #}
+       kappa <- c("kappa" = kappa, CI)
+       wCI <- c(lower = wkappa - qnorm(1-(alpha/2)) * sqrt(Varweight),
+               upper = wkappa + qnorm(1-(alpha/2)) * sqrt(Varweight))
+       wkappa <- c("kappa" = wkappa, wCI)
+
+       kappa_res <- rbind("kappa" = kappa,
+                    "weighted kappa" = wkappa)
 
     }
 
@@ -88,7 +128,7 @@ kappa <-
 
 
 
-    return(kappa)
+    return(kappa_res)
 
   }
 
