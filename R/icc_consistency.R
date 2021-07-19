@@ -46,12 +46,12 @@ icc_consistency <- function(model, alpha = 0.05){
 
   return(
     list(
-      varpat_cons = varpat_cons,
+      varj_cons = varpat_cons,
       varerr_cons = varerr_cons,
-      icc_c = icc_c,
-      sem_c = sem_c,
-      L_c = L_c,
-      U_c = U_c
+      icc = icc_c,
+      sem = sem_c,
+      L_icc = L_c,
+      U_icc = U_c
     )
   )
 }

@@ -49,12 +49,12 @@ icc_oneway <- function(model, alpha = 0.05){
 
   return(
     list(
-      varpat_oneway = varpat_oneway,
+      varj_oneway = varpat_oneway,
       varerr_oneway = varerr_oneway,
-      icc_o = icc_o,
-      sem_o = sem_o,
-      L_o = L_o,
-      U_o = U_o
+      icc = icc_o,
+      sem = sem_o,
+      L_icc = L_o,
+      U_icc = U_o
     )
   )
 }

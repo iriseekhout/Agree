@@ -74,13 +74,13 @@ icc_agreement <- function(model, alpha = 0.05){
 
   return(
     list(
-      varpat_agr = varpat_agr,
-      varobs_agr = varobs_agr,
+      varj_agr = varpat_agr,
+      varr_agr = varobs_agr,
       varerr_agr = varerr_agr,
-      icc_a = icc_a,
-      sem_a = sem_a,
-      L_a = l_a, #use upper case L for PSYCH version/ lowercase l for same logic as in oneway and consistency - however the observer part is then ignored.
-      U_a = u_a #use upper case U for PSYCH version/ lowercase l for same logic as in oneway and consistency - however the observer part is then ignored.
+      icc = icc_a,
+      sem = sem_a,
+      L_icc = l_a, #use upper case L for PSYCH version/ lowercase l for same logic as in oneway and consistency - however the observer part is then ignored.
+      U_icc = u_a #use upper case U for PSYCH version/ lowercase l for same logic as in oneway and consistency - however the observer part is then ignored.
     )
   )
 }
