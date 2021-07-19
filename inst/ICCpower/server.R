@@ -18,8 +18,8 @@ shinyServer(function(input, output, session) {
     disdat <- reactive({
 
         Agree::simoutput %>%
-        mutate(n = as.numeric(n),
-               k = factor(k)) %>%
+        mutate(n = factor(n),
+               k = as.numeric(k)) %>%
         dplyr::filter(cor == !!input$correlation &
                variance == !!input$variance &
                method == !!input$method &
@@ -35,70 +35,73 @@ shinyServer(function(input, output, session) {
         disdat()
     )
 
+    ##change this for all graphs -- change ratercolor
     output$biasicc <- renderPlot({
-        ggplot(disdat(), aes(x = n, y = bias_icc, group = k, color = k))+
+        ggplot(disdat(), aes(x = k, y = bias_icc, group = n, color = n))+
             geom_line(size = 1) +
             ylab("Bias for ICC") +
-        xlab("Sample size (n)")+
+            ylim(-0.055,0.01)+
+        xlab("Raters (k)")+
         theme(text = element_text(size = 16))+
-            scale_color_manual(name = "Raters (k)", values = ratercolors)+
-            ggtitle(paste("ICC method =", input$method), subtitle = paste("correlation:", input$correlation, "variance:", input$variance, "deviate raters:", input$systdif))
+            scale_color_manual(name = "Sample size (n)", values = ncolors)+
+            ggtitle(paste("ICC type =", input$method), subtitle = paste("correlation:", input$correlation, "variance:", input$variance, "deviate raters:", input$systdif))
     })
 
     output$biassem <-
         renderPlot({
-            ggplot(disdat(), aes(x = n, y = bias_sem, group = k, color = k))+
+            ggplot(disdat(), aes(x = k, y = bias_sem, group = n, color = n))+
                 geom_line(size = 1) +
                 ylab("Bias for SEM") +
-            xlab("Sample size (n)")+
+                xlab("Raters (k)")+
                 theme(text = element_text(size = 16))+
-                scale_color_manual(name = "Raters (k)", values = ratercolors)+
-                ggtitle(paste("ICC method =", input$method), subtitle = paste("correlation:", input$correlation, "variance:", input$variance, "deviate raters:", input$systdif))
+                scale_color_manual(name = "Sample size (n)", values = ncolors)+
+                ggtitle(paste("ICC type =", input$method), subtitle = paste("correlation:", input$correlation, "variance:", input$variance, "deviate raters:", input$systdif))
         })
 
 
     output$mseicc <- renderPlot({
-        ggplot(disdat(), aes(x = n, y = mse_icc, group = k, color = k))+
+        ggplot(disdat(), aes(x = k, y = mse_icc, group = n, color = n))+
             geom_line(size = 1) +
             ylab("MSE for ICC") +
-            xlab("Sample size (n)")+
+            #ylim(0,0.055)+
+            xlab("Raters (k)")+
             theme(text = element_text(size = 16))+
-            scale_color_manual(name = "Raters (k)", values = ratercolors)+
-            ggtitle(paste("ICC method =", input$method), subtitle = paste("correlation:", input$correlation, "variance:", input$variance, "deviate raters:", input$systdif))
+            scale_color_manual(name = "Sample size (n)", values = ncolors)+
+            ggtitle(paste("ICC type =", input$method), subtitle = paste("correlation:", input$correlation, "variance:", input$variance, "deviate raters:", input$systdif))
     })
 
     output$msesem <-
         renderPlot({
-            ggplot(disdat(), aes(x = n, y = mse_sem, group = k, color = k))+
+            ggplot(disdat(), aes(x = k, y = mse_sem, group = n, color = n))+
                 geom_line(size = 1) +
                 ylab("MSE for SEM") +
-                xlab("Sample size (n)")+
+                xlab("Raters (k)")+
                 theme(text = element_text(size = 16))+
-                scale_color_manual(name = "Raters (k)", values = ratercolors)+
-                ggtitle(paste("ICC method =", input$method), subtitle = paste("correlation:", input$correlation, "variance:", input$variance, "deviate raters:", input$systdif))
+                scale_color_manual(name = "Sample size (n)", values = ncolors)+
+                ggtitle(paste("ICC type =", input$method), subtitle = paste("correlation:", input$correlation, "variance:", input$variance, "deviate raters:", input$systdif))
         })
 
 
     output$covicc <- renderPlot({
-        ggplot(disdat(), aes(x = n, y = cov_icc, group = n))+
-            geom_point(aes(group = k, color = k), stroke = 3, size = 2, pch = 3)+
+        ggplot(disdat(), aes(x = k, y = cov_icc, group = n))+
+            geom_point(aes(group = n, color = n), stroke = 3, size = 2, pch = 3)+
                 geom_line(size = 1) +
             ylab("Coverage for ICC") +
-            xlab("Sample size (n)")+
+            xlab("Raters (k)")+
             ylim(0.9,1)+
             theme(text = element_text(size = 16))+
-            scale_color_manual(name = "Raters (k)", values = ratercolors)+
-            ggtitle(paste("ICC method =", input$method), subtitle = paste("correlation:", input$correlation, "variance:", input$variance, "deviate raters:", input$systdif))
+            scale_color_manual(name = "Sample size (n)", values = ncolors)+
+            ggtitle(paste("ICC type =", input$method), subtitle = paste("correlation:", input$correlation, "variance:", input$variance, "deviate raters:", input$systdif))
     })
 
     output$widthicc <- renderPlot({
-        ggplot(disdat(), aes(x = n, y = width_icc, group = k, color = k))+
+        ggplot(disdat(), aes(x = k, y = width_icc, group = n, color = n))+
             geom_line(size = 1) +
             ylab("95% CI width for ICC") +
-            xlab("Sample size (n)")+
+            xlab("Raters (k)")+
             theme(text = element_text(size = 16))+
-            scale_color_manual(name = "Raters (k)", values = ratercolors)+
-            ggtitle(paste("ICC method =", input$method), subtitle = paste("correlation:", input$correlation, "variance:", input$variance, "deviate raters:", input$systdif))
+            scale_color_manual(name = "Sample size (n)", values = ncolors)+
+            ggtitle(paste("ICC type =", input$method), subtitle = paste("correlation:", input$correlation, "variance:", input$variance, "deviate raters:", input$systdif))
     })
 
 
@@ -174,7 +177,7 @@ shinyServer(function(input, output, session) {
     })
    #simple dotplot
     output$widthcond <- renderPlot({
-        ggplot(refwidth_icc(), aes(x = n, y = k, color = ciwidthm))+
+        ggplot(refwidth_icc(), aes(x = k, y = k, color = ciwidthm))+
             geom_point(size = 3) +
             xlim(0,200) +
             ylim(0,6) +
@@ -458,7 +461,7 @@ shinyServer(function(input, output, session) {
 #
 #
 # output$mseratio_n <- renderPlot({
-#     ggplot(ratdat_k(), aes(x = n, y = k, color = factor(start)))+
+#     ggplot(ratdat_k(), aes(x = k, y = k, color = factor(start)))+
 #         geom_point(size = 3)+
 #         xlab("Sample size (n)") + ylab("Raters (k)") +
 #         scale_color_manual(values=c("#999999", "#E69F00"))+

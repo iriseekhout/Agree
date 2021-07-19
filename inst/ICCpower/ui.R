@@ -16,7 +16,7 @@ ui <- navbarPage(
     "ICC power      ",
     # tabPanel("Welcome"
     #       ),
-    tabPanel("Simulation",
+    tabPanel("Resutls of simulation study",
              sidebarLayout(
                  # MSE ratio's paper
                  sidebarPanel(
@@ -99,7 +99,7 @@ ui <- navbarPage(
                  )
              )),
     tabPanel(
-        "Design estimation",
+        "Design choice assistant",
         p(
             "On this page add the MSE ratio's to estimate the effect of increasing rater's on sample size / precision etc."
         ),
@@ -116,7 +116,7 @@ ui <- navbarPage(
                 radioButtons(
                     "power",
                     label = "Calculate power parameters by",
-                    choices = c("MSE ratio", "CI width", "CI lower"),
+                    choices = c("MSE ratio", "CI lower", "CI width"),
                     selected = "0",
                     inline = TRUE
                 ),
@@ -194,7 +194,7 @@ ui <- navbarPage(
                     selectInput(
                         "design",
                         label = "Design aspect to vary between reference and goal",
-                        choices = c("sample size", "raters"),
+                        choices = c("raters", "sample size"),
                         selected = character(0)
                     ),
                     #vary for raters ----
@@ -314,12 +314,12 @@ ui <- navbarPage(
                     strong("MSE ratio: "),
                     "the MSE ratio procedure uses the simulation study to estimate to what extend a current reference design needs to be updated to achieve a similar precision as a goal design.",
                     br(),
-                    strong("CI width:"),
-                    "the CI width procedure also uses teh simulations study. The specified width of the confidence interval is used to determine what conditions of raters and sample size can achieve that CI width under the referenced design conditions.",
-                    br(),
                     strong("CI lower: "),
                     "the CI lower procedure uses a formula presented in Zou (2011) to estimate the sample size required given the icc, lower limit of the icc and the number of raters. With this method it is possible to give a range of rater numbers in order to visualise the required sample size for different rater conditions."
                 ), em("Note that this method was developed for the ICC for consistency."),
+                br(),
+                strong("CI width:"),
+                "the CI width procedure also uses teh simulations study. The specified width of the confidence interval is used to determine what conditions of raters and sample size can achieve that CI width under the referenced design conditions.",
                 conditionalPanel(
                     condition = "output.powermse",
                     fluidRow(
