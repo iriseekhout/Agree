@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
   comment = ">"
 )
 library(dplyr)
+library(tidyr)
 ```
 
 This Document describes the computational background and the use of the `icc()` function from the `Agree` package.
@@ -42,6 +43,16 @@ head(breast_scores)
 
 The example data shows missings. The `icc` function can deal with these missings, because a mixed model is used to estimate the variances to compute the icc with.
 
+For a mixed model, the data needs to be restructured to a long format. we can use the `pivot_longer()` function from the `tidyr` package to do that:
+
+```{r}
+breast_long <- breast_scores %>%
+ mutate(id = 1:nrow(breast_scores)) %>% #add id column
+  pivot_longer(cols = -id, names_to = "rater", values_to = "score")
+
+breast_long
+```
+
 ## ICC model
 
 The variances that are used to compute the `icc` are obtained from a linear mixed model. This model is estimated with the `lmer()` function from the `lme4` package. The model is defined as $Y_{ijr} = \beta_0 + b_{0j} + b_{0r} + \epsilon_{ijr}$, where $b_{0j}$ is the random intercept at the subject level and $b_{0r}$ the random intercept at the rater/observer level. The $\epsilon_{ijr}$ is the residual error. The `r-code` for the model in `lme4` is: `lmer(score ~ (1|id) + (1|observer), data, REML = T)`
@@ -55,7 +66,7 @@ This same model is used to estimate the variance components for each of three ty
 
 ```{r}
 # Estimate model for example data
-icc_model(breast_scores)
+icc_model2(breast_long)
 
 # Extract variance components from the icc model
 varcomp <- as.data.frame(lme4::VarCorr(icc_model(breast_scores)))

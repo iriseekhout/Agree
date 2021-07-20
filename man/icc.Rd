@@ -7,7 +7,9 @@
 icc(
   data,
   method = c("oneway", "agreement", "consistency"),
+  format = "wide",
   cols = colnames(data),
+  levels = c("id", "rater"),
   sem = TRUE,
   confint = TRUE,
   alpha = 0.05,
@@ -21,8 +23,14 @@ and rated subjects in the rows}
 \item{method}{type of ICC that is returned, options are:
 `c("oneway", "agreement", "consistency")`, the default returns all.}
 
-\item{cols}{column names used for the repeated measures, default uses
-`cols = colnames(data)`}
+\item{format}{character string indicating the data structure as either "wide"
+or "long". Default `format = "wide"`.}
+
+\item{cols}{column names used for the repeated measures in the wide format,
+default uses `cols = colnames(data)`}
+
+\item{levels}{character vector for the column names used for the levels.
+Default is `levels = c("id", "rater")`.}
 
 \item{sem}{logical vector if standard error of measurement is returned.}
 

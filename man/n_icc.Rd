@@ -7,7 +7,8 @@
 n_icc(beta = 0.8, alpha = 0.05, k = 3, icc, icc_lower)
 }
 \arguments{
-\item{beta}{power level, default \code{beta = 0.8}}
+\item{beta}{power level, default \code{beta = 0.8}, also called assurance
+probability.}
 
 \item{alpha}{confidence level, default \code{alpha = 0.05}}
 
@@ -23,7 +24,7 @@ Sample size for ICC
 \details{
 Calculate the sample size for achieving a certain lower limit of the
 confidence interval derived by the F procedure. This method is developed for
-the ICC type consistency.
+the ICC type oneway.
 }
 \examples{
 n_icc(icc = 0.7, icc_lower = 0.6, k = 4)
