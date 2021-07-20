@@ -17,8 +17,7 @@
 #' the fixed set of raters in the data (Shrout & Fleiss,
 #' 1979). The `icc_model()` function is used to compute the variances.
 #' This is a `lmer` model with a random slope for the subjects as well as for
-#' the raters. The sem is the square root of the sum of the rater variance and
-#' the error variance.
+#' the raters. The sem is the square root of the error variance.
 #' The confidence are computed with the exact F method. F = (k * subject variance +
 #' error variance)/ error variance, with df1 = n - 1 and df2 = (n - 1) * (k - 1)
 #' (Shrout & Fleiss, 1979).
