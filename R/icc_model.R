@@ -30,7 +30,7 @@ icc_model <- function(data, cols = colnames(data)){
 #'
 #' Calculate model for the ICC estimations. The basic model contains a random
 #' intercept for the id-level and a random intercept for the rater level, more
-#' levels can be indicated for a 3-way model.This fuction works from a long data
+#' levels can be indicated for a 3-way model.This function works from a long data
 #' format.
 #' For each ICC type, different variance components are used.
 #'

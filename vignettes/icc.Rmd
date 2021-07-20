@@ -69,7 +69,7 @@ This same model is used to estimate the variance components for each of three ty
 icc_model2(breast_long)
 
 # Extract variance components from the icc model
-varcomp <- as.data.frame(lme4::VarCorr(icc_model(breast_scores)))
+varcomp <- as.data.frame(lme4::VarCorr(icc_model2(breast_long)))
 varcomp[,c(1,4)]
 ```
 
