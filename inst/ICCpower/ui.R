@@ -14,40 +14,49 @@ ui <- navbarPage(
     theme = shinytheme("cerulean"),
     collapsible = TRUE,
     "ICC power      ",
-    # tabPanel("Welcome"
-    #       ),
-    tabPanel("Resutls of simulation study",
+    tabPanel("Home"
+           ),
+
+    tabPanel("Results of simulation study",
              sidebarLayout(
                  # MSE ratio's paper
                  sidebarPanel(
-                     #shinyjs::useShinyjs(),
+                     shinyjs::useShinyjs(),
                      tags$h2("Study Design"),
-                     tags$p("Select study design options"),
+                     tags$p("Below you can select one of the conditions to compare the simulation results for. If you choose 'none' you can select the setting for each of the four conditions."),
+
+                     radioButtons(
+                         "compare",
+                         label = "Condition to compare",
+                         choices = c("methods","correlation","variance", "deviation", "none"),
+                         inline = TRUE
+                     ),
+                     br(),
+                     tags$h3("Fixed conditions:"),
+                    div(id = "methods_buttons",
                      radioButtons(
                          "method",
                          label = "Type of ICC",
                          choices = c("oneway", "agreement", "consistency")
-                     ),
-                     radioButtons(
+                     ))%>% shinyjs::hidden(),
+                    div(id = "correlation_buttons",
+                        radioButtons(
                          "correlation",
                          label = "Expected correlation between raters",
                          choices = c(0.6, 0.7, 0.8),
                          selected = 0.7
-                     ),
-                     radioButtons("variance",
+                     )) %>% shinyjs::hidden(),
+                     div(id = "variance_buttons",
+                         radioButtons("variance",
                                   label = "Expected variance in scores",
-                                  choices = c(1, 10, 100)),
-                     radioButtons("systdif",
-                                  label = "0, 1 or 2 raters with systematic differences",
-                                  choices = c(0, 1, 2)),
-                     #              div(id = "main_start0",
-                     #     textOutput("agemos")
-                     # )%>% shinyjs::hidden(),
-                     # #tags$br(),
-                     #actionButton("start", "Start"),
-                     #tags$br(),
-                     #tags$br()
-                     width = 3
+                                  choices = c(1, 10, 100)
+                        )) %>% shinyjs::hidden(),
+                    div(id = "systdif_buttons",
+                         radioButtons("systdif",
+                               label = "0, 1 or 2 raters with systematic differences",
+                                  choices = c(0, 1, 2)
+                        )) %>% shinyjs::hidden(),
+                   width = 3
                  ),
 
                  mainPanel(
@@ -55,15 +64,15 @@ ui <- navbarPage(
                      fluidRow(box(
                          width = 12,
                          h1("Visualisation of simulation results"),
-                         p(
-                             "The input parameter can be selected from the left-hand panel. For simulations results shown below, the following input paramers are selected:"
-                         ),
-                         textOutput("variableselection")
+                    #    # p(
+                          #   "The input parameter can be selected from the left-hand panel. For simulations results shown below, the following input paramers are selected:"
+                        # ),
+                        # textOutput("variableselection")
                      )),
                      fluidRow(
                          width = 12,
                          box(width = 12,
-                             h1("Results for ICC estimations"),
+                             h2("Results for ICC estimations"),
                              p("")),
                          tabBox(
                              width = 10,
@@ -78,7 +87,7 @@ ui <- navbarPage(
                      fluidRow(
                          width = 12,
                          box(width = 12,
-                             h1("Results for SEM estimations"),
+                             h2("Results for SEM estimations"),
                              p("")),
                          tabBox(
                              width = 10,
@@ -99,7 +108,7 @@ ui <- navbarPage(
                  )
              )),
     tabPanel(
-        "Design choice assistant",
+        "Choice assistant",
         p(
             "On this page add the MSE ratio's to estimate the effect of increasing rater's on sample size / precision etc."
         ),
