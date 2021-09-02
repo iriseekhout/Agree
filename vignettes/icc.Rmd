@@ -85,7 +85,7 @@ The ICC type oneway is the variance between the subjects ($\sigma^2_j$) divided 
 $ICC_{oneway} = \frac{\sigma^2_j}{\sigma^2_j + \sigma^2_{\epsilon}}$
 
 
-The ICC oneway assumes that each subject is rated by a different set of raters, that are randomly selected from a larger population of judges (@shrout1979). The `icc_oneway()` uses the `icc_model()` function to compute the variances. This is a `lmer` model with  random slope for the subjects as well as the raters. The rater variance is not used for the ICC oneway and is subtracted from the sum of subject variance over the raters, which is then averaged: $\sigma^{2}_{j*} = \frac{ k\sigma^2_j - \sigma^2_r}{k}$ The error variance is computed as the sum of the residual variance and the rater variance from the `icc_model`: $\sigma^2_{\epsilon*} = \sigma^2_r + \sigma^2_\epsilon$ Accordingly, the rater variance is part of the error variance. 
+The ICC oneway assumes that each subject is rated by a different set of raters, that are randomly selected from a larger population of judges (@shrout1979). The `icc_oneway()` uses the `icc_model()` function to compute the variances. This is a `lmer` model with  random slope for the subjects as well as the raters. The rater variance is not separately used for the ICC oneway and is subtracted from the sum of subject variance over the raters, which is then averaged: $\sigma^{2}_{j*} = \frac{ k\sigma^2_j - \sigma^2_r}{k}$ The error variance is computed as the sum of the residual variance and the rater variance from the `icc_model`: $\sigma^2_{\epsilon*} = \sigma^2_r + \sigma^2_\epsilon$ Accordingly, the rater variance is part of the error variance. 
 
 
 The standard error of measurement ($sem$) is the square root of this error variance (i.e. $sem = \sigma^2_{\epsilon*}$). The confidence intervals are computed with the exact F method. $F = \frac{k  \sigma^2_{j*} + \sigma^2_{\epsilon*}}{\sigma^2_{\epsilon*}}$, with $df1 = n - 1$ and $df2 = n  (k - 1)$ (@shrout1979).
@@ -93,11 +93,11 @@ The standard error of measurement ($sem$) is the square root of this error varia
 
 ```{r}
 # ICC oneway 
-icc(breast_scores, method = "oneway")
+icc(breast_long, format = "long", method = "oneway")
 
 
 # ICC oneway with variance components
-icc(breast_scores, method = "oneway", var = TRUE)
+icc(breast_long, format = "long", method = "oneway", var = TRUE)
 ```
 
 
@@ -107,33 +107,32 @@ The icc type agreement is the variance between the subjects ($\sigma^2_j$) divid
 
 $ICC_{agreement} = \frac{\sigma^2_j}{\sigma^2_j + \sigma^2_k + \sigma^2_{\epsilon}}$
 
-The ICC for agreement generalizes to other raters within a population (@shrout1979). The `icc_model()` function is used to compute the variances. This is a `lmer` model with a random slope for the subjects as well as for the raters. The $sem$ is the square root of the sum of the rater variance and the error variance (i.e. $sem = \sqrt{\sigma^2_r + \sigma^2_\epsilon}$). The confidence intervals are approximated to account for the three independent variance components, as defined by @satter1946 & @shrout1979.
+The ICC for agreement generalizes to other raters within a population (@shrout1979). All subjects are rated by the same set of raters, and the rater variance is taken into account in the calculation of the ICC. The variance components are computed with the `icc_model()` function. This is a `lmer` model with a random slope for the subjects and for the raters. The $sem$ is the square root of the sum of the rater variance and the error variance (i.e. $sem = \sqrt{\sigma^2_r + \sigma^2_\epsilon}$). The confidence intervals are approximated to account for the three independent variance components, as defined by @satter1946 & @shrout1979.
 
 ```{r}
 # ICC agreement 
-icc(breast_scores, method = "agreement")
+icc(breast_long, format = "long", method = "agreement")
 
 
 # ICC oneway with variance components
-icc(breast_scores, method = "agreement", var = TRUE)
+icc(breast_long, format = "long", method = "agreement", var = TRUE)
 ```
 
 ### ICC consistency
 
-The ICC type consistency is the variance between the subjects ($\sigma^2_j$) divided by the sum of the subject variance ($\sigma^2_j$) and the residual variance ($\sigma^2_\epsilon$). The subject variance and error variance are *adjusted* for the rater variance, but the rater variance is not used to calculate the ICC. The $ICC_{consistency}$ is computed as follows:
+The ICC type consistency is the variance between the subjects ($\sigma^2_j$) divided by the sum of the subject variance ($\sigma^2_j$) and the residual variance ($\sigma^2_\epsilon$). The rater variance is separated from the subject variance and error variance, but the rater variance is not used to calculate the ICC. The rater variance can therefore also be considered as a fixed effect. The $ICC_{consistency}$ is computed as follows:
 
 $ICC_{consistency} = \frac{\sigma^2_j}{\sigma^2_j + \sigma^2_{\epsilon}}$
 
-
-The ICC for consistency generalizes only to the fixed set of raters in the data (@shrout1979). The `icc_model()` function is used to compute the variances. This is a `lmer` model with a random slope for the subjects as well as for the raters. The sem is the square root of the error variance. The confidence are computed with the exact F method. $F = \frac{(k  \sigma^2_j + \sigma^2_\epsilon)}{\sigma^2_\epsilon}$, with $df1 = n - 1$ and $df2 = (n - 1)  (k - 1)$ (@shrout1979).
+The ICC for consistency generalizes only to the set of raters in the data (@shrout1979). The `icc_model()` function is used to compute the variances. This is a `lmer` model with a random slope for the subjects as well as for the raters. The sem is the square root of the error variance, ignoring the variance between raters. The confidence are computed with the exact F method. $F = \frac{(k  \sigma^2_j + \sigma^2_\epsilon)}{\sigma^2_\epsilon}$, with $df1 = n - 1$ and $df2 = (n - 1)  (k - 1)$ (@shrout1979).
 
 ```{r}
 # ICC consistency 
-icc(breast_scores, method = "consistency")
+icc(breast_long, format = "long", method = "consistency")
 
 
 # ICC consistency with variance components
-icc(breast_scores, method = "consistency", var = TRUE)
+icc(breast_long, format = "long", method = "consistency", var = TRUE)
 
 ```
 
@@ -145,15 +144,17 @@ The differences in computations between the ICC methods can quickly be seen in t
 
 ```{r}
 # ICC for all methods
-icc(breast_scores, var = TRUE)
+icc(breast_long, format = "long", var = TRUE)
 
 ```
 
 When we estimate the ICC for the surgeons only, we can see that the variance at the rater level is decreased. This effect is directly shown in the ICC.
 
+In the icc we can also use the data in wide format and use the `cols` option to define the rater columns that we want to use. 
+
 ```{r}
 # ICC for all methods
-icc(breast_scores,cols = c("PCH1_score", "PCH2_score", "PCH3_score", "PCH4_score", "PCH5_score"), var = TRUE)
+icc(breast_scores, format = "wide", cols = c("PCH1_score", "PCH2_score", "PCH3_score", "PCH4_score", "PCH5_score"), var = TRUE)
 
 ```
 
@@ -161,7 +162,7 @@ When we estimate the ICC for the mammography nurses only, we see that the varian
 
 ```{r}
 # ICC for all methods
-icc(breast_scores,cols = c("Mam1_score", "Mam2_score", "Mam3_score"), var = TRUE)
+icc(breast_scores, format = "wide", cols = c("Mam1_score", "Mam2_score", "Mam3_score"), var = TRUE)
 
 ```
 
