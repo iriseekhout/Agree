@@ -14,10 +14,14 @@ ui <- navbarPage(
     theme = shinytheme("cerulean"),
     collapsible = TRUE,
     "ICC power      ",
-    tabPanel("Home"
+    tabPanel("Home",
+             tags$iframe(src = "./home.html",
+                         width = "100%",
+                         frameborder = 0, scrolling = "auto", style = "height: 100vh;"
+             )
            ),
 
-    tabPanel("Results of simulation study",
+    tabPanel("Study Results",
              sidebarLayout(
                  # MSE ratio's paper
                  sidebarPanel(
@@ -109,11 +113,7 @@ ui <- navbarPage(
              )),
     tabPanel(
         "Choice assistant",
-        p(
-            "On this page add the MSE ratio's to estimate the effect of increasing rater's on sample size / precision etc."
-        ),
-
-        sidebarLayout(
+       sidebarLayout(
             # MSE ratio's paper
             sidebarPanel(
                 tags$h2("Study Design"),
@@ -125,7 +125,7 @@ ui <- navbarPage(
                 radioButtons(
                     "power",
                     label = "Calculate power parameters by",
-                    choices = c("MSE ratio", "CI lower", "CI width"),
+                    choices = c("CI width", "CI lower", "MSE ratio"),
                     selected = "0",
                     inline = TRUE
                 ),
@@ -267,6 +267,7 @@ ui <- navbarPage(
                             "method_iccrg",
                             label = "Type of ICC",
                             choices = c("oneway", "agreement", "consistency"),
+                            selected = "agreement",
                             inline = TRUE
                         ),
                         checkboxGroupInput(
@@ -315,20 +316,19 @@ ui <- navbarPage(
             ),
             # power outputs ----
             mainPanel(
+                conditionalPanel(
+                    condition = "output.startpage",
                 h2("Power estimations"),
                 div(
                     p("On this page power calculations can be performed using three different strategies."
                     ),
                     br(),
-                    strong("MSE ratio: "),
-                    "the MSE ratio procedure uses the simulation study to estimate to what extend a current reference design needs to be updated to achieve a similar precision as a goal design.",
+                    strong("MSE ratio: "), "the MSE ratio procedure uses the simulation study to estimate to what extend a current reference design needs to be updated to achieve a similar precision as a goal design.",
                     br(),
-                    strong("CI lower: "),
-                    "the CI lower procedure uses a formula presented in Zou (2011) to estimate the sample size required given the icc, lower limit of the icc and the number of raters. With this method it is possible to give a range of rater numbers in order to visualise the required sample size for different rater conditions."
-                ), em("Note that this method was developed for the ICC for consistency."),
+                    strong("CI lower: "), "the CI lower procedure uses a formula presented in Zou (2011) to estimate the sample size required given the icc, lower limit of the icc and the number of raters. With this method it is possible to give a range of rater numbers in order to visualise the required sample size for different rater conditions."), em("Note that this method was developed for the ICC for consistency."),
                 br(),
-                strong("CI width:"),
-                "the CI width procedure also uses teh simulations study. The specified width of the confidence interval is used to determine what conditions of raters and sample size can achieve that CI width under the referenced design conditions.",
+                strong("CI width:"), "the CI width procedure also uses teh simulations study. The specified width of the confidence interval is used to determine what conditions of raters and sample size can achieve that CI width under the referenced design conditions."
+                ),
                 conditionalPanel(
                     condition = "output.powermse",
                     fluidRow(
@@ -340,8 +340,7 @@ ui <- navbarPage(
                         p( "The MSE ratio relates directly to the sample size. The Mean squared error is a combination of the squared standard error and the squared bias. In the situation of virtually no bias, the square root of the MSE equals the standard error. The standard error decreases by the square root of the sample size. Accordingly, the MSE is directly related to the sample size; the MSE decreases by the sample size."
                         ),
                         h3("Simulation results"),
-                        p(
-                            "The simulation results can be used to compare different study design scenario's. By computing the ratio of the MSE in two different scenarios, let's say a reference and a goal scenario, the ratio indicates the required ratio difference in sample for the scenario's to achieve equal precision."
+                        p( "The simulation results can be used to compare different study design scenario's. By computing the ratio of the MSE in two different scenarios, let's say a reference and a goal scenario, the ratio indicates the required ratio difference in sample for the scenario's to achieve equal precision."
                         ),
                         ##hier dan nog uitleg toevoegen over hoe de MSE ratio geinterpreteerd moet worden. Dit moet helemaal geleid worden met de input parameters.
                         h3("Interpreting MSE ratio"),
@@ -351,7 +350,7 @@ ui <- navbarPage(
                 conditionalPanel(condition = "output.powerci",
                                  fluidRow(
                                      h2("Power by Confidence interval width"),
-                                     p("The plot below shows the conditions for sample size and rater combinations that satisfy the confidence interval width requirement, given the scenario specified."),
+                                     p("The plot below shows the sample size and rater combinations that satisfy the confidence interval width requirement, given the scenario specified."),
                                      #plotOutput("widthcond"),
                                      plotlyOutput("widthmap")
                                  )),
@@ -364,13 +363,13 @@ ui <- navbarPage(
         )
     ),
 
-    tabPanel(
-        "Background",
-        p(
-            "On this page add background info on calculations, links to package and documentation."
-        )
-    ),
-    tabPanel("About",
+    navbarMenu("About",
+               tabPanel("Background",
+                    p(
+                        "On this page add background info on calculations, links to package and documentation."
+                        )
+                ),
+            tabPanel("Authors",
              fluidRow(box(
                  #tags$h1("About"),
                  width = 12,
@@ -391,6 +390,7 @@ ui <- navbarPage(
                      )
                  )
              )))
+    )
     #     #simulation page ----
     # tabPanel("Simulate",
     #          sidebarLayout(

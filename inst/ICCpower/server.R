@@ -561,7 +561,13 @@ shinyServer(function(input, output, session) {
 
 
     # scenario 3: icc agreement is about 0.7, currently we have 30 patients rated by 4 raters, how close are we to the 3 raters; n = 50 situation - will we need more raters or patients?
-    output$powercilow <- reactive({
+  output$startpage <- reactive({
+      FALSE
+      if(length(input$power) == 0) TRUE
+  })
+  outputOptions(output, "startpage", suspendWhenHidden = FALSE)
+
+  output$powercilow <- reactive({
         FALSE
         if(length(input$power) > 0 & input$power == "CI lower") TRUE
     })
@@ -664,7 +670,7 @@ shinyServer(function(input, output, session) {
     p <- heatmaply(mat,
                    dendrogram = "none",
                    xlab = "Raters", ylab = "Sample size",
-                   main = "Width for Confidence interval of ICC for sample size and rater combinations",
+                   main = "Width of Confidence interval for ICC",
                    scale = "none",
                    margins = c(60,100,40,20),
                    grid_color = "white",

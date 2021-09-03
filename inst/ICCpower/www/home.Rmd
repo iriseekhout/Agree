@@ -1,0 +1,36 @@
+---
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Reliability
+
+This application is an extension for the paper "" by Wieneke Mokkink, Iris Eekhout and Henrica de Vet. 
+
+## Simulation Results
+
+The results for the simulation study performed for the paper, are presented on the "Results" page. For all different conditions investigated, the results in terms of bias and precision for ICC and SEM can be reviewed. 
+
+
+
+## Design choice assistant
+
+
+On the "Choice assistant" page, power calculations can be performed using three different strategies. 
+
+### MSE ratio
+
+The MSE ratio procedure uses the simulation study to estimate to what extend a current reference design needs to be updated to achieve a similar precision as a goal design.
+
+### CI lower
+
+The CI lower procedure uses a formula presented in Zou (2011) to estimate the sample size required given the icc, lower limit of the icc and the number of raters. With this method it is possible to give a range of rater numbers in order to visualise the required sample size for different rater conditions. *Note that this method was developed for the ICC oneway.*
+
+### CI width:
+
+The CI width procedure also uses teh simulations study. The specified width of the confidence interval is used to determine what conditions of raters and sample size can achieve that CI width under the referenced design conditions.
+
+
