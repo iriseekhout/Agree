@@ -616,11 +616,11 @@ shinyServer(function(input, output, session) {
 
 
         scenario <- out %>%
-            filter(method %in% !!input$method_iccrg &
-                    deviation %in% !!input$systdif_iccrg &
-                    cor %in% !!input$correlation_iccrg &
-                    variance %in% !!input$variance_iccrg &
-                    ciwidthm <= !!input$ciwidth)
+            filter(method %in% !!input$method_iccrgw &
+                    deviation %in% !!input$systdif_iccrgw &
+                    cor %in% !!input$correlation_iccrgw &
+                    variance %in% !!input$variance_iccrgw &
+                    ciwidthm <= !!input$ciwidthw)
         scenario
 
     })
@@ -640,10 +640,10 @@ shinyServer(function(input, output, session) {
         mat <- Agree::simoutput %>%
             filter(
 
-                method %in% !!input$method_iccrg &
-                    deviation %in% !!input$systdif_iccrg &
-                    cor %in% !!input$correlation_iccrg &
-                    variance %in% !!input$variance_iccrg) %>%
+                method %in% !!input$method_iccrgw &
+                    deviation %in% !!input$systdif_iccrgw &
+                    cor %in% !!input$correlation_iccrgw &
+                    variance %in% !!input$variance_iccrgw) %>%
             # method %in% "agreement" &
             #     deviation %in% 0 &
             #     cor %in% 0.7 &
@@ -655,7 +655,7 @@ shinyServer(function(input, output, session) {
                 lower = cent - (1.96 * SE),
                 upper = cent + (1.96 * SE),
                 ciwidthm = upper - lower,
-                ciwidthm = ifelse(ciwidthm >!!input$ciwidth, NA, ciwidthm)
+                ciwidthm = ifelse(ciwidthm >!!input$ciwidthw, NA, ciwidthm)
             ) %>% dplyr::select(n, k, ciwidthm) %>%
             group_by(n, k) %>%
             summarise(ciwidthm = mean(ciwidthm, na.rm = TRUE),
@@ -688,58 +688,30 @@ shinyServer(function(input, output, session) {
     })
 
     ### MSE ratio --------------
-    output$designk <- reactive({
-        FALSE
-        if(length(input$design) > 0 & input$design == "raters") TRUE
-    })
-    outputOptions(output, "designk", suspendWhenHidden = FALSE)
+      observe({ #all output is in this observe!
+      if(input$design == "raters"){
+       show("designk")
+       hide("designn")
 
-    output$designn <- reactive({
-        FALSE
-        if(length(input$design) > 0 & input$design == "sample size") TRUE
-    })
-    outputOptions(output, "designn", suspendWhenHidden = FALSE)
+       k_iccr <- reactive(input$k_iccr)
+       k_iccg <- reactive(input$k_iccg)
+       n_iccr <- reactive(input$n_iccrg)
+       n_iccg <- reactive(input$n_iccrg)
+
+      }
+      if(input$design == "sample size"){
+        show("designn")
+        hide("designk")
+
+        k_iccr <- reactive(input$k_iccrg)
+        k_iccg <- reactive(input$k_iccrg)
+        n_iccr <- reactive(input$n_iccr)
+        n_iccg <- reactive(input$n_iccg)
+
+      }
 
 
-    k_iccr <- reactive({
-        if(input$design != "raters"){
-            k_icc <- input$k_iccrg
-        }
-        if(input$design == "raters"){
-            k_icc <- input$k_iccr
-        }
-        k_icc
-    })
-    k_iccg <- reactive({
-        if(input$design != "raters"){
-            k_icc <- input$k_iccrg
-        }
-        if(input$design == "raters"){
-            k_icc <- input$k_iccg
-        }
-        k_icc
-    })
-    n_iccr <- reactive({
-        if(input$design != "sample size"){
-            n_icc <- input$n_iccrg
-        }
-        if(input$design == "sample size"){
-            n_icc <- input$n_iccr
-        }
-        n_icc
-    })
-    n_iccg <- reactive({
-        if(input$design != "sample size"){
-            n_icc <- input$n_iccrg
-        }
-        if(input$design == "sample size"){
-            n_icc <- input$n_iccg
-        }
-        n_icc
-    })
-
-    scenario_icc <- reactive({
-         ref <- Agree::simoutput %>%
+       ref <- Agree::simoutput %>%
             filter(method %in% !!input$method_iccrg &
                        k %in% !!k_iccr() &
                        n %in% !!n_iccr() &
@@ -778,28 +750,39 @@ shinyServer(function(input, output, session) {
                    scenario = factor(scenario, levels = c("reference", "goal")),
                    mseratio = ref$mse/goal$mse)
 
-        scenario
-    })
+        scenario_icc <- scenario
+    #})
+        output$variableselection2 <- renderText({
+          paste(
+          paste("Input ICC:", input$correlation_iccrg),
+          paste("Variance:", input$variance_iccrg),
+          paste("Method:", input$method_iccrg),
+          paste("Raters with deviation:", input$systdif_iccrg)
+          )
+        })
 
     output$mseratio_icc <- renderPlot({
-    ggplot(scenario_icc(), aes(x = scenario, y = icc))+
+    ggplot(scenario_icc, aes(x = scenario, y = icc))+
         # geom_point() +
-        geom_line(data = scenario_icc(), aes(x = scenario, y = lower, group = 1), lty = "dashed") +
-        geom_line(data = scenario_icc(), aes(x = scenario, y = upper, group = 1), lty = "dashed") +
+        geom_line(data = scenario_icc, aes(x = scenario, y = lower, group = 1), lty = "dashed") +
+        geom_line(data = scenario_icc, aes(x = scenario, y = upper, group = 1), lty = "dashed") +
         geom_errorbar(aes( x = scenario, ymin = lower, ymax = upper), width = 0.2)+
         ylim(-0.5, 0.5) + ylab("Confidence interval for ICC") +
-        annotate(geom= "text", label= paste("MSE ratio = ", round(scenario_icc()$mseratio[1],2)), x = 2.2, y = 0.45)
+        annotate(geom= "text", label= paste("MSE ratio = ", round(scenario_icc$mseratio[1],2)), x = 2.2, y = 0.45)
     })
 
     output$MSEratio <- renderText({
         if(input$design == "sample size"){
-           statement <-  paste0("The MSE ratio is the required increase in number of raters to achieve the precision for the design with a sample size of ", input$n_iccg, " (indicated as goal), with an actual sample size of ", input$n_iccr, " (reference). Accordingly, the number of raters (", input$k_iccrg, ") needs to be multiplied by ", round(scenario_icc()$mseratio[1],2), ", and change to ",round(as.numeric(input$k_iccrg) * scenario_icc()$mseratio[1]), " to have a precision close to the precision with a sample size of ", input$n_iccg)
+           statement <-  paste0("The MSE ratio is the required increase in number of raters to achieve the precision for the design with a sample size of ", input$n_iccg, " (indicated as goal), with an actual sample size of ", input$n_iccr, " (reference). Accordingly, the number of raters (", input$k_iccrg, ") needs to be multiplied by ", round(scenario_icc$mseratio[1],2), ", and change to ",round(as.numeric(input$k_iccrg) * scenario_icc$mseratio[1]), " to have a precision close to the precision with a sample size of ", input$n_iccg)
         }
         if(input$design == "raters"){
-           statement <-  paste0("The MSE ratio is the required sample size increase to achieve the precision for the design with ", input$k_iccg, " raters (indicated as goal), with only ", input$k_iccr, " raters. Accordingly, the sample size of ", input$n_iccrg, " needs to be multiplied by ", round(scenario_icc()$mseratio[1],2), " and change to ", round(as.numeric(input$n_iccrg) * scenario_icc()$mseratio[1]), " to have a precision close to the precision with ", input$k_iccg, " raters.")
+           statement <-  paste0("The MSE ratio is the required sample size increase to achieve the precision for the design with ", input$k_iccg, " raters (indicated as goal), with only ", input$k_iccr, " raters. Accordingly, the sample size of ", input$n_iccrg, " needs to be multiplied by ", round(scenario_icc$mseratio[1],2), " and change to ", round(as.numeric(input$n_iccrg) * scenario_icc$mseratio[1]), " to have a precision close to the precision with ", input$k_iccg, " raters.")
         }
         statement
     })
+    })
+
+
 
     # # simulation page ----
     # nseq <- reactive({
