@@ -6,9 +6,9 @@ goal <- simoutput %>% filter(method == "agreement" & k == 3 & n == 50 & deviatio
 ref/goal #2.5 times r raters; 8 raters.
 
 #scenario 2: correlation is about 0.8, Currently we have 2 raters for 50 patients,; 3 raters are recommended, how many additional raters do I need?
-ref <- simoutput %>% filter(method == "oneway" & k == 2 & n == 50 & deviation == 1 & cor == 0.8) %>% summarise(mse= mean(mse_icc)) %>% unlist()
+ref <- simoutput %>% filter(method == "oneway" & k == 4 & n == 10 & deviation == 2 & cor == 0.6 & variance == 1) %>% summarise(mse= mean(mse_icc)) %>% unlist()
 
-goal <- simoutput %>% filter(method == "oneway" & k == 3 & n == 50 & deviation == 1 & cor == 0.8) %>% summarise(mse= mean(mse_icc)) %>% unlist()
+goal <- simoutput %>% filter(method == "oneway" & k == 4 & n == 20 & deviation == 2 & cor == 0.6 & variance == 1) %>% summarise(mse= mean(mse_icc)) %>% unlist()
 
 ref/goal #2 times n patients; 100 patients.
 
@@ -37,12 +37,14 @@ goal <- simoutput %>% filter(method == "agreement" & k == 3 & n == 50 & deviatio
                                                                                                                  ciwidth = mean(width_icc)) %>%
   mutate(scenario = "goal")
 
-scenario <- bind_rows(ref, goal) %>%
-  mutate(SE = sqrt(mse),
+scenario <- bind_rows(data.frame(scenario = "reference", mse = ref),
+                      data.frame(scenario = "goal", mse = goal)) %>%
+  mutate(icc = 0,
+         SE = sqrt(mse),
          lower = icc - (1.96 * SE),
          upper = icc + (1.96 * SE),
          scenario = factor(scenario, levels = c("reference", "goal")),
-         mseratio = ref$mse/goal$mse)
+         mseratio = ref/goal)
 
 ggplot(scenario, aes(x = scenario, y = icc))+
  # geom_point() +
