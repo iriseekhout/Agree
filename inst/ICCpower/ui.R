@@ -141,10 +141,24 @@ ui <- navbarPage(
                     ),
                     sliderInput(
                         "cilower",
-                        label = "Lower end of the 95% Confidence interval for ICC (needs to be lower than expected ICC)",
+                        label = "Lower end of the Confidence interval for ICC (needs to be lower than expected ICC)",
                         min = 0.1,
                         max = 1,
                         value = 0.55
+                    ),
+                    sliderInput(
+                        "alphalevel",
+                        label = "Confidence interval proportion",
+                        min = 0.90,
+                        max = 0.99,
+                        value = 0.95
+                    ),
+                    sliderInput(
+                        "betapower",
+                        label = "Power, also called assurance probability.",
+                        min = 0.80,
+                        max = 0.99,
+                        value = 0.80
                     ),
                     sliderInput(
                         "raterrange",
@@ -295,14 +309,14 @@ ui <- navbarPage(
                     br(),
                     strong("MSE ratio: "), "the MSE ratio procedure uses the simulation study to estimate to what extend a current reference design needs to be updated to achieve a similar precision as a goal design.",
                     br(),
-                    strong("CI lower: "), "the CI lower procedure uses a formula presented in Zou (2011) to estimate the sample size required given the icc, lower limit of the icc and the number of raters. With this method it is possible to give a range of rater numbers in order to visualise the required sample size for different rater conditions."), em("Note that this method was developed for the ICC for consistency."),
+                    strong("CI lower: "), "the CI lower procedure uses a formula presented in Zou (2011) to estimate the sample size required given the icc, lower limit of the icc and the number of raters. With this method it is possible to give a range of rater numbers in order to visualise the required sample size for different rater conditions."), em("Note that this method was developed for the ICC oneway and the estimated sample size is therefore conservative when applied for ICC agreement or consistency."),
                 br(),
                 strong("CI width:"), "the CI width procedure also uses teh simulations study. The specified width of the confidence interval is used to determine what conditions of raters and sample size can achieve that CI width under the referenced design conditions."
             ),
             conditionalPanel(
                 condition = "output.powermse",
                 fluidRow(
-              #      textOutput("variableselection2"),#for testing
+                    textOutput("variableselection2"),#for testing
                     h3("Power by MSE"),
                     p("The figure below shows the confidence interval computed via the mean squared error for the reference situation and the goal scenario."),
                     plotOutput("mseratio_icc")),
@@ -327,7 +341,7 @@ ui <- navbarPage(
                              )),
             conditionalPanel(condition = "output.powercilow",
                              h2("Power by lower end of Confidence Interval"),
-                             p("The plot below shows the required sample size for the number of raters on the x-axis that are needed for the scenario with a given ICC to obtain a confidence interval with a lower end as indicated."),
+                             p("The plot below shows the required sample size for the number of raters on the x-axis that are needed for the scenario with a given ICC to obtain a confidence interval with a lower end as indicated."), em("Note that this method was developed for the ICC oneway and the estimated sample size is therefore conservative when applied for ICC agreement or consistency."),
                              fluidRow(plotlyOutput("n_icc_plot"))),
 
         )

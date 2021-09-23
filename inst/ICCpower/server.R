@@ -589,9 +589,12 @@ shinyServer(function(input, output, session) {
     ### CI lower ----
 
     output$n_icc_plot <- renderPlotly({
-        krange <- input$raterrange[1]:input$raterrange[2]
+      if(input$icc_e < input$cilower){stop("The lower limit of the Confidence Interval cannot exceed the expected ICC.")}
 
-        n <- n_icc(k = krange, icc = input$icc_e, icc_lower = input$cilower)
+      krange <- input$raterrange[1]:input$raterrange[2]
+
+
+        n <- n_icc(k = krange, icc = input$icc_e, icc_lower = input$cilower, alpha = (1-input$alphalevel), beta = input$betapower)
 
         dat <- data.frame(raters = krange, n = n)
 
@@ -757,7 +760,14 @@ shinyServer(function(input, output, session) {
           paste("Input ICC:", input$correlation_iccrg),
           paste("Variance:", input$variance_iccrg),
           paste("Method:", input$method_iccrg),
-          paste("Raters with deviation:", input$systdif_iccrg)
+          paste("Raters with deviation:", input$systdif_iccrg),
+          paste("n_ref: ", n_iccr()),
+          paste("n_goal: ", n_iccg()),
+          paste("k_ref: ", k_iccr()),
+          paste("k_goal: ", k_iccg()),
+          paste("mse_ref: ", ref$mse),
+          paste("mse_goal: ", goal$mse)
+
           )
         })
 
@@ -767,7 +777,8 @@ shinyServer(function(input, output, session) {
         geom_line(data = scenario_icc, aes(x = scenario, y = lower, group = 1), lty = "dashed") +
         geom_line(data = scenario_icc, aes(x = scenario, y = upper, group = 1), lty = "dashed") +
         geom_errorbar(aes( x = scenario, ymin = lower, ymax = upper), width = 0.2)+
-        ylim(-0.5, 0.5) + ylab("Confidence interval for ICC") +
+        ylim(-0.6, 0.6) +
+        ylab("Confidence interval for ICC") +
         annotate(geom= "text", label= paste("MSE ratio = ", round(scenario_icc$mseratio[1],2)), x = 2.2, y = 0.45)
     })
 

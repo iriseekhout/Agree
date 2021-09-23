@@ -27,7 +27,7 @@ The MSE ratio procedure uses the simulation study to estimate to what extend a c
 
 ### CI lower
 
-The CI lower procedure uses a formula presented in Zou (2011) to estimate the sample size required given the icc, lower limit of the icc and the number of raters. With this method it is possible to give a range of rater numbers in order to visualise the required sample size for different rater conditions. *Note that this method was developed for the ICC oneway.*
+The CI lower procedure uses a formula presented in Zou (2011) to estimate the sample size required given the icc, lower limit of the icc and the number of raters. With this method it is possible to give a range of rater numbers in order to visualise the required sample size for different rater conditions. *Note that this method was developed for the ICC oneway and the estimated sample size is therefore conservative when applied for ICC agreement or consistency.*
 
 ### CI width:
 
