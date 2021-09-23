@@ -1,7 +1,7 @@
 ---
 title: "icc"
 #output: rmarkdown::html_vignette
-author: "Iris Eekhout"
+author: "Iris Eekhout & Wieneke Mokkink"
 date: "`r Sys.Date()`"
 output: pdf_document
 bibliography: [references.bib]
@@ -21,7 +21,7 @@ library(dplyr)
 library(tidyr)
 ```
 
-This Document describes the computational background and the use of the `icc()` function from the `Agree` package.
+This Document describes the computational background and the use of the `icc()` function from the `Agree` package. We developed the `icc()` functions for this package in connection with a simulation study about sample size requirements for studies on reliability and measurement error @mokkink1 and a methodological paper about how to design and conduct a study on reliability and measurement error @mokkink2. 
 
 ```{r setup}
 library(Agree)
@@ -35,7 +35,8 @@ The intra-class agreement is usually obtained for continuous ratings. As an exam
 ```{r}
 breast_scores <- 
 Agree::breast %>%
-  dplyr::select(Patient_score, PCH1_score, PCH2_score, PCH3_score, PCH4_score, PCH5_score, Mam1_score, Mam2_score, Mam3_score)
+  dplyr::select(Patient_score, PCH1_score, PCH2_score, PCH3_score, PCH4_score, 
+                PCH5_score, Mam1_score, Mam2_score, Mam3_score)
 
 head(breast_scores)
 
@@ -57,7 +58,7 @@ breast_long
 
 The variances that are used to compute the `icc` are obtained from a linear mixed model. This model is estimated with the `lmer()` function from the `lme4` package. The model is defined as $Y_{ijr} = \beta_0 + b_{0j} + b_{0r} + \epsilon_{ijr}$, where $b_{0j}$ is the random intercept at the subject level and $b_{0r}$ the random intercept at the rater/observer level. The $\epsilon_{ijr}$ is the residual error. The `r-code` for the model in `lme4` is: `lmer(score ~ (1|id) + (1|observer), data, REML = T)`
 
-This same model is used to estimate the variance components for each of three types of ICC's. Each ICC is used in a different context of a study design and has different assumptions. The following variance components can be obtained directly from the model:
+This same model is used to estimate the variance components for each of three types of ICC's: ICC oneway, ICC agreement and ICC consistency. Each ICC is used in a different context of a study design and has different assumptions. The following variance components can be obtained directly from the model:
 
 - $\sigma^2_j$: subject variance
 - $\sigma^2_r$: rater variance
@@ -85,7 +86,7 @@ The ICC type oneway is the variance between the subjects ($\sigma^2_j$) divided 
 $ICC_{oneway} = \frac{\sigma^2_j}{\sigma^2_j + \sigma^2_{\epsilon}}$
 
 
-The ICC oneway assumes that each subject is rated by a different set of raters, that are randomly selected from a larger population of judges (@shrout1979). The `icc_oneway()` uses the `icc_model()` function to compute the variances. This is a `lmer` model with  random slope for the subjects as well as the raters. The rater variance is not separately used for the ICC oneway and is subtracted from the sum of subject variance over the raters, which is then averaged: $\sigma^{2}_{j*} = \frac{ k\sigma^2_j - \sigma^2_r}{k}$ The error variance is computed as the sum of the residual variance and the rater variance from the `icc_model`: $\sigma^2_{\epsilon*} = \sigma^2_r + \sigma^2_\epsilon$ Accordingly, the rater variance is part of the error variance. 
+The ICC oneway assumes that each subject is rated by a different set of raters, that are randomly selected from a larger population of judges (@shrout1979). The `icc_oneway()` uses the `icc_model()` function to compute the variances. This is a `lmer` model with  random slope for the subjects as well as the raters. The rater variance is not separately used for the ICC oneway and is subtracted from the sum of subject variance over the raters, which is then averaged: $\sigma^{2}_{j*} = \frac{ k\sigma^2_j + \sigma^2_r}{k}$ The error variance is computed as the sum of the residual variance and the rater variance from the `icc_model`: $\sigma^2_{\epsilon*} = \sigma^2_r + \sigma^2_\epsilon$ Accordingly, the rater variance is part of the error variance. 
 
 
 The standard error of measurement ($sem$) is the square root of this error variance (i.e. $sem = \sigma^2_{\epsilon*}$). The confidence intervals are computed with the exact F method. $F = \frac{k  \sigma^2_{j*} + \sigma^2_{\epsilon*}}{\sigma^2_{\epsilon*}}$, with $df1 = n - 1$ and $df2 = n  (k - 1)$ (@shrout1979).
@@ -154,7 +155,9 @@ In the icc we can also use the data in wide format and use the `cols` option to 
 
 ```{r}
 # ICC for all methods
-icc(breast_scores, format = "wide", cols = c("PCH1_score", "PCH2_score", "PCH3_score", "PCH4_score", "PCH5_score"), var = TRUE)
+icc(breast_scores, format = "wide", 
+    cols = c("PCH1_score", "PCH2_score", "PCH3_score", "PCH4_score", 
+             "PCH5_score"), var = TRUE)
 
 ```
 
