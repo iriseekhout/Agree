@@ -1,13 +1,14 @@
 #' Sample size for ICC
 #'
-#' @param beta power level, default \code{beta = 0.8}
+#' @param beta power level, default \code{beta = 0.8}, also called assurance
+#' probability.
 #' @param alpha confidence level, default \code{alpha = 0.05}
 #' @param k number of raters, default \code{k = 3}
 #' @param icc reliability coefficient
 #' @param icc_lower lower limit of the reliability coefficient icc
 #' @details Calculate the sample size for achieving a certain lower limit of the
 #' confidence interval derived by the F procedure. This method is developed for
-#' the ICC type consistency.
+#' the ICC type oneway.
 #' @references
 #' Zou, G.Y. (2012) Sample size formulas for estimating intraclass correlation
 #' coefficients with precision and assurance. Statistics in medicine, 31, 3971-3981.
