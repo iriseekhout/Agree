@@ -1,6 +1,7 @@
 Package: Agree
 Title: Agreement and reliability between multiple raters
 Version: 0.1.8
+Date: 2021-09-22
 Authors@R: person("Iris", "Eekhout", email = "iris.eekhout@tno.nl", role = c("aut", "cre"))
 Description: The agreement between multiple raters can be obained for a variable
     rated by 2 or more Likert answer categories. The confidence interval around the
