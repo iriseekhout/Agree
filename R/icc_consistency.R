@@ -54,3 +54,41 @@ icc_consistency <- function(model, alpha = 0.05){
     )
   )
 }
+
+
+icc_consistency2 <- function(data, cols = colnames(data), alpha = 0.05){
+  k <- length(cols)
+  n <- nrow(data)
+  data1 <- data.frame(data) %>%
+    mutate(id = 1:nrow(data)) %>% #add id column
+    pivot_longer(cols = cols, names_to = "rater", values_to = "score")
+  model <- lmer(score ~ (1|id) + rater , data1, REML = T)
+
+
+
+  vc <- as.data.frame(lme4::VarCorr(model))
+
+  #consistency
+  varpat_cons <- vc[1,4]
+  varerr_cons <- vc[2,4]
+  icc_c <- varpat_cons/(varpat_cons + varerr_cons)
+  sem_c <- sqrt(varerr_cons)
+  F_c <- (k * varpat_cons + varerr_cons)/varerr_cons
+  df21n <- n - 1
+  df21d <- (n - 1) * (k - 1)
+  F3L <- F_c/qf(1 - alpha/2, df21n, df21d) #or alpha/2? not dividing by 2 is shrout fleis
+  F3U <- F_c * qf(1 - alpha/2, df21d, df21n)#or alpha/2?
+  L_c <- (F3L - 1)/(F3L + k - 1)
+  U_c <- (F3U - 1)/(F3U + k - 1)
+
+  return(
+    list(
+      varj_cons = varpat_cons,
+      varerr_cons = varerr_cons,
+      icc = icc_c,
+      sem = sem_c,
+      L_icc = L_c,
+      U_icc = U_c
+    )
+  )
+}

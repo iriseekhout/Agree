@@ -58,3 +58,42 @@ icc_oneway <- function(model, alpha = 0.05){
     )
   )
 }
+
+
+icc_oneway2 <- function(data, cols = colnames(data), alpha = 0.05){
+
+  k <- length(cols)
+  n <- nrow(data)
+  data1 <- data.frame(data) %>%
+    mutate(id = 1:nrow(data)) %>% #add id column
+    pivot_longer(cols = cols, names_to = "rater", values_to = "score")
+  model <- lmer(score ~ (1|id) , data1, REML = T)
+
+
+
+  vc <- as.data.frame(lme4::VarCorr(model))
+
+  #oneway
+  varpat_oneway <- vc[1,4]
+  varerr_oneway <- vc[2,4]
+  icc_o <- varpat_oneway / (varpat_oneway + varerr_oneway)
+  sem_o <- sqrt(varerr_oneway)
+  F_o <- (k * varpat_oneway + varerr_oneway)/varerr_oneway
+  dfon <- n - 1
+  dfod <- n * (k - 1)
+  F_oL <- F_o/qf(1 - alpha/2, dfon, dfod) #or alpha/2?not dividing by 2 is shrout fleis
+  F_oU <- F_o * qf(1 - alpha/2, dfod, dfon) #or alpha/2?
+  L_o <- (F_oL - 1)/(F_oL + (k - 1))
+  U_o <- (F_oU - 1)/(F_oU + k - 1)
+
+  return(
+    list(
+      varj_oneway = varpat_oneway,
+      varerr_oneway = varerr_oneway,
+      icc = icc_o,
+      sem = sem_o,
+      L_icc = L_o,
+      U_icc = U_o
+    )
+  )
+}
