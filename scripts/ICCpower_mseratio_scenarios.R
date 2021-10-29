@@ -1,3 +1,8 @@
+#check results Wieneke with results extracted from R and later in app?
+
+library(dplyr)
+library(Agree)
+
 # MSE / app ratio scenarios.
 ref <- simoutput %>% filter(method == "agreement" & k == 3 & n == 20 & deviation == 1 & cor == 0.7) %>% summarise(mse= mean(mse_icc)) %>% unlist()
 
@@ -6,10 +11,12 @@ goal <- simoutput %>% filter(method == "agreement" & k == 3 & n == 50 & deviatio
 ref/goal #2.5 times r raters; 8 raters.
 
 #scenario 2: correlation is about 0.8, Currently we have 2 raters for 50 patients,; 3 raters are recommended, how many additional raters do I need?
-ref <- simoutput %>% filter(method == "oneway" & k == 4 & n == 10 & deviation == 2 & cor == 0.6 & variance == 1) %>% summarise(mse= mean(mse_icc)) %>% unlist()
+ref <- simoutput %>% filter(method == "oneway" & k == 5 & n == 10 & deviation == 2 & cor == 0.6 & variance == 1) %>% summarise(mse= mean(mse_icc)) %>% unlist()
 
-goal <- simoutput %>% filter(method == "oneway" & k == 4 & n == 20 & deviation == 2 & cor == 0.6 & variance == 1) %>% summarise(mse= mean(mse_icc)) %>% unlist()
+goal <- simoutput %>% filter(method == "oneway" & k == 6 & n == 10 & deviation == 2 & cor == 0.6 & variance == 1) %>% summarise(mse= mean(mse_icc)) %>% unlist()
 
+ref
+goal
 ref/goal #2 times n patients; 100 patients.
 
 

@@ -7,3 +7,5 @@
 ^data-raw$
 ^.*/.stackdump
 ^.*/.txt
+^doc$
+^Meta$
