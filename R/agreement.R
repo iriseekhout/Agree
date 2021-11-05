@@ -65,12 +65,12 @@ agreement <- function(data,
                       k = ncol(data),
                       b = 1000,
                       ...){
-  if (is.data.frame(data)) {
+  if (is.data.frame(data) | !(nrow(data) == ncol(data))) {
     table <- Agree::sumtable(data, ...)
     if(is.null(n)) n <- nrow(data)
     if(is.null(k)) k <- ncol(data)
   }
-  if (nrow(data) == ncol(data)) {
+  if (!is.data.frame(data) & nrow(data) == ncol(data)) {
     table <- data
 
     if(confint){
