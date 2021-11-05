@@ -32,7 +32,7 @@ sumtable <- function(df, ratings=NULL, levels=NULL, offdiag=NULL){
 
   ## ratings are colnames
   if(is.null(ratings)){
-    ratings=colnames(df)}
+    ratings <- colnames(df)}
   stopifnot(is.character(ratings))
 
   ## variables to factors with equalnr of levels
@@ -41,12 +41,12 @@ sumtable <- function(df, ratings=NULL, levels=NULL, offdiag=NULL){
     }
 
   if(is.null(levels)){
-    levels = df %>% purrr::map(unique) %>% unlist() %>% unique %>% sort
+    levels <- df %>% purrr::map(unique) %>% unlist() %>% unique %>% sort
   }
 
   if(is.null(offdiag)){
-    if(length(levels)==2){offdiag=FALSE}
-    if(length(levels)>3){offdiag=TRUE}
+    if(length(levels)==2){offdiag <- FALSE}
+    if(length(levels)>2){offdiag <- TRUE}
     }
 
   df <- df[ratings]
