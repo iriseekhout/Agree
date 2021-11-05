@@ -10,6 +10,7 @@
 #' @return Returns a contingency table, an object of class "table", an array of integer values.
 #' @export
 #' @importFrom utils combn
+#' @importFrom dplyr %>%
 #'
 #' @examples
 #' df <- data.frame(r1=factor(c(1,0,1,0,0,1,1,0,0,0,1,1,0,1,1)),
@@ -24,14 +25,29 @@
 #'                  r4=factor(c(1,2,1,0,3,3,1,0,3,0,2,2,0,2,1)))
 #' sumtable(df=df, ratings=c("r1", "r2", "r3", "r4"), levels=c("0","1", "2", "3"))
 sumtable <- function(df, ratings=NULL, levels=NULL, offdiag=NULL){
-  stopifnot(is.data.frame(df))
+  ## input to data.frame
+  #
+  if(!is.data.frame(df)){warning("Data are automatically transformed to a data.frame.")}
   df <- as.data.frame(df)
-  if(is.null(ratings)){ratings=colnames(df)}
+
+  ## ratings are colnames
+  if(is.null(ratings)){
+    ratings=colnames(df)}
   stopifnot(is.character(ratings))
-  stopifnot(all(purrr::map_chr(df[ratings], class)=="factor"))
-  if(is.null(levels)){levels=levels(unlist(df[,ratings[1]]))}
-  if(is.null(offdiag)){if(length(levels==2)){offdiag=FALSE}
-                     if(length(levels>3)){offdiag=TRUE}}
+
+  ## variables to factors with equalnr of levels
+  if(!all(purrr::map_chr(df[ratings], class)=="factor")){
+    warning("Variables are automatically transformed to factors.")
+    }
+
+  if(is.null(levels)){
+    levels = df %>% purrr::map(unique) %>% unlist() %>% unique %>% sort
+  }
+
+  if(is.null(offdiag)){
+    if(length(levels)==2){offdiag=FALSE}
+    if(length(levels)>3){offdiag=TRUE}
+    }
 
   df <- df[ratings]
   nraters <- length(ratings)
@@ -54,10 +70,12 @@ sumtable <- function(df, ratings=NULL, levels=NULL, offdiag=NULL){
   if(offdiag==TRUE){
   ## off diagonal means in matrix
   mat1 <-sumtable*0
-  for (i in levels){ for (j in levels){
+  for (i in 1:length(levels)){
+    for (j in 1:length(levels)){
     mat1[i,j] <- (sumtable[i,j]+sumtable[j,i])/2
     mat1[j,i] <- (sumtable[i,j]+sumtable[j,i])/2
-  }}
+    }
+    }
   sumtable <- mat1
   }
   sumtable
