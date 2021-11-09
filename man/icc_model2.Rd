@@ -4,7 +4,7 @@
 \alias{icc_model2}
 \title{ICC model}
 \usage{
-icc_model2(data, levels = c("id", "rater"))
+icc_model2(data, levels = c("id", "rater"), values = "score")
 }
 \arguments{
 \item{data}{data.frame in a long format with multiple rows per subject (id).
@@ -13,6 +13,9 @@ The data should contain a column for each of the `levels` and a column named
 
 \item{levels}{character vector with the column names of the levels that should
 be used in the data. Default is `cols = c("id", "rater")`.}
+
+\item{values}{character with name of variable with the score values,
+default = "score".}
 }
 \value{
 `lmer`model object
@@ -23,4 +26,13 @@ intercept for the id-level and a random intercept for the rater level, more
 levels can be indicated for a 3-way model.This function works from a long data
 format.
 For each ICC type, different variance components are used.
+}
+\examples{
+breast_scores <- Agree::breast \%>\%
+  dplyr::select(Patient_score, PCH1_score, PCH2_score, PCH3_score,
+  Mam1_score, Mam2_score, Mam3_score)
+data1 <- breast_scores \%>\%
+mutate(id = 1:nrow(breast_scores)) \%>\% #add id column
+pivot_longer(cols = -id, names_to = "rater", values_to = "score")
+icc_model2(data = data1)
 }

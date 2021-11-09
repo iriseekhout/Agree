@@ -31,14 +31,15 @@
 #' Rater Reliability. Psychological Bulletin, 87(2), 420-428.
 icc_agreement <- function(model, alpha = 0.05){
 
-  k <- ngrps(model)[2]
-  n <- ngrps(model)[1]
-  vc <- as.data.frame(VarCorr(model))
+  k <- ngrps(model)["level2"]
+  n <- ngrps(model)["level1"]
+  vc <- as.data.frame(lme4::VarCorr(model))[,c("grp", "vcov")]
+  rownames(vc) <- vc[,"grp"]
 
   #agreement
-  varpat_agr <- vc[1,4]
-  varobs_agr <- vc[2,4]
-  varerr_agr <- vc[3,4]
+  varpat_agr <- vc["level1","vcov"]
+  varobs_agr <- vc["level2","vcov"]
+  varerr_agr <- vc["Residual","vcov"]
   icc_a <- varpat_agr/(varpat_agr + varobs_agr + varerr_agr)
   sem_a <- sqrt(varobs_agr + varerr_agr)
   MSB <-  (k * varpat_agr + varerr_agr)

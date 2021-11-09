@@ -30,13 +30,14 @@
 #' Shrout, P.E. & Fleiss, J.L. (1979) Intraclass Correlations: Uses in Assessing
 #' Rater Reliability. Psychological Bulletin, 87(2), 420-428.
 icc_oneway <- function(model, alpha = 0.05){
-  k <- lme4::ngrps(model)[2]
-  n <- lme4::ngrps(model)[1]
-  vc <- as.data.frame(lme4::VarCorr(model))
+  k <- lme4::ngrps(model)["level2"] #level2 #wijzigen naar generieke benaming?
+  n <- lme4::ngrps(model)["level1"] #level1
+  vc <- as.data.frame(lme4::VarCorr(model))[,c("grp", "vcov")]
+  rownames(vc) <- vc[,"grp"]
 
   #oneway
-  varpat_oneway <- ((k * vc[1,4]) - vc[2,4]) / k
-  varerr_oneway <- (vc[2,4] + vc[3,4])
+  varpat_oneway <- ((k * vc["level1","vcov"]) - vc["level2","vcov"]) / k
+  varerr_oneway <- (vc["level2","vcov"] + vc["Residual","vcov"])
   icc_o <- varpat_oneway / (varpat_oneway + varerr_oneway)
   sem_o <- sqrt(varerr_oneway)
   F_o <- (k * varpat_oneway + varerr_oneway)/varerr_oneway
@@ -59,23 +60,22 @@ icc_oneway <- function(model, alpha = 0.05){
   )
 }
 
-
+#for wide data
 icc_oneway2 <- function(data, cols = colnames(data), alpha = 0.05){
 
   k <- length(cols)
   n <- nrow(data)
   data1 <- data.frame(data) %>%
-    mutate(id = 1:nrow(data)) %>% #add id column
-    pivot_longer(cols = cols, names_to = "rater", values_to = "score")
-  model <- lmer(score ~ (1|id) , data1, REML = T)
+    mutate(level1 = 1:nrow(data)) %>% #add id column
+    pivot_longer(cols = cols, names_to = "level2", values_to = "score")
+  model <- lmer(score ~ (1|level1) , data1, REML = T)
 
-
-
-  vc <- as.data.frame(lme4::VarCorr(model))
+  vc <- as.data.frame(lme4::VarCorr(model))[,c("grp", "vcov")]
+  rownames(vc) <- vc[,"grp"]
 
   #oneway
-  varpat_oneway <- vc[1,4]
-  varerr_oneway <- vc[2,4]
+  varpat_oneway <- vc["level1","vcov"]
+  varerr_oneway <- vc["Residual","vcov"]
   icc_o <- varpat_oneway / (varpat_oneway + varerr_oneway)
   sem_o <- sqrt(varerr_oneway)
   F_o <- (k * varpat_oneway + varerr_oneway)/varerr_oneway

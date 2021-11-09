@@ -10,6 +10,7 @@
 #' default uses `cols = colnames(data)`
 #' @param levels character vector for the column names used for the levels.
 #' Default is `levels = c("id", "rater")`.
+#' @param values character with name of column with scores for long data format.
 #' @param sem logical vector if standard error of measurement is returned.
 #' @param confint logical vector if confidence interval for ICC is returned.
 #' @param alpha the confidence level required, default `alpha = 0.05`.
@@ -30,6 +31,7 @@ icc <- function(data,
                 format = "wide",
                 cols = colnames(data),
                 levels = c("id", "rater"),
+                values = "score",
                 sem = TRUE,
                 confint = TRUE,
                 alpha = 0.05,
@@ -38,16 +40,22 @@ icc <- function(data,
 
 
   if(format == "wide"){
-  data <- data.frame(data) %>%
-    mutate(id = 1:nrow(data)) %>% #add id column
-    pivot_longer(cols = cols, names_to = "rater", values_to = "score")
-  levels <- c("id", "rater")
+    k <- length(cols)
+    n <- nrow(data)
+
+    data <- data.frame(data) %>%
+      mutate(level1 = 1:nrow(data)) %>% #add id column
+      pivot_longer(cols = cols, names_to = "level2", values_to = "score")
+
+  levels <- c("level1", "level2")
+  values <- "score"
   }
-  model <- icc_model2(data = data, levels = levels)
+  model <- icc_model2(data = data, levels = levels, values = values)
 
   #model <- icc_model(data = data, cols = cols)
 
   #output table definition based on model
+  ##HIER CHECKEN OF DIT KLOPT! >> gaan mis als levels niet in goed volgorde staan.
   vc <- data.frame(VarCorr(model))
   ICC <- matrix(NA, nrow = length(method), ncol = (4 + nrow(vc)))
   rownames(ICC) <- method
@@ -57,8 +65,8 @@ icc <- function(data,
   if("oneway" %in% method){
 
   icc_ow <- icc_oneway(model, alpha = alpha)
-  ICC["oneway", paste("var", vc$grp[1], sep = "_")] <- icc_ow$varj_oneway
-  ICC["oneway", paste("var", vc$grp[3], sep = "_")] <- icc_ow$varerr_oneway
+  ICC["oneway", paste("var_level1")] <- icc_ow$varj_oneway
+  ICC["oneway", paste("var_Residual")] <- icc_ow$varerr_oneway
 
   #icc_o <- varj_oneway / (varj_oneway + varerr_oneway)
 
@@ -88,9 +96,9 @@ icc <- function(data,
   #varr_agr <- vc[2,4]
   #varerr_agr <- vc[3,4]
 
-  ICC["agreement", paste("var", vc$grp[1], sep = "_")] <- icc_am$varj_agr
-  ICC["agreement", paste("var", vc$grp[3], sep = "_")] <- icc_am$varerr_agr
-  ICC["agreement", paste("var", vc$grp[2], sep = "_")] <- icc_am$varr_agr
+  ICC["agreement", paste("var_level1")] <- icc_am$varj_agr
+  ICC["agreement", paste("var_Residual")] <- icc_am$varerr_agr
+  ICC["agreement", paste("var_level2")] <- icc_am$varr_agr
 
   # compute ICC agreement: ICC 2,1
   #icc_a <- varj_agr/(varj_agr + varr_agr + varerr_agr)
@@ -140,8 +148,8 @@ icc <- function(data,
   #varj_cons <- vc[1,4]
   #varerr_cons <- vc[3,4]
 
-  ICC["consistency", paste("var", vc$grp[1], sep = "_")] <- icc_cs$varj_cons
-  ICC["consistency", paste("var", vc$grp[3], sep = "_")] <- icc_cs$varerr_cons
+  ICC["consistency", paste("var_level1")] <- icc_cs$varj_cons
+  ICC["consistency", paste("var_Residual")] <- icc_cs$varerr_cons
 
   # compute ICC consistency: ICC 3,1
   #icc_c <- varj_cons/(varj_cons + varerr_cons)
@@ -196,9 +204,7 @@ icc <- function(data,
 
 icc2 <- function(data,
                 method = c("oneway", "agreement", "consistency"),
-                #format = "wide",
                 cols = colnames(data),
-                #levels = c("id", "rater"),
                 sem = TRUE,
                 confint = TRUE,
                 alpha = 0.05,
@@ -226,8 +232,8 @@ icc2 <- function(data,
   if("oneway" %in% method){
 
     icc_ow <- icc_oneway2(data = data, cols = cols, alpha = alpha)
-    ICC["oneway", paste("var", vc$grp[1], sep = "_")] <- icc_ow$varj_oneway
-    ICC["oneway", paste("var", vc$grp[3], sep = "_")] <- icc_ow$varerr_oneway
+    ICC["oneway", paste("var_level1")] <- icc_ow$varj_oneway
+    ICC["oneway", paste("var_Residual")] <- icc_ow$varerr_oneway
 
     #icc_o <- varj_oneway / (varj_oneway + varerr_oneway)
 
@@ -257,9 +263,9 @@ icc2 <- function(data,
     #varr_agr <- vc[2,4]
     #varerr_agr <- vc[3,4]
 
-    ICC["agreement", paste("var", vc$grp[1], sep = "_")] <- icc_am$varj_agr
-    ICC["agreement", paste("var", vc$grp[3], sep = "_")] <- icc_am$varerr_agr
-    ICC["agreement", paste("var", vc$grp[2], sep = "_")] <- icc_am$varr_agr
+    ICC["agreement", paste("var_level1")] <- icc_am$varj_agr
+    ICC["agreement", paste("var_Residual")] <- icc_am$varerr_agr
+    ICC["agreement", paste("var_level2")] <- icc_am$varr_agr
 
     # compute ICC agreement: ICC 2,1
     #icc_a <- varj_agr/(varj_agr + varr_agr + varerr_agr)
@@ -309,8 +315,8 @@ icc2 <- function(data,
     #varj_cons <- vc[1,4]
     #varerr_cons <- vc[3,4]
 
-    ICC["consistency", paste("var", vc$grp[1], sep = "_")] <- icc_cs$varj_cons
-    ICC["consistency", paste("var", vc$grp[3], sep = "_")] <- icc_cs$varerr_cons
+    ICC["consistency", paste("var_level1")] <- icc_cs$varj_cons
+    ICC["consistency", paste("var_Residual")] <- icc_cs$varerr_cons
 
     # compute ICC consistency: ICC 3,1
     #icc_c <- varj_cons/(varj_cons + varerr_cons)

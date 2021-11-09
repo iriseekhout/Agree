@@ -28,9 +28,8 @@ Variance components
 }
 \examples{
 form <- score ~ (1|patient)
-mod <- lmer(score ~ (1|patient), data = fake_1)
 form_cros <- score ~ (1|rater) + (1|patient)
-form_nest <- score ~ (1|rater/patient)
+#form_nest <- score ~ (1|rater/patient)
 
 varcomp(form, data = fake_1)
 varcomp(form_nest, data = fake_2nest)

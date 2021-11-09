@@ -10,6 +10,7 @@ icc(
   format = "wide",
   cols = colnames(data),
   levels = c("id", "rater"),
+  values = "score",
   sem = TRUE,
   confint = TRUE,
   alpha = 0.05,
@@ -31,6 +32,8 @@ default uses `cols = colnames(data)`}
 
 \item{levels}{character vector for the column names used for the levels.
 Default is `levels = c("id", "rater")`.}
+
+\item{values}{character with name of column with scores for long data format.}
 
 \item{sem}{logical vector if standard error of measurement is returned.}
 

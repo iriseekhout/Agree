@@ -26,13 +26,14 @@
 #' Fleiss, J. L., & Shrout, P. E. Approximate interval estimation for a certain
 #' intraclass correlation coefficient. Psychometrika, 1978, 43, 259-262.
 icc_consistency <- function(model, alpha = 0.05){
-  k <- lme4::ngrps(model)[2]
-  n <- lme4::ngrps(model)[1]
-  vc <- as.data.frame(lme4::VarCorr(model))
+  k <- lme4::ngrps(model)["level2"]
+  n <- lme4::ngrps(model)["level1"]
+  vc <- as.data.frame(lme4::VarCorr(model))[,c("grp", "vcov")]
+  rownames(vc) <- vc[,"grp"]
 
   #consistency
-  varpat_cons <- vc[1,4]
-  varerr_cons <- vc[3,4]
+  varpat_cons <- vc["level1","vcov"]
+  varerr_cons <- vc["Residual","vcov"]
   icc_c <- varpat_cons/(varpat_cons + varerr_cons)
   sem_c <- sqrt(varerr_cons)
   F_c <- (k * varpat_cons + varerr_cons)/varerr_cons
@@ -60,17 +61,18 @@ icc_consistency2 <- function(data, cols = colnames(data), alpha = 0.05){
   k <- length(cols)
   n <- nrow(data)
   data1 <- data.frame(data) %>%
-    mutate(id = 1:nrow(data)) %>% #add id column
-    pivot_longer(cols = cols, names_to = "rater", values_to = "score")
-  model <- lmer(score ~ (1|id) + rater , data1, REML = T)
+    mutate(level1 = 1:nrow(data)) %>% #add id column
+    pivot_longer(cols = cols, names_to = "level2", values_to = "score")
+  model <- lmer(score ~ (1|level1) + level2 , data1, REML = T)
 
 
-
-  vc <- as.data.frame(lme4::VarCorr(model))
+  vc <- as.data.frame(lme4::VarCorr(model))[,c("grp", "vcov")]
+  rownames(vc) <- vc[,"grp"]
 
   #consistency
-  varpat_cons <- vc[1,4]
-  varerr_cons <- vc[2,4]
+  varpat_cons <- vc["level1","vcov"]
+  varerr_cons <- vc["Residual","vcov"]
+
   icc_c <- varpat_cons/(varpat_cons + varerr_cons)
   sem_c <- sqrt(varerr_cons)
   F_c <- (k * varpat_cons + varerr_cons)/varerr_cons

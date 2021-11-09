@@ -14,15 +14,16 @@
 #'
 #' @return data.frame with the variance components in rows
 #' @export
+#' @importFrom lme4 lmer VarCorr
+#' @importFrom dplyr %>% select
 #'
 #' @examples
 #' form <- score ~ (1|patient)
-#' mod <- lmer(score ~ (1|patient), data = fake_1)
 #' form_cros <- score ~ (1|rater) + (1|patient)
-#' form_nest <- score ~ (1|rater/patient)
+#' #form_nest <- score ~ (1|rater/patient)
 #'
 #' varcomp(form, data = fake_1)
-#' varcomp(form_nest, data = fake_2nest)
+#' varcomp(form_cros, data = fake_2nest)
 #' varcomp(form_cros, data = fake_2cros)
 #'
 #' form_3nest <- score ~ (1|rater/patient)
@@ -34,7 +35,7 @@ varcomp <- function(formula, data){
 
  vc <- VarCorr(mod) %>%
    data.frame %>%
-   select(grp, vcov)
+   select(.data$grp, .data$vcov)
 
  vc
 }

@@ -18,10 +18,11 @@
 icc_model <- function(data, cols = colnames(data)){
   k <- length(cols)
   n <- nrow(data)
+
   data1 <- data.frame(data) %>%
-    mutate(id = 1:nrow(data)) %>% #add id column
-    pivot_longer(cols = cols, names_to = "rater", values_to = "score")
-  REML_model <- lmer(score ~ (1|id) + (1|rater), data1, REML = T)
+    mutate(level1 = 1:nrow(data)) %>% #add id column
+    pivot_longer(cols = cols, names_to = "level2", values_to = "score")
+  REML_model <- lmer(score ~ (1|level1) + (1|level2), data1, REML = T)
   REML_model
 }
 
@@ -39,13 +40,15 @@ icc_model <- function(data, cols = colnames(data)){
 #' `score` for the scores.
 #' @param levels character vector with the column names of the levels that should
 #' be used in the data. Default is `cols = c("id", "rater")`.
+#' @param values character with name of variable with the score values,
+#' default = "score".
 #'
 #' @importFrom lme4 lmer
 #' @importFrom tidyr pivot_longer
 #' @importFrom dplyr %>% mutate
 #' @return `lmer`model object
 #' @export
-#' @example
+#' @examples
 #' breast_scores <- Agree::breast %>%
 #'   dplyr::select(Patient_score, PCH1_score, PCH2_score, PCH3_score,
 #'   Mam1_score, Mam2_score, Mam3_score)
@@ -53,19 +56,27 @@ icc_model <- function(data, cols = colnames(data)){
 #'mutate(id = 1:nrow(breast_scores)) %>% #add id column
 #'pivot_longer(cols = -id, names_to = "rater", values_to = "score")
 #'icc_model2(data = data1)
-icc_model2 <- function(data, levels = c("id", "rater")){
+icc_model2 <- function(data, levels = c("id", "rater"), values = "score"){
 
   #n <- n_distinct(data[,levels[1]])
   #k <- n_distinct(data[,levels[2]])
+df <- data[c(levels, values)]
+ if(length(levels) == 1){
+   colnames(df) <- c("level1", "score")
+   form <- as.formula(paste0("score ~ (1|level1)"))
+    }
 
-    form <- as.formula(paste0("score ~ (1|", levels[1], ") + (1|", levels[2],")"))
+if(length(levels) == 2){
+  colnames(df) <- c("level1","level2", "score")
+  form <- as.formula(paste0("score ~ (1|level1) + (1|level2)"))
+}
 
   if(length(levels) == 3){
-   # t <- n_distinct(data[,levels[3]])
-    form <- as.formula(paste0("score ~ (1|", levels[1], ") + (1|", levels[2],") + (1|", levels[3], ")"))
+    colnames(df) <- c("level1","level2","level3", "score")
+    form <- as.formula(paste0("score ~ (1|level1) + (1|level2) + (1|level3)"))
   }
 
-  REML_model <- lmer(form, data, REML = T)
+  REML_model <- lmer(form, df, REML = T)
   REML_model
 
 

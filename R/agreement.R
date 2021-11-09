@@ -83,6 +83,7 @@ agreement <- function(data,
     }
   }
 
+  levels <- colnames(table) #toevoegen voor specific agreement bootstrap
   ## General CI function:
   ci <- function(p, n, alpha) {
     a <- qnorm(1 - ((alpha) / 2))
@@ -165,7 +166,7 @@ agreement <- function(data,
           }
 
           agree.boot <- function(data,x) {
-            sa.agreement(sumtable(data[x,]), s = specific)}
+            sa.agreement(sumtable(data[x,], levels = levels), s = specific)}
           res1a <- boot::boot(data,agree.boot,b)
           BCI_agr <-  quantile(res1a$t,c((alpha)/2,(1-alpha)+((alpha)/2)), na.rm=TRUE)
           CI <- c(lower_boot=BCI_agr[1], upper_boot=BCI_agr[2])
@@ -241,7 +242,7 @@ agreement <- function(data,
           }
 
           agree.boot <- function(data,x) {
-            sa.agreement(sumtable(data[x,]), s = specific)}
+            sa.agreement(sumtable(data[x,], levels = levels), s = specific)}
           res1a <- boot::boot(data,agree.boot,b)
           BCI_agr <-  quantile(res1a$t,c((alpha)/2,(1-alpha)+((alpha)/2)), na.rm=TRUE)
           CI <- c(lower_boot=BCI_agr[1], upper_boot=BCI_agr[2])
