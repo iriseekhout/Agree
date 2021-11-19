@@ -1,0 +1,226 @@
+---
+title: "ICC from variance components"
+#output: rmarkdown::html_vignette
+author: "Iris Eekhout & Wieneke Mokkink"
+date: "`r Sys.Date()`"
+output: pdf_document
+bibliography: [references.bib]
+biblio-style: apalike
+vignette: >
+  %\VignetteIndexEntry{icc varcomp}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = ">"
+)
+library(dplyr)
+library(tidyr)
+```
+
+This Document describes the computational background and the use of the `icc()` function from the `Agree` package. We developed the `icc()` functions for this package in connection with a simulation study about sample size requirements for studies on reliability and measurement error @mokkink1 and a methodological paper about how to design and conduct a study on reliability and measurement error @mokkink2. 
+
+```{r setup}
+library(Agree)
+```
+
+## Data example
+
+### Breast
+
+The intra-class agreement is usually obtained for continuous ratings. As an example we can use data from data study by @dikmans2017. This data is based on photographs of breasts of 50 women after breast reconstruction. The photographs are independently scored by 5 surgeons, the patients, and three mammography nurses. They each rated the quality of the reconstruction on a 5 point ordinal scale with the verbal anchors on the left side ‘very dissatisfied’ on the left end and on the right end ‘very satisfied’ on the right end. They specifically rated the volume, shape, symmetry, scars and nipple. For the `icc` examples we can use the sum scores for volume, shape, symmetry, scars and nipple as an overall rating from each rater. 
+
+
+```{r}
+breast_scores <- 
+Agree::breast %>%
+  dplyr::select(Patient_score, PCH1_score, PCH2_score, PCH3_score, PCH4_score, 
+                PCH5_score, Mam1_score, Mam2_score, Mam3_score)
+
+head(breast_scores)
+
+```
+
+The example data shows missings. The `icc` function can deal with these missings, because a mixed model is used to estimate the variances to compute the icc with.
+
+For a mixed model, the data needs to be restructured to a long format. we can use the `pivot_longer()` function from the `tidyr` package to do that:
+
+```{r}
+breast_long <- breast_scores %>%
+ mutate(id = 1:nrow(breast_scores)) %>% #add id column
+  pivot_longer(cols = -id, names_to = "rater", values_to = "score")
+
+breast_long
+```
+
+## Variance components
+
+The variances that are used to compute the `icc` are obtained from a linear mixed model. This model is estimated with the `lmer()` function from the `lme4` package. In the `breast` example we have two levels: patients are level 1 and raters/observers are level 2. The two-level multilevel model is defined as $Y_{ijr} = \beta_0 + b_{0j} + b_{0r} + \epsilon_{ijr}$, where $b_{0j}$ is the random intercept at the subject level and $b_{0r}$ the random intercept at the rater/observer level. The $\epsilon_{ijr}$ is the residual error. The `r-code` for the model in `lme4` is: `lmer(score ~ (1|id) + (1|observer), data, REML = T)`
+
+De exact specification of the multilevel model, depends on the design of the study and the type of ICC that one wants to compute. 
+
+
+
+## Types of ICC
+
+There are three types of icc incorporated in the `icc` function. The ICC oneway, ICC agreement and the ICC consistency. 
+
+
+### ICC oneway
+
+The ICC type oneway is the variance between the subjects ($\sigma^2_j$) divided by the sum of the subject variance ($\sigma^2_j$) and the residual variance ($\sigma^2_{\epsilon}$). The $ICC_{oneway}$ is computed as follows: 
+
+$ICC_{oneway} = \frac{\sigma^2_j}{\sigma^2_j + \sigma^2_{\epsilon}}$
+
+The ICC oneway assumes that each subject is rated by a different set of raters, that are randomly selected from a larger population of judges (@shrout1979). 
+The `icc_oneway()` uses the `varcomp()` function to compute the variance components. These variances are estimated from a `lmer` model with random slope for the subjects. $Y_{ij} = \beta_0 + b_{0j} + \epsilon_{ij}$
+
+The standard error of measurement ($sem$) is the square root of the error variance (i.e. $sem = \sigma^2_{\epsilon}$). The confidence intervals are computed with the exact F method. $F = \frac{k  \sigma^2_{j} + \sigma^2_{\epsilon}}{\sigma^2_{\epsilon}}$, with $df1 = n - 1$ and $df2 = n  (k - 1)$ (@shrout1979).
+
+
+For the oneway ICC, only the level 1, the patient level, is random. The rater variance is not used. 
+
+The `r-code` to extract the variance component with the `varcomp` function is:
+
+```{r}
+varcomp(score~(1|id), data = breast_long)
+
+```
+
+The variance components, can be used to compute the ICC oneway:
+
+```{r}
+vc <- varcomp(score~(1|id), data = breast_long)
+vc["id", "vcov"]/sum(vc[,"vcov"])
+
+```
+
+We have also incorporated a function that computed the ICC oneway directly from the data in the wide format, using the same steps. This is the `icc_oneway` function.
+
+
+```{r}
+icc_oneway(breast_scores)
+```
+
+
+
+### ICC agreement
+
+The icc type agreement is the variance between the subjects ($\sigma^2_j$) divided by the sum of the subject variance ($\sigma^2_j$), rater variance ($\sigma^2_k$) and the residual variance ($\sigma^2_\epsilon$). The $ICC_{agreement}$ is computed as follows:
+
+$ICC_{agreement} = \frac{\sigma^2_j}{\sigma^2_j + \sigma^2_k + \sigma^2_{\epsilon}}$
+
+The ICC for agreement generalizes to other raters within a population (@shrout1979). All subjects are rated by the same set of raters, and the rater variance is taken into account in the calculation of the ICC. The variance components are computed with the `icc_model()` function. This is a `lmer` model with a random slope for the subjects and for the raters. The $sem$ is the square root of the sum of the rater variance and the error variance (i.e. $sem = \sqrt{\sigma^2_r + \sigma^2_\epsilon}$). The confidence intervals are approximated to account for the three independent variance components, as defined by @satter1946 & @shrout1979.
+
+For the ICC for agreement, both the level 1 and level 2 are random.
+
+The `r-code` to extract the variance component with the `varcomp` function is:
+
+```{r}
+varcomp(score ~ (1|id) + (1|rater), data = breast_long)
+
+```
+
+The variance components, can be used to compute the ICC agreement:
+
+```{r}
+vc <- varcomp(score~ (1|id) + (1|rater), data = breast_long)
+vc["id", "vcov"]/sum(vc[,"vcov"])
+
+```
+
+We have also incorporated a function that computed the ICC for agreement directly from the data in the wide format, using the same steps. This is the `icc_agreement` function.
+
+
+```{r}
+icc_agreement(breast_scores)
+```
+
+
+### ICC consistency
+
+The ICC type consistency is the variance between the subjects ($\sigma^2_j$) divided by the sum of the subject variance ($\sigma^2_j$) and the residual variance ($\sigma^2_\epsilon$). The rater variance is not used to calculate the ICC and can therefore also be considered as a fixed effect. The $ICC_{consistency}$ is computed as follows:
+
+$ICC_{consistency} = \frac{\sigma^2_j}{\sigma^2_j + \sigma^2_{\epsilon}}$
+
+The ICC for consistency generalizes only to the set of raters in the data (@shrout1979). The `varcomp()` function is used to compute the variance components. These variances are computed from a a `lmer` model with a random slope for the subjects and a fixed effect for the raters. The sem is the square root of the error variance. The confidence are computed with the exact F method. $F = \frac{(k  \sigma^2_j + \sigma^2_\epsilon)}{\sigma^2_\epsilon}$, with $df1 = n - 1$ and $df2 = (n - 1)  (k - 1)$ (@shrout1979).
+
+
+For the ICC for consistency, the level 1 is a random effect and the level 2 is fixed.
+
+The `r-code` to extract the variance component with the `varcomp` function is:
+
+```{r}
+varcomp(score ~ (1|id) + rater, data = breast_long)
+
+```
+
+The variance components, can be used to compute the ICC consistency:
+
+```{r}
+vc <- varcomp(score~ (1|id) + rater, data = breast_long)
+vc["id", "vcov"]/sum(vc[,"vcov"])
+
+```
+
+We have also incorporated a function that computed the ICC consistency directly from the data in the wide format, using the same steps. This is the `icc_consistency` function.
+
+
+```{r}
+icc_consistency(breast_scores)
+```
+
+
+
+### Comparing ICC types
+
+We have one general `icc` function that computes all three ICC types for a data set. The differences in computations between the ICC types can quickly be seen in the variance components returned by the `icc` function. We can obtain the variances by using `var = TRUE` in the `icc()` function, the `var_level2` shows the variance between the raters. Only for the ICC for agreement this variance component is estimated.
+
+```{r}
+# ICC for all methods
+icc(breast_scores, var = TRUE)
+
+```
+
+When we estimate the ICC for the surgeons only, we can see that the variance at the rater level is decreased. This effect is directly shown in the ICC.
+
+In the icc we can also use the data in wide format and use the `cols` option to define the rater columns that we want to use. 
+
+```{r}
+# ICC for all methods
+icc(breast_scores, 
+    cols = c("PCH1_score", "PCH2_score", "PCH3_score", "PCH4_score", "PCH5_score"), 
+    var = TRUE)
+
+```
+
+When we estimate the ICC for the mammography nurses only, we see that the variance at the rater level is increased. This effect is directly shown in the ICC.
+
+```{r}
+# ICC for all methods
+icc(breast_scores, 
+    cols = c("Mam1_score", "Mam2_score", "Mam3_score"), 
+    var = TRUE)
+
+```
+
+## Overview technical terms
+
+|Term |Description|
+|-----|------------------------------------|
+|$\beta_0$|Fixed intercept|
+|$b_{0j}$|Random intercept at subject level|
+|$b_{0r}$|Random intercept at rater level|
+|$\epsilon_{ijr}$|Residual error|
+|$\sigma_j$|Variance between subjects|
+|$\sigma_r$|Variance between raters|
+|$\sigma_\epsilon$|Residual error variance|
+|$k$|Number of raters/observers|
+|$n$|Number of subjects|
+
+
+## References
+
