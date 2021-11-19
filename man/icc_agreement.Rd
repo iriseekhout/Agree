@@ -4,10 +4,14 @@
 \alias{icc_agreement}
 \title{ICC agreement}
 \usage{
-icc_agreement(model, alpha = 0.05)
+icc_agreement(data, cols = colnames(data), alpha = 0.05)
 }
 \arguments{
-\item{model}{merMod object result from `icc_model()`.}
+\item{data}{data.frame with a column for each observer/rater and a row per
+rated subject.}
+
+\item{cols}{character vector with the column names to be used as observers.
+Default is `cols = colnames(data)`.}
 
 \item{alpha}{confidence interval level, default `alpha = 0.05`.}
 }
@@ -23,10 +27,10 @@ icc, standard error of measurment (sem) and confidence intervals for icc.
 The icc type agreement is the variance between the subjects divided by the sum
 of the subject variance, rater variance and the residual variance. The ICC for
 agreement generalizes to other raters within a population (Shrout & Fleiss,
-1979). The `icc_model()` function is used to compute the variances.
-This is a `lmer` model with a random slope for the subjects as well as for
-the raters. The sem is the square root of the sum of the rater variance and
-the error variance.
+1979). The `varcomp()` function is used to compute the variances.
+Thes variance components are estimated from a `lmer` model with a random
+slope for the subjects as well as for the raters. The sem is the square
+root of the sum of the rater variance and the error variance.
 The confidence intervals are approximated to account for the three independent
 variance components, as defined by Satterthwaite (1946) & Fleiss and Shrout (1978).
 }

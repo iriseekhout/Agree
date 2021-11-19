@@ -36,6 +36,7 @@ varcomp <- function(formula, data){
  vc <- VarCorr(mod) %>%
    data.frame %>%
    select(.data$grp, .data$vcov)
+ rownames(vc) <- vc$grp
 
  vc
 }

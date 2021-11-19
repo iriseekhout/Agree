@@ -4,7 +4,10 @@
 #' the variance estimates from a linear mixed model. The function returns the
 #' icc, standard error of measurment (sem) and confidence intervals for icc.
 #'
-#' @param model merMod object result from `icc_model()`.
+#' @param data data.frame with a column for each observer/rater and a row per
+#' rated subject.
+#' @param cols character vector with the column names to be used as observers.
+#' Default is `cols = colnames(data)`.
 #' @param alpha confidence interval level, default `alpha = 0.05`.
 #' @importFrom lme4 ngrps VarCorr
 #' @importFrom stats qf
@@ -15,10 +18,10 @@
 #' The icc type agreement is the variance between the subjects divided by the sum
 #' of the subject variance, rater variance and the residual variance. The ICC for
 #' agreement generalizes to other raters within a population (Shrout & Fleiss,
-#' 1979). The `icc_model()` function is used to compute the variances.
-#' This is a `lmer` model with a random slope for the subjects as well as for
-#' the raters. The sem is the square root of the sum of the rater variance and
-#' the error variance.
+#' 1979). The `varcomp()` function is used to compute the variances.
+#' Thes variance components are estimated from a `lmer` model with a random
+#' slope for the subjects as well as for the raters. The sem is the square
+#' root of the sum of the rater variance and the error variance.
 #' The confidence intervals are approximated to account for the three independent
 #' variance components, as defined by Satterthwaite (1946) & Fleiss and Shrout (1978).
 #' @author Iris Eekhout
@@ -29,12 +32,16 @@
 #' components. Biometrics, 1946, 2, 110-114.
 #' Shrout, P.E. & Fleiss, J.L. (1979) Intraclass Correlations: Uses in Assessing
 #' Rater Reliability. Psychological Bulletin, 87(2), 420-428.
-icc_agreement <- function(model, alpha = 0.05){
+icc_agreement <- function(data, cols = colnames(data), alpha = 0.05){
 
-  k <- ngrps(model)["level2"]
-  n <- ngrps(model)["level1"]
-  vc <- as.data.frame(lme4::VarCorr(model))[,c("grp", "vcov")]
-  rownames(vc) <- vc[,"grp"]
+  k <- length(cols)
+  n <- nrow(data)
+
+  data1 <- data.frame(data) %>%
+    mutate(level1 = 1:nrow(data)) %>% #add id column
+    pivot_longer(cols = cols, names_to = "level2", values_to = "score")
+
+  vc <- varcomp(score ~ (1|level1) + (1|level2), data1)
 
   #agreement
   varpat_agr <- vc["level1","vcov"]
@@ -74,14 +81,17 @@ icc_agreement <- function(model, alpha = 0.05){
                                                                               k - n) * varerr_agr + n * F3L * MSB)#checked with shrout fleis.
 
   return(
+    data.frame(
     list(
+      icc = icc_a,
+      L_icc = l_a, #use upper case L for PSYCH version/ lowercase l for same logic as in oneway and consistency - however the observer part is then ignored.
+      U_icc = u_a, #use upper case U for PSYCH version/ lowercase l for same logic as in oneway and consistency - however the observer part is then ignored.
+      sem = sem_a,
       varj_agr = varpat_agr,
       varr_agr = varobs_agr,
-      varerr_agr = varerr_agr,
-      icc = icc_a,
-      sem = sem_a,
-      L_icc = l_a, #use upper case L for PSYCH version/ lowercase l for same logic as in oneway and consistency - however the observer part is then ignored.
-      U_icc = u_a #use upper case U for PSYCH version/ lowercase l for same logic as in oneway and consistency - however the observer part is then ignored.
+      varerr_agr = varerr_agr
+
+    )
     )
   )
 }

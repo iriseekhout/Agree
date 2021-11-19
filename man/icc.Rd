@@ -7,14 +7,12 @@
 icc(
   data,
   method = c("oneway", "agreement", "consistency"),
-  format = "wide",
   cols = colnames(data),
-  levels = c("id", "rater"),
-  values = "score",
   sem = TRUE,
   confint = TRUE,
   alpha = 0.05,
-  var = FALSE
+  var = FALSE,
+  onemodel = FALSE
 )
 }
 \arguments{
@@ -24,16 +22,8 @@ and rated subjects in the rows}
 \item{method}{type of ICC that is returned, options are:
 `c("oneway", "agreement", "consistency")`, the default returns all.}
 
-\item{format}{character string indicating the data structure as either "wide"
-or "long". Default `format = "wide"`.}
-
 \item{cols}{column names used for the repeated measures in the wide format,
 default uses `cols = colnames(data)`}
-
-\item{levels}{character vector for the column names used for the levels.
-Default is `levels = c("id", "rater")`.}
-
-\item{values}{character with name of column with scores for long data format.}
 
 \item{sem}{logical vector if standard error of measurement is returned.}
 
@@ -41,7 +31,10 @@ Default is `levels = c("id", "rater")`.}
 
 \item{alpha}{the confidence level required, default `alpha = 0.05`.}
 
-\item{var}{logical vector if variance estimates are returned.}
+\item{var}{logical indicator if variance estimates are returned.}
+
+\item{onemodel}{logical indicator if all ICC's should be computed from one
+model to increase computation time, defalt `onemodel = FALSE`.}
 }
 \value{
 matrix with relevant output

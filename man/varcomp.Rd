@@ -32,7 +32,7 @@ form_cros <- score ~ (1|rater) + (1|patient)
 #form_nest <- score ~ (1|rater/patient)
 
 varcomp(form, data = fake_1)
-varcomp(form_nest, data = fake_2nest)
+varcomp(form_cros, data = fake_2nest)
 varcomp(form_cros, data = fake_2cros)
 
 form_3nest <- score ~ (1|rater/patient)

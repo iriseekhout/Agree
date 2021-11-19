@@ -4,12 +4,19 @@
 \alias{icc_consistency}
 \title{ICC consistency}
 \usage{
-icc_consistency(model, alpha = 0.05)
+icc_consistency(data, cols = colnames(data), alpha = 0.05, twoway = FALSE)
 }
 \arguments{
-\item{model}{merMod object result from `icc_model()`.}
+\item{data}{data.frame with a column for each observer/rater and a row per
+rated subject.}
+
+\item{cols}{character vector with the column names to be used as observers.
+Default is `cols = colnames(data)`.}
 
 \item{alpha}{confidence interval level, default `alpha = 0.05`.}
+
+\item{twoway}{logical indicator if the variance components are estimated from
+the two-way model default: `twoway = FALSE`.}
 }
 \value{
 list

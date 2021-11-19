@@ -4,12 +4,19 @@
 \alias{icc_oneway}
 \title{ICC oneway}
 \usage{
-icc_oneway(model, alpha = 0.05)
+icc_oneway(data, cols = colnames(data), alpha = 0.05, twoway = FALSE)
 }
 \arguments{
-\item{model}{`merMod` object result from `icc_model`.}
+\item{data}{data.frame with a column for each observer/rater and a row per
+rated subject.}
+
+\item{cols}{character vector with the column names to be used as observers.
+Default is `cols = colnames(data)`.}
 
 \item{alpha}{confidence interval level, default `alpha = 0.05`.}
+
+\item{twoway}{logical indicator if the variance components are estimated from
+the two-way model default: `twoway = FALSE`.}
 }
 \value{
 a `list` with parameter estimates.
@@ -24,17 +31,18 @@ See details for more information.
 The ICC type oneway is the variance between the subjects divided by the sum
 of the subject variance and the residual variance (total variance in a oneway
 model. Each subject is rated by a different set of raters, that are randomly
-selected from a larger population of judges (Shrout & Fleiss, 1979). The `icc_oneway()` uses the
-`icc_model()` function to compute the variances. This is a `lmer` model with
-random slope for the subjects as well as the raters. The rater variance is
-not used for the ICC oneway and is subtracted from the sum of subject variance
-over the raters, which is then averaged. The error variance is computed as the
-sum of the residual variance and the rater variance from the `icc_model`.
-Accordingly, the rater variance is part of the error variance. The standard
-error of measurement is the square root of this error variance.
-The confidence are computed with the exact F method. F = (k * subject variance +
-error variance)/ error variance, with df1 = n - 1 and df2 = n * (k - 1)
-(Shrout & Fleiss, 1979).
+selected from a larger population of judges (Shrout & Fleiss, 1979). The
+`icc_oneway()` uses the `varcomp()` function to compute the variances.
+Theses variances are estimated from a `lmer` model with random slope for the
+subjects. When `twoway = TRUE` a level for the raters is estimtaed as well
+and the rater variance is not used for the ICC oneway and is subtracted from
+the sum of subject variance over the raters, which is then averaged.
+The error variance is computed as the sum of the residual variance and the
+rater variance. Accordingly, the rater variance is part of the error variance.
+The standard #' error of measurement is the square root of this error variance.
+The confidence intervals are computed with the exact F method. F = (k *
+subject variance + error variance)/ error variance, with df1 = n - 1 and
+df2 = n * (k - 1) (Shrout & Fleiss, 1979).
 }
 \references{
 Shrout, P.E. & Fleiss, J.L. (1979) Intraclass Correlations: Uses in Assessing
