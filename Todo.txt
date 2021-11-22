@@ -1,5 +1,6 @@
 #to do:
 
+_ ** add weighted kappa
 - 1/ Simulatie van ordinale data in sim_rates functie vangen. script goed checken. >> in progress.
 - 2/ Toevoegen daarin van CI agreement simulatie
 - 3/ check ci calculation for kappa - different from psych intervals >> done >> see Check_kappa_CI.R

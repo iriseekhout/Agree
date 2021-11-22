@@ -27,7 +27,8 @@
 #' varcomp(form_cros, data = fake_2cros)
 #'
 #' form_3nest <- score ~ (1|rater/patient)
-#' varcomp(form_3nest, data = fake_3nest %>% drop_na(score))
+#' library(dplyr)
+#' varcomp(form_3nest, data = fake_3nest %>% tidyr::drop_na(score))
 #'
 varcomp <- function(formula, data){
 

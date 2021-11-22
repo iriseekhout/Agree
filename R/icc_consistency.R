@@ -12,6 +12,8 @@
 #' @param twoway logical indicator if the variance components are estimated from
 #' the two-way model default: `twoway = FALSE`.
 #' @importFrom lme4 ngrps VarCorr
+#' @importFrom dplyr mutate %>%
+#' @importFrom tidyr pivot_longer
 #' @return list
 #' @export
 #' @details
@@ -37,7 +39,7 @@ icc_consistency <- function(data, cols = colnames(data), alpha = 0.05, twoway = 
 
   data1 <- data.frame(data) %>%
     mutate(level1 = 1:nrow(data)) %>% #add id column
-    pivot_longer(cols = cols, names_to = "level2", values_to = "score")
+    tidyr::pivot_longer(cols = cols, names_to = "level2", values_to = "score")
 
   if(twoway){
     vc <- varcomp(score ~ (1|level1) + (1|level2), data1)

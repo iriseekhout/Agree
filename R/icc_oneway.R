@@ -14,6 +14,8 @@
 #' the two-way model default: `twoway = FALSE`.
 #' @return a `list` with parameter estimates.
 #' @importFrom lme4 ngrps VarCorr
+#' @importFrom dplyr mutate %>%
+#' @importFrom tidyr pivot_longer
 #' @export
 #' @details
 #' The ICC type oneway is the variance between the subjects divided by the sum
@@ -42,7 +44,7 @@ icc_oneway <- function(data, cols = colnames(data), alpha = 0.05, twoway = FALSE
 
   data1 <- data.frame(data) %>%
     mutate(level1 = 1:nrow(data)) %>% #add id column
-    pivot_longer(cols = cols, names_to = "level2", values_to = "score")
+    tidyr::pivot_longer(cols = cols, names_to = "level2", values_to = "score")
 
   if(twoway){
   vc <- varcomp(score ~ (1|level1) + (1|level2), data1)
