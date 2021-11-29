@@ -49,7 +49,7 @@ agreement(data1, specific="not satisfied", confint = TRUE)
 ```
 
 
-## Politomous outcomes
+## Polytomous outcomes
 
 The use of the Agree package for two data examples that are used in the paper on specific agreement on polytomous outcomes in the situation of more than two raters [@devet2018]. The first data example is an example of ordinal ratings and the second example of nominal rating. 
 
