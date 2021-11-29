@@ -6,31 +6,24 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Reliability
+# Welcome
 
-This application is an extension for the paper "" by Wieneke Mokkink, Iris Eekhout and Henrica de Vet. 
+This web-application is an extension for the paper "Sample size requirements for studies on reliability and measurement error: a web-based application based on a simulation study" and developed by Iris Eekhout and Wieneke Mokkink. This app offers all results of the simulation study visualized, and the design choice assistant to help you decide on the sample size of your study and the number of repeated measurements.
 
-## Simulation Results
+In this paper we performed a series of simulation studies to investigate the precision of various reliability and measurement error parameters under different conditions within different study designs. We aim to study the trade-off between sample size of patients (n) and for the number of repeated measurements (k), and for which conditions of n and k the most optimal estimations of the ICCs and SEMs can be achieved. Based on the results, we developed this freely available web-application that shows the implications for decisions about the sample sizes in reliability studies, i.e. the (design) choice assistant.
 
-The results for the simulation study performed for the paper, are presented on the "Results" page. For all different conditions investigated, the results in terms of bias and precision for ICC and SEM can be reviewed. 
+In a study on reliability or measurement error, we are often interested in the influence of specific sources of variation such as rater, occasion or equipment, on the score. This source of variation of interest is varied across the repeated measurements. For example, we are interested in the influence of the rater on different occasions (i.e. intra-rater reliability) or the influence of different raters on one occasion (inter-rater reliability) on the score of a patient. In this app, the term ‘repeated measurements’ refers to repeated measurements in stable patients. As the source of variation of interest ‘raters’ will be used as an example throughout this app. 
+
+Below you can find a brief description for each page on this web-application.
+
+> **Simulation Results**
+>
+> To find the results in terms of bias and precision for ICC and SEM parameters for all different conditions investigated.
+> 
+> **Design choice assistant**
+> 
+> To use the tool that provides you with insight into the practical implications for efficient study designs in terms of the required number of patients and the number of repeated measurements.
 
 
-
-## Design choice assistant
-
-
-On the "Choice assistant" page, power calculations can be performed using three different strategies. 
-
-### MSE ratio
-
-The MSE ratio procedure uses the simulation study to estimate to what extend a current reference design needs to be updated to achieve a similar precision as a goal design.
-
-### CI lower
-
-The CI lower procedure uses a formula presented in Zou (2011) to estimate the sample size required given the icc, lower limit of the icc and the number of raters. With this method it is possible to give a range of rater numbers in order to visualise the required sample size for different rater conditions. *Note that this method was developed for the ICC oneway and the estimated sample size is therefore conservative when applied for ICC agreement or consistency.*
-
-### CI width:
-
-The CI width procedure also uses teh simulations study. The specified width of the confidence interval is used to determine what conditions of raters and sample size can achieve that CI width under the referenced design conditions.
 
 

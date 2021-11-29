@@ -1,16 +1,8 @@
-#
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
 
+ui <-tagList(
+    tags$head(tags$script(src="js/index.js")),
 
-
-# Define UI for application that draws a histogram
-ui <- navbarPage(
+    navbarPage(
     theme = shinytheme("cerulean"),
     collapsible = TRUE,
     "ICC power      ",
@@ -21,13 +13,13 @@ ui <- navbarPage(
              )
     ),
 
-    tabPanel("Study Results",
+    tabPanel("Simulation results",
              sidebarLayout(
                  # MSE ratio's paper
                  sidebarPanel(
                      shinyjs::useShinyjs(),
                      tags$h2("Study Design"),
-                     tags$p("Below you can select one of the conditions to compare the simulation results for. If you choose 'none' you can select the setting for each of the four conditions."),
+                     tags$p("Below you can select whether you want to compare the simulation results of the conditions of specific variables. If you choose 'none', you will see results of the selected values of conditions only."),
 
                      radioButtons(
                          "compare",
@@ -46,7 +38,7 @@ ui <- navbarPage(
                      div(id = "correlation_buttons",
                          radioButtons(
                              "correlation",
-                             label = "Expected correlation between raters",
+                             label = "Expected correlation between repeated measurements",
                              choices = c(0.6, 0.7, 0.8),
                              selected = 0.7
                          )) %>% shinyjs::hidden(),
@@ -57,7 +49,7 @@ ui <- navbarPage(
                          )) %>% shinyjs::hidden(),
                      div(id = "systdif_buttons",
                          radioButtons("systdif",
-                                      label = "0, 1 or 2 raters with systematic differences",
+                                      label = "Systematic differences between 0, 1 or 2 of the repeated measurements",
                                       choices = c(0, 1, 2)
                          )) %>% shinyjs::hidden(),
                      width = 3
@@ -67,10 +59,10 @@ ui <- navbarPage(
                      #dataTableOutput("ratdf_k"),
                      fluidRow(box(
                          width = 12,
-                         h1("Visualisation of simulation results"),
-                         #    # p(
-                         #   "The input parameter can be selected from the left-hand panel. For simulations results shown below, the following input paramers are selected:"
-                         # ),
+                         h1("Simulation results"),
+                          p(
+                            "The methods and general results of the simulation study can be found in Mokkink et al. <link>"
+                          )
                          # textOutput("variableselection")
                      )),
                      fluidRow(
@@ -99,7 +91,7 @@ ui <- navbarPage(
                              tabPanel("Bias for SEM", plotOutput("biassem")),
                              tabPanel("MSE for SEM", plotOutput("msesem"))
                          )
-                     ),
+                     )
                      #fluidRow(
                      #  box(width = 12,
                      #      h2("Visualisation of MSE ratio's for ICC"),
@@ -112,19 +104,18 @@ ui <- navbarPage(
                  )
              )),
     tabPanel(
-        "Choice assistant",
+        "Design choice assistant", value = "design",
         sidebarLayout(
             # MSE ratio's paper
             sidebarPanel(
                 tags$h2("Study Design"),
                 tags$p(
-                    "First indicate the approach for the power calculation. Then, depending on the method, parts of the study study design can be specified."
+                    "First indicate the approach for the power calculation. Then, depending on the method, parts of the study design can be specified."
                 ),
 
-                # hiertussen nog een conditionele vraag over wel van de onderste drie parameters onderzocht moet worden. Voor welke design parameter wil je het effect op de sample size bekijken? Afhankelijk van dit antwoord, worden de andere twee vast gezet voor beide scenarios - wel gekozen maar gelijk over de twee scenarios, de ander kan dan varieren tussen referentie en goal. Deze input werkt ook in de interpretatie die in een textoutput moet komen.
-                radioButtons(
+              radioButtons(
                     "power",
-                    label = "Calculate power parameters by",
+                    label = "Choose a procedure for the power calculations",
                     choices = c("CI width", "CI lower", "MSE ratio"),
                     selected = "0",
                     inline = TRUE
@@ -141,7 +132,7 @@ ui <- navbarPage(
                     ),
                     sliderInput(
                         "cilower",
-                        label = "Lower end of the Confidence interval for ICC (needs to be lower than expected ICC)",
+                        label = "Accepted lower limit of the Confidence interval for ICC (needs to be lower than expected ICC)",
                         min = 0.1,
                         max = 1,
                         value = 0.55
@@ -162,7 +153,7 @@ ui <- navbarPage(
                     ),
                     sliderInput(
                         "raterrange",
-                        label = "Number of raters",
+                        label = "Number of repeated measurments",
                         min = 1,
                         max = 99,
                         step = 1,
@@ -177,11 +168,12 @@ ui <- navbarPage(
                         "method_iccrgw",
                         label = "Type of ICC",
                         choices = c("oneway", "agreement", "consistency"),
+                        selected = "oneway",
                         inline = TRUE
                     ),
                     checkboxGroupInput(
                         "correlation_iccrgw",
-                        label = "Expected correlation between raters",
+                        label = "Expected correlation between repeated measurments",
                         choices = c(0.6, 0.7, 0.8),
                         selected = c(0.6, 0.7, 0.8),
                         inline = TRUE
@@ -195,13 +187,13 @@ ui <- navbarPage(
                     ),
                     radioButtons(
                         "systdif_iccrgw",
-                        label = "0, 1 or 2 raters with systematic differences",
+                        label = "Systematic differences expected between 0, 1 or 2 of the repeated measurements",
                         choices = c(0, 1, 2),
                         inline = TRUE
                     ),
                     sliderInput(
                         "ciwidthw",
-                        label = "Width of the 95% Confidence interval for ICC",
+                        label = "Target width of the 95% Confidence interval for ICC",
                         min = 0.1,
                         max = 1,
                         value = 0.3
@@ -212,11 +204,13 @@ ui <- navbarPage(
                 conditionalPanel(
                     condition = "output.powermse",
                     p(
-                        "Either sample size or number of raters can be varied between the reference and goal. For that condition the MSE ratio is calculated. The MSE ratio can be used to estimate the required sample size/rater increase to reach the goal."
+                        "Either the sample size or the number of repeated measurements can be varied between the alternative (what you have collected so far) and initial design (the chosen design at the start of the study, referring to the target sample size and number of repeated measurements). For that condition the MSE ratio is calculated. The MSE ratio can be used to estimate the required sample size/rater increase to reach the goal."
                     ),
+                    br(),
+                    em("Initial design refers to the intended number of patients or number of repeated measurements chosen at the start of the study, i.e. your goal; alternative design refers to the number of patients or repeated measurements included so far."),
                     selectInput(
                         "design",
-                        label = "Design aspect to vary between reference and goal",
+                        label = "Design aspect to vary between alternative (current) design and initial (goal) design",
                         choices = c("raters", "sample size"),
                         selected = character(0)
                     ),
@@ -231,7 +225,7 @@ ui <- navbarPage(
                     ),
                     checkboxGroupInput(
                         "correlation_iccrg",
-                        label = "Expected correlation between raters",
+                        label = "Expected correlation between repeated measurements",
                         choices = c(0.6, 0.7, 0.8),
                         selected = c(0.6, 0.7, 0.8),
                         inline = TRUE
@@ -245,7 +239,7 @@ ui <- navbarPage(
                     ),
                     radioButtons(
                         "systdif_iccrg",
-                        label = "0, 1 or 2 raters with systematic differences",
+                        label = "Systematic differences expected between 0, 1 or 2 of the repeated measurements",
                         choices = c(0, 1, 2),
                         inline = TRUE
                     ),
@@ -253,21 +247,21 @@ ui <- navbarPage(
                     div(id = "designk", ##vary for raters
                         radioButtons(
                             "n_iccrg",
-                            label = "Sample size",
+                            label = "Sample size (patients)",
                             choices = c(10, 20, 25, 30, 40, 50, 100, 200),
                             selected = "50",
                             inline = TRUE
                         ),
                         radioButtons(
                             "k_iccr",
-                            label = "number of raters in reference",
+                            label = "number of repeated measurements in alternative(current) design",
                             choices = c(2, 3, 4, 5, 6),
                             selected = "2",
                             inline = TRUE
                         ),
                         radioButtons(
                             "k_iccg",
-                            label = "number of raters for goal",
+                            label = "number of repeated measurements in initial (goal) design",
                             choices = c(2, 3, 4, 5, 6),
                             selected = "3",
                             inline = TRUE
@@ -276,20 +270,20 @@ ui <- navbarPage(
                     div(id = "designn", ## vary for sample size
                         radioButtons(
                             "k_iccrg",
-                            label = "number of raters",
+                            label = "number of repeated measurements",
                             choices = c(2, 3, 4, 5, 6),
                             inline = TRUE
                         ),
                         radioButtons(
                             "n_iccr",
-                            label = "Sample size in reference",
+                            label = "Sample size in alternative(current) design",
                             choices = c(10, 20, 25, 30, 40, 50, 100, 200),
                             selected = "50",
                             inline = TRUE
                         ),
                         radioButtons(
                             "n_iccg",
-                            label = "Sample size goal",
+                            label = "Sample size in initial (goal) design",
                             choices = c(10, 20, 25, 30, 40, 50, 100, 200),
                             selected = "100",
                             inline = TRUE
@@ -304,28 +298,34 @@ ui <- navbarPage(
                 condition = "output.startpage",
                 h2("Power estimations"),
                 div(
-                    p("On this page power calculations can be performed using three different strategies."
+                    p("The Design Choice Assistant informs your choice on sample size and number of repeated measurements in a study on reliability and measurement error. You can choose between three different approaches, depending on the phase you are in, or the model that you prefer."
                     ),
                     br(),
-                    strong("MSE ratio: "), "the MSE ratio procedure uses the simulation study to estimate to what extend a current reference design needs to be updated to achieve a similar precision as a goal design.",
-                    br(),
-                    strong("CI lower: "), "the CI lower procedure uses a formula presented in Zou (2011) to estimate the sample size required given the icc, lower limit of the icc and the number of raters. With this method it is possible to give a range of rater numbers in order to visualise the required sample size for different rater conditions."), em("Note that this method was developed for the ICC oneway and the estimated sample size is therefore conservative when applied for ICC agreement or consistency."),
-                br(),
-                strong("CI width:"), "the CI width procedure also uses teh simulations study. The specified width of the confidence interval is used to determine what conditions of raters and sample size can achieve that CI width under the referenced design conditions."
+                strong("CI width procedure:"), "you can use this procedure when you are designing your study. this procedure is based on  the results of the simulations study. The specified width of the confidence interval is used to determine what conditions of repeated measurements  and sample size can achieve that CI width under the chosen design conditions."
             ),
+            br(),
+            strong("CI lower procedure: "), "you can choose this procedure when you are designing a study and want to apply the one-way random effects model. the CI lower procedure is based on  a formula presented in Zou (2011) to estimate the sample size required. This model requires somewhat larger sample sizes, so it will give an conservative recommendations for use in other effect models.  With this method it is possible to give a range of numbers of repeated measurements in order to visualize the required sample size for different numbers of repeated measurements."),
+            br(),
+                    strong("MSE ratio procedure: "), "when the data collection has started and you want to check whether your power will be sufficient, you can use the MSE ratio approach. The MSE ratio procedure is based on the results of the simulation study to estimate to what extend a current alternative design needs to be updated to achieve a similar precision as the initial design.",
+            br(),
+            em("Initial design refers to the intended number of patients or number of repeated measurements chosen at the start of the study; alternative design refers to the number of patients or repeated measurements included so far."),
+            br(),
+            em("Note that we base our sample size recommendations on the ICC estimation; the SEM results from this"),
+
+
             conditionalPanel(
                 condition = "output.powermse",
                 fluidRow(
                     textOutput("variableselection2"),#for testing
                     h3("Power by MSE"),
-                    p("The figure below shows the confidence interval computed via the mean squared error for the reference situation and the goal scenario."),
+                    p("The figure below shows the confidence interval computed via the mean squared error for the alternative design and the initial design (> link Mokkink et al.,  2022)."),
                     plotOutput("mseratio_icc")),
                 fluidRow(
                     h3("MSE ratio"),
-                    p( "The MSE ratio relates directly to the sample size. The Mean squared error is a combination of the squared standard error and the squared bias. In the situation of virtually no bias, the square root of the MSE equals the standard error. The standard error decreases by the square root of the sample size. Accordingly, the MSE is directly related to the sample size; the MSE decreases by the sample size."
+                    p( "The MSE ratio relates directly to the sample size, and the number of repeated measurements. The Mean squared error is a combination of the squared standard error and the squared bias. In the situation of virtually no bias, the square root of the MSE equals the standard error. The standard error decreases by the square root of the number of repeated measurements. Accordingly, the MSE is directly related to the sample size and the number of repeated measurements; the MSE decreases by the sample size."
                     ),
                     h3("Simulation results"),
-                    p( "The simulation results can be used to compare different study design scenario's. By computing the ratio of the MSE in two different scenarios, let's say a reference and a goal scenario, the ratio indicates the required ratio difference in sample for the scenario's to achieve equal precision."
+                    p( "The simulation results can be used to compare different study design scenario's. By computing the ratio of the MSE in two different scenarios, that is the alternative (current) and initial (goal) design, the ratio indicates the required change in sample size or repeated measurements for the scenario's to achieve equal precision."
                     ),
                     ##hier dan nog uitleg toevoegen over hoe de MSE ratio geinterpreteerd moet worden. Dit moet helemaal geleid worden met de input parameters.
                     h3("Interpreting MSE ratio"),
@@ -335,46 +335,47 @@ ui <- navbarPage(
             conditionalPanel(condition = "output.powerci",
                              fluidRow(
                                  h2("Power by Confidence interval width"),
-                                 p("The plot below shows the sample size and rater combinations that satisfy the confidence interval width requirement, given the scenario specified."),
-                                 #plotOutput("widthcond"),
+                                 p("The plot below shows the sample size and rater combinations that satisfy the confidence interval width requirement, given you specified scenario."),
+                                 br(),
+                                 em("> Scroll over the figure to find the recommendations."),
                                  plotlyOutput("widthmap")
                              )),
             conditionalPanel(condition = "output.powercilow",
                              h2("Power by lower end of Confidence Interval"),
-                             p("The plot below shows the required sample size for the number of raters on the x-axis that are needed for the scenario with a given ICC to obtain a confidence interval with a lower end as indicated."), em("Note that this method was developed for the ICC oneway and the estimated sample size is therefore conservative when applied for ICC agreement or consistency."),
+                             p("The plot below shows the required sample size (y-axis) for the number of repeated measurements on the x-axis that are needed for your  scenario with a given ICC to obtain a confidence interval with a lower end as indicated in your scenario."), em("Note that this method was developed for the ICC oneway and the estimated sample size is therefore conservative when applied for ICC agreement or consistency."),
                              fluidRow(plotlyOutput("n_icc_plot"))),
 
         )
     )
 ),
-
-navbarMenu("About",
-           tabPanel("Background",
-                    p(
-                        "On this page add background info on calculations, links to package and documentation."
-                    )
-           ),
-           tabPanel("Authors",
-                    fluidRow(box(
-                        #tags$h1("About"),
-                        width = 12,
-                        # box(width= 300,
-                        #     tags$a(img(src="TNO_zwart.jpg", width="10%"),href="https://www.tno.nl/nl/"),
-                        #     tags$h4("Department Child Health")),
-                        box(
-                            width = 10,
-                            tags$h4("Iris Eekhout"),
-                            tags$div("Email: iris.eekhout@tno.nl"),
-                            tags$div(
-                                "Website: ",
-                                tags$a("www.iriseekhout.com", href = "https://www.iriseekhout.com")
-                            ),
-                            tags$div(
-                                "Github: ",
-                                tags$a("iriseekhout", href = "https://github.com/iriseekhout")
-                            )
-                        )
-                    )))
+## FAQ ----
+tabPanel("FAQ & links",
+         fluidRow(
+             column(width = 8, offset = 2,
+           h1("Frequently Asked Questions"),
+         br(),
+           h4("Where can I find more information?"),
+           p("> link paper"),
+           h4("Where can I find information to decide which ICC or SEM formula matches my design?"),
+           p("> link paper"),
+           h4("Where can I find help to decide on the number of patients and repeated measurements in my study"),
+         tags$div("The", tags$a("choice assistent", onclick = "customHref('design')"), " in this application can guide you with this decision."),
+           h4("How can I estimate the ICCs and SEMs in R?"),
+           tags$div("The R package", tags$a("Agree", href = "https://github.com/iriseekhout/Agree"), "includes all functions to obtain the ICCs and SEMs for different types of ICCs. The Agree package is publically available and can be installed in R using the following code: ", tags$code("remotes::install_github(repo = 'iriseekhout/Agree')")),
+           h4("How can I estimate the ICCs and SEMs in SPSS?"),
+           p("")
+           )
+         )
+         ),
+## about ----
+tabPanel("About the team",
+           tags$iframe(src = "./about.html",
+                       width = "100%",
+                       frameborder = 0, scrolling = "auto", style = "height: 100vh;"
+           )
+           )
+## end about ----
+)
 )
 #     #simulation page ----
 # tabPanel("Simulate",
@@ -515,4 +516,4 @@ navbarMenu("About",
 #          )
 #)
 
-)
+#)

@@ -567,6 +567,7 @@ shinyServer(function(input, output, session) {
   })
   outputOptions(output, "startpage", suspendWhenHidden = FALSE)
 
+  #note: evaluation of "input$power# givens een warning (Warning: Error in if: argument is of length zero) by definition, because when length(input$power) == 0; then input$power == "CI lower" cannot be evaluated. >> not a problem for the app.
   output$powercilow <- reactive({
         FALSE
         if(length(input$power) > 0 & input$power == "CI lower") TRUE
@@ -600,7 +601,7 @@ shinyServer(function(input, output, session) {
 
         p <- ggplot(dat, aes(x = raters, y = n)) +
             geom_bar(stat = "identity") +
-            xlab("Number of raters (k)") +
+            xlab("Number of repeated measurements (k)") +
             ylab('Sample size (n)')
         ggplotly(p)
     })
@@ -672,16 +673,16 @@ shinyServer(function(input, output, session) {
 
     p <- heatmaply(mat,
                    dendrogram = "none",
-                   xlab = "Raters", ylab = "Sample size",
-                   main = "Width of Confidence interval for ICC",
+                   xlab = "Repeated measurements", ylab = "Sample size",
+                   main = paste("Width of Confidence interval for ICC type", paste(input$method_iccrgw, collapse = " & ")),
                    scale = "none",
                    margins = c(60,100,40,20),
                    grid_color = "white",
                    grid_width = 0.001,
-                   titleX = FALSE,
+                   titleX = TRUE,
                    hide_colorbar = TRUE,
                    branches_lwd = 0.1,
-                   label_names = c("Sample size", "Raters", "CI width"),
+                   label_names = c("Sample size", "Repeated Measurements", "CI width"),
                    fontsize_row = 14, fontsize_col = 14,
                    labCol = colnames(mat),
                    labRow = rownames(mat),
@@ -784,10 +785,10 @@ shinyServer(function(input, output, session) {
 
     output$MSEratio <- renderText({
         if(input$design == "sample size"){
-           statement <-  paste0("The MSE ratio is the required increase in number of raters to achieve the precision for the design with a sample size of ", input$n_iccg, " (indicated as goal), with an actual sample size of ", input$n_iccr, " (reference). Accordingly, the number of raters (", input$k_iccrg, ") needs to be multiplied by ", round(scenario_icc$mseratio[1],2), ", and change to ",round(as.numeric(input$k_iccrg) * scenario_icc$mseratio[1]), " to have a precision close to the precision with a sample size of ", input$n_iccg)
+           statement <-  paste0("The MSE ratio is the required increase in repeated measurements to achieve the precision for the design with a sample size of ", input$n_iccg, " (indicated as goal), with an actual sample size of ", input$n_iccr, " (initial). Accordingly, the number of repeated measurements (", input$k_iccrg, ") needs to be multiplied by ", round(scenario_icc$mseratio[1],2), ", and change to ",round(as.numeric(input$k_iccrg) * scenario_icc$mseratio[1]), " to have a precision close to the precision with a sample size of ", input$n_iccg)
         }
         if(input$design == "raters"){
-           statement <-  paste0("The MSE ratio is the required sample size increase to achieve the precision for the design with ", input$k_iccg, " raters (indicated as goal), with only ", input$k_iccr, " raters. Accordingly, the sample size of ", input$n_iccrg, " needs to be multiplied by ", round(scenario_icc$mseratio[1],2), " and change to ", round(as.numeric(input$n_iccrg) * scenario_icc$mseratio[1]), " to have a precision close to the precision with ", input$k_iccg, " raters.")
+           statement <-  paste0("The MSE ratio is the required sample size increase to achieve the precision for the design with ", input$k_iccg, " raters (indicated as goal), with only ", input$k_iccr, " raters. Accordingly, the sample size of ", input$n_iccrg, " needs to be multiplied by ", round(scenario_icc$mseratio[1],2), " and change to ", round(as.numeric(input$n_iccrg) * scenario_icc$mseratio[1]), " to have a precision close to the precision with ", input$k_iccg, " repeated measurements.")
         }
         statement
     })
