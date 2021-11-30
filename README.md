@@ -188,7 +188,7 @@ breast_long
 
 ### Variance components
 
-The variances that are used to compute the `icc` are obtained from a linear mixed model. This model is estimated with the `lmer()` function from the `lme4` package. In the `breast` example we have two levels: patients are level 1 and raters/observers are level 2. The two-level multilevel model is defined as $Y_{ijr} = \beta_0 + b_{0j} + b_{0r} + \epsilon_{ijr}$, where $b_{0j}$ is the random intercept at the subject level and $b_{0r}$ the random intercept at the rater/observer level. The $\epsilon_{ijr}$ is the residual error. The `r-code` for the model in `lme4` is: `lmer(score ~ (1|id) + (1|observer), data, REML = T)`
+The variances that are used to compute the `icc` are obtained from a linear mixed model. This model is estimated with the `lmer()` function from the `lme4` package. In the `breast` example we have two levels: patients are level 1 and raters/observers are level 2. The two-level multilevel model is defined as Y<sub>ijr</sub> = &beta;<sub>0</sub> + b<sub>0j</sub> + b<sub>0r</sub> + &epsilon;<sub>ijr</sub>, where &beta;<sub>0</sub> is the random intercept at the subject level and &beta;<sub>0r</sub> the random intercept at the rater/observer level. The &epsilon;<sub>ijr</sub> is the residual error. The `r-code` for the model in `lme4` is: `lmer(score ~ (1|id) + (1|observer), data, REML = T)`
 
 De exact specification of the multilevel model, depends on the design of the study and the type of ICC that one wants to compute. 
 
