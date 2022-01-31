@@ -19,9 +19,9 @@
 #' @details
 #' The ICC type consistency is the variance between the subjects divided by the sum
 #' of the subject variance and the residual variance. The subject variance and
-#' error variance are adjusted for the rater variance, but the rater variance is
-#' not used to calculate the ICC. The ICC for consistency generalizes only to
-#' the fixed set of raters in the data (Shrout & Fleiss,
+#' error variance are adjusted for the fixed rater effect, accordingly the rater
+#' variance is not used to calculate the ICC. The ICC for consistency generalizes
+#' only to the fixed set of raters in the data (Shrout & Fleiss,
 #' 1979). The `icc_model()` function is used to compute the variances.
 #' This is a `lmer` model with a random slope for the subjects as well as for
 #' the raters. The sem is the square root of the error variance.

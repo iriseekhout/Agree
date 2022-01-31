@@ -24,7 +24,7 @@
 #' selected from a larger population of judges (Shrout & Fleiss, 1979). The
 #' `icc_oneway()` uses the `varcomp()` function to compute the variances.
 #' Theses variances are estimated from a `lmer` model with random slope for the
-#' subjects. When `twoway = TRUE` a level for the raters is estimtaed as well
+#' subjects. When `twoway = TRUE` a level for the raters is estimated as well
 #' and the rater variance is not used for the ICC oneway and is subtracted from
 #' the sum of subject variance over the raters, which is then averaged.
 #' The error variance is computed as the sum of the residual variance and the

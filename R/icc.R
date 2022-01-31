@@ -41,7 +41,7 @@ icc <- function(data,
 
 
   if("oneway" %in% method){
-   icc_ow <- icc_oneway(data = data, cols = cols, alpha = alpha,                                    twoway = onemodel)
+   icc_ow <- icc_oneway(data = data, cols = cols, alpha = alpha, twoway = onemodel)
 
   ICC["oneway", paste("var_level1")] <- icc_ow$varj_oneway
   ICC["oneway", paste("var_Residual")] <- icc_ow$varerr_oneway
