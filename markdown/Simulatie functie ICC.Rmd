@@ -1,0 +1,163 @@
+---
+title: "Varcomp examples"
+author: "Iris Eekhout"
+date: "30-11-2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(Agree)
+library(dplyr)
+library(tidyr)
+```
+
+## Fake data
+
+
+
+```{r}
+level3 = 
+level2 = 3 #aantal repeated measurements
+icc=0.7 #input covariance
+n=100 #sample size (patients)
+vari=1 #variantie tussen patienten (range scores)
+
+
+simperf_icc <- function(n, 
+                       k,
+                       means = rep(0, k), 
+                       cor, 
+                       var,
+                       sim = 1000,
+                       method = c("oneway", "agreement", "consistency")){
+  cormat <- matrix(cor, nrow = k, ncol = k)
+  diag(cormat) <- 1
+  covmat <- cormat * var
+  
+  sampout <- lapply(as.list(1:sim), function(x){
+   dat <- MASS::mvrnorm(n = n, mu = means, Sigma = covmat)
+   colnames(dat) <- paste0("rater", 1:k)
+   sampout <- Agree::icc(dat, method = method)
+   sampout
+  })
+  
+  popdat <- MASS::mvrnorm(n = 1000000, mu = means, Sigma = covmat)
+   colnames(popdat) <- paste0("rater", 1:k)
+   popout <- Agree::icc(popdat, method = method)
+   
+   
+  sbias <- lapply(sampout, function(x){
+    x - popout
+  }) 
+   
+  sqe <- lapply(sbias, function(x){
+    x^2
+  })
+   
+  cover <- lapply(sampout, function(x){
+    ylow <- ifelse(x[, "lower"] < popout[, "icc"], TRUE, FALSE)
+    yhigh <- ifelse(x[, "upper"] > popout[, "icc"], TRUE, FALSE)
+    ifelse(ylow & yhigh, 1, 0)
+  })
+
+  
+ bias <- Reduce(`+`, sbias) / length(sbias)
+ mse <- Reduce(`+`, sqe) / length(sqe)
+ coverage <- Reduce(`+`, cover) / length(cover)
+ 
+ }
+
+simperf_icc(n = 25, k = 3, cor = 0.8, var = 1)
+  
+simperf_icc(n = 25, k = 3, cor = 0.8, var = 1, method = "oneway")
+
+```
+
+
+## Oneway
+
+
+```{r}
+load("~/Documents/GitHub/Agree/data/fake_1.rda")
+
+varcomp(score ~ (1|patient), data = fake_1)
+
+fake1_wide <- fake_1 %>% pivot_wider(names_from = meting,names_prefix = "rater", values_from = score)
+icc(fake1_wide[,-1], var = T)
+
+```
+
+
+
+## Twoway
+
+### Crossed (twoway)
+
+
+
+```{r}
+load("~/Documents/GitHub/Agree/data/fake_2cros.rda")
+
+varcomp(score ~ (1|patient) + (1|rater), data = fake_2cros)
+
+fake2_cr_wide <- fake_2cros %>% pivot_wider(names_from = rater,names_prefix = "rater", values_from = score)
+icc(fake2_cr_wide[,-1], var = T)
+
+```
+
+
+
+### Nested (twoway)
+
+Kom er nog niet uit..
+```{r}
+load("~/Documents/GitHub/Agree/data/fake_2nest.rda")
+fake_2nest2 <- fake_2nest %>% mutate(patient = ifelse(patient> 5, patient -5, patient)) %>% drop_na(score)
+
+varcomp(score ~ (1|rater/patient), data = fake_2nest2)
+
+
+fake2_ne_wide <- fake_2nest %>% pivot_wider(names_from = rater, names_prefix = "rater", values_from = score)
+icc(fake2_ne_wide[,-1], var = T)
+
+## voorbeelddata waarbij wel alles werkt.
+lme4::cake
+varcomp(angle ~(1|recipe/replicate), data = lme4::cake)
+
+varcomp(angle ~(1|recipe) (1|replicate), data = lme4::cake)
+
+varcomp(angle ~ (1|replicate), data = lme4::cake %>% filter(recipe == "A"))
+varcomp(angle ~ (1|replicate), data = lme4::cake %>% filter(recipe == "B"))
+varcomp(angle ~ (1|replicate), data = lme4::cake %>% filter(recipe == "C"))
+
+
+
+```
+
+
+SPSS manier: beide modellen apart en vervolgens de varianties poolen.
+
+```{R}
+varcomp(score ~ (1|rater) + (1|patient), data = fake_2nest[fake_2nest$rater < 3,])
+varcomp(score ~ (1|rater) + (1|patient), data = fake_2nest[fake_2nest$rater > 2,])
+
+
+pool_var <- function(v1, v2, n1, n2){
+  pvar <- ((n1-1) * v1 + (n2-1) * v2) / (n1 + n2 -2)
+  pvar
+}
+pool_var(550.222, 512.1766, 10,10)
+
+#als je pooled mis je een deel van de rater variance - deze laat je weg en je komt dan bij de consistency uit.
+
+```
+
+
+
+## Threeway
+
+### Crossed (threeway)
+
+### Nested (threeway)
+
