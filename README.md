@@ -158,7 +158,7 @@ agreement(data2, specific="Other", confint = TRUE)
 conditional.agreement(data2) %>% kable()
 ```
 
-## ICC and SEM
+## Estimating ICCs and SEMs with multilevel models
 
 The computational background and the use of the `icc()` function from the `Agree` package. We developed the `icc()` functions for this package in connection with a simulation study about sample size requirements for studies on reliability and measurement error (Mokkink et al, tbp) and a methodological paper about how to design and conduct a study on reliability and measurement error (Mokkink et al tbp). 
 
@@ -336,6 +336,24 @@ icc(breast_scores,
     var = TRUE)
 
 ```
+
+### Three-way models
+
+The three-way effects models are an extension of the two-way effects models with an extra random or fixed effect. The additional effect can be defined in the `lmer` formula in the `varcomp` function. 
+
+```{r}
+# variance components for a three-way model for agreement
+varcomp(score ~ (1|id) + (1|rater) + (1|technician), data)
+
+# variance components for a three-way mixed model for consistency with fixed rater and technician
+varcomp(score ~ (1|id) + rater + technician, data)
+
+# variance components for a three-way mixed model for consistency with fixed technician
+varcomp(score ~ (1|id) + (1|rater) + technician, data)
+
+
+```
+
 
 ### Overview technical terms
 
