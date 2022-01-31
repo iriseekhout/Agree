@@ -18,9 +18,10 @@ colnames(data) <- paste0("X", 1:5)
 data <- sfdata_wide #Shrout & Fleiss voorbeeld data
 
 #all icc's computed from one model:
-icc(data, var = T)
+icc(data, var = T, onemodel = T)
+icc(data, var = T, onemodel = F)
 #all icc's computed from a separate model - using the official model per icc:
-icc2(data, var = T)
+#icc2(data, var = T)
 #programation by psych library via lmer
 psych::ICC(data, lmer = TRUE)
 #prgram by psych via anova
