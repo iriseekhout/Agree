@@ -8,9 +8,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Welcome
 
-This web-application is an extension for the paper "Sample size requirements for studies on reliability and measurement error: a web-based application based on a simulation study" and developed by Iris Eekhout and Wieneke Mokkink. This app offers all results of the simulation study visualized, and the design choice assistant to help you decide on the sample size of your study and the number of repeated measurements.
+This web-application is an extension for the paper "Sample size requirements for studies on reliability and measurement error: an online application based on a simulation study" (BMC Medical Resaerch Methodology, in submission) and developed by Iris Eekhout and Wieneke Mokkink. This app offers all results of the simulation study visualized, and the Design choice assistant to help you decide on the sample size of your study and the number of repeated measurements.
 
-In this paper we performed a series of simulation studies to investigate the precision of various reliability and measurement error parameters under different conditions within different study designs. We aim to study the trade-off between sample size of patients (n) and for the number of repeated measurements (k), and for which conditions of n and k the most optimal estimations of the ICCs and SEMs can be achieved. Based on the results, we developed this freely available web-application that shows the implications for decisions about the sample sizes in reliability studies, i.e. the (design) choice assistant.
+In this paper we performed a series of simulation studies to investigate the precision of various reliability and measurement error parameters under different conditions within different study designs. We aim to study the trade-off between sample size of patients (n) and for the number of repeated measurements (k), and for which conditions of n and k the optimal estimations of the ICCs and SEMs can be achieved. Based on the results, we developed this freely available web-application that shows the implications for decisions about the sample sizes in reliability studies, i.e. the Design choice assistant.
 
 In a study on reliability or measurement error, we are often interested in the influence of specific sources of variation such as rater, occasion or equipment, on the score. This source of variation of interest is varied across the repeated measurements. For example, we are interested in the influence of the rater on different occasions (i.e. intra-rater reliability) or the influence of different raters on one occasion (inter-rater reliability) on the score of a patient. In this app, the term ‘repeated measurements’ refers to repeated measurements in stable patients. As the source of variation of interest ‘raters’ will be used as an example throughout this app. 
 
@@ -18,7 +18,7 @@ Below you can find a brief description for each page on this web-application.
 
 > **Simulation Results**
 >
-> To find the results in terms of bias and precision for ICC and SEM parameters for all different conditions investigated.
+> To find the results in terms of bias and precision for ICC and SEM parameters for all different conditions investigated in the simulation study.
 > 
 > **Design choice assistant**
 > 

@@ -175,7 +175,7 @@ ui <-tagList(
                         "correlation_iccrgw",
                         label = "Expected correlation between repeated measurments",
                         choices = c(0.6, 0.7, 0.8),
-                        selected = c(0.6, 0.7, 0.8),
+                        selected = c(0.7),
                         inline = TRUE
                     ),
                     checkboxGroupInput(
@@ -204,13 +204,13 @@ ui <-tagList(
                 conditionalPanel(
                     condition = "output.powermse",
                     p(
-                        "Either the sample size or the number of repeated measurements can be varied between the alternative (what you have collected so far) and initial design (the chosen design at the start of the study, referring to the target sample size and number of repeated measurements). For that condition the MSE ratio is calculated. The MSE ratio can be used to estimate the required sample size/rater increase to reach the goal."
+                        "Either the sample size or the number of repeated measurements can be varied between the adapted (what you have collected so far) and target design (the chosen design at the start of the study, referring to the target sample size and number of repeated measurements). For that condition the MSE ratio is calculated. The MSE ratio can be used to estimate the required sample size/rater increase to reach the goal."
                     ),
                     br(),
-                    em("Initial design refers to the intended number of patients or number of repeated measurements chosen at the start of the study, i.e. your goal; alternative design refers to the number of patients or repeated measurements included so far."),
+                    em("Target design refers to the intended number of patients or number of repeated measurements chosen at the start of the study, i.e. your goal; adapted design refers to the number of patients or repeated measurements included so far."),
                     selectInput(
                         "design",
-                        label = "Design aspect to vary between alternative (current) design and initial (goal) design",
+                        label = "Design aspect to vary between adapted (current) design and target (goal) design",
                         choices = c("raters", "sample size"),
                         selected = character(0)
                     ),
@@ -227,7 +227,7 @@ ui <-tagList(
                         "correlation_iccrg",
                         label = "Expected correlation between repeated measurements",
                         choices = c(0.6, 0.7, 0.8),
-                        selected = c(0.6, 0.7, 0.8),
+                        selected = c(0.7),
                         inline = TRUE
                     ),
                     checkboxGroupInput(
@@ -254,14 +254,14 @@ ui <-tagList(
                         ),
                         radioButtons(
                             "k_iccr",
-                            label = "number of repeated measurements in alternative(current) design",
+                            label = "number of repeated measurements in adapted(current) design",
                             choices = c(2, 3, 4, 5, 6),
                             selected = "2",
                             inline = TRUE
                         ),
                         radioButtons(
                             "k_iccg",
-                            label = "number of repeated measurements in initial (goal) design",
+                            label = "number of repeated measurements in target (goal) design",
                             choices = c(2, 3, 4, 5, 6),
                             selected = "3",
                             inline = TRUE
@@ -276,14 +276,14 @@ ui <-tagList(
                         ),
                         radioButtons(
                             "n_iccr",
-                            label = "Sample size in alternative(current) design",
+                            label = "Sample size in adapted(current) design",
                             choices = c(10, 20, 25, 30, 40, 50, 100, 200),
                             selected = "50",
                             inline = TRUE
                         ),
                         radioButtons(
                             "n_iccg",
-                            label = "Sample size in initial (goal) design",
+                            label = "Sample size in target (goal) design",
                             choices = c(10, 20, 25, 30, 40, 50, 100, 200),
                             selected = "100",
                             inline = TRUE
@@ -298,34 +298,34 @@ ui <-tagList(
                 condition = "output.startpage",
                 h2("Power estimations"),
                 div(
-                    p("The Design Choice Assistant informs your choice on sample size and number of repeated measurements in a study on reliability and measurement error. You can choose between three different approaches, depending on the phase you are in, or the model that you prefer."
+                    p("The Design choice assistant informs your choice on sample size and number of repeated measurements in a study on reliability and measurement error. You can choose between three different approaches, depending on the phase you are in, or the model that you prefer."
                     ),
                     br(),
-                strong("CI width procedure:"), "you can use this procedure when you are designing your study. this procedure is based on  the results of the simulations study. The specified width of the confidence interval is used to determine what conditions of repeated measurements  and sample size can achieve that CI width under the chosen design conditions."
+                strong("Confidence Interval (CI) width procedure:"), "you can use this procedure when you are designing your study. this procedure is based on  the results of the simulations study. The specified width of the confidence interval (CI) is used to determine what conditions of repeated measurements  and sample size can achieve that CI width under the chosen design conditions."
             ),
             br(),
-            strong("CI lower procedure: "), "you can choose this procedure when you are designing a study and want to apply the one-way random effects model. the CI lower procedure is based on  a formula presented in Zou (2011) to estimate the sample size required. This model requires somewhat larger sample sizes, so it will give an conservative recommendations for use in other effect models.  With this method it is possible to give a range of numbers of repeated measurements in order to visualize the required sample size for different numbers of repeated measurements."),
+            strong("Confidence Interval (CI) lower limit procedure: "), "you can choose this procedure when you are designing a study and want to apply the one-way random effects model. the CI lower procedure is based on  a formula presented in ", a("Zou (2011)", href = "https://doi.org/10.1002/sim.5466"), "to estimate the sample size required. This model requires somewhat larger sample sizes, so it will give an conservative recommendations for use in other effect models.  With this method it is possible to give a range of numbers of repeated measurements in order to visualize the required sample size for different numbers of repeated measurements."),
             br(),
-                    strong("MSE ratio procedure: "), "when the data collection has started and you want to check whether your power will be sufficient, you can use the MSE ratio approach. The MSE ratio procedure is based on the results of the simulation study to estimate to what extend a current alternative design needs to be updated to achieve a similar precision as the initial design.",
+                    strong("MSE ratio procedure: "), "and there is a need to change or reconsider the target design of the study, e.g. the patient recruitment is slow or one of the raters drops out, you can use the MSE ratio procedure. The MSE ratio procedure is based on the results of the simulation study to estimate to what extend a current adapted design (i.e. the number of patients or repeated measurements included so far in the study) needs to be updated to achieve a similar precision as the target design (i.e. the indended number of patients or repeated measruements chosen at the start of the study).",
+
             br(),
-            em("Initial design refers to the intended number of patients or number of repeated measurements chosen at the start of the study; alternative design refers to the number of patients or repeated measurements included so far."),
-            br(),
-            em("Note that we base our sample size recommendations on the ICC estimation; the SEM results from this"),
+            "We specifically used the results for ICC estimations for the recommendations, as these required (in addition to MSE values) confidence intervals, which we could not obtain for the SEM estimations. In addition, because we saw the same trends in MSE values for ICC and SEM, and we recommend always reporting both parameters in a study, we focus only on ICC estimations."
+            ,
 
 
             conditionalPanel(
                 condition = "output.powermse",
                 fluidRow(
                     textOutput("variableselection2"),#for testing
-                    h3("Power by MSE"),
-                    p("The figure below shows the confidence interval computed via the mean squared error for the alternative design and the initial design (> link Mokkink et al.,  2022)."),
+                    h3("Power by MSE procedure"),
+                    p("The figure below shows the confidence interval computed via the mean squared error for the adapted design and the target design (> link Mokkink et al.,  2022)."),
                     plotOutput("mseratio_icc")),
                 fluidRow(
                     h3("MSE ratio"),
-                    p( "The MSE ratio relates directly to the sample size, and the number of repeated measurements. The Mean squared error is a combination of the squared standard error and the squared bias. In the situation of virtually no bias, the square root of the MSE equals the standard error. The standard error decreases by the square root of the number of repeated measurements. Accordingly, the MSE is directly related to the sample size and the number of repeated measurements; the MSE decreases by the sample size."
+                    p( "The MSE ratio relates directly to the sample size, and the number of repeated measurements. The mean squared error is a combination of the squared standard error and the squared bias (see Mokkink et al.). In the situation of virtually no bias, the square root of the MSE equals the standard error. The standard error decreases by the square root of the number of repeated measurements. Accordingly, the MSE is directly related to the sample size and the number of repeated measurements; the MSE decreases by the sample size."
                     ),
                     h3("Simulation results"),
-                    p( "The simulation results can be used to compare different study design scenario's. By computing the ratio of the MSE in two different scenarios, that is the alternative (current) and initial (goal) design, the ratio indicates the required change in sample size or repeated measurements for the scenario's to achieve equal precision."
+                    p( "The simulation results can be used to compare different study design scenario's. By computing the ratio of the MSE in two different scenarios, that is the adapted (current) and target (defined at the start of the study) design, the ratio indicates the required change in sample size or repeated measurements for the scenario's to achieve equal precision. The decreased precision of the adapted design shows the loss in precision relative to the target design, when the sample size or repeated measurements cannot be further increased."
                     ),
                     ##hier dan nog uitleg toevoegen over hoe de MSE ratio geinterpreteerd moet worden. Dit moet helemaal geleid worden met de input parameters.
                     h3("Interpreting MSE ratio"),
@@ -335,6 +335,8 @@ ui <-tagList(
             conditionalPanel(condition = "output.powerci",
                              fluidRow(
                                  h2("Power by Confidence interval width"),
+                                 p("The CI width procedures can be used when designing the study, i.e. before the start of the data collection, to determine the precision of the target design. In the CI width procedure a pre-specified width of the confidence interval (e.g. 0.3) is set to determine what conditions of sample size and repeated measurements can achieve that specific CI width under the specified design conditions. This way, various designs can be considered to decide on the most efficient target design (i.e. the chosen design that will be described in the study protocol)."),
+                                 br(),
                                  p("The plot below shows the sample size and rater combinations that satisfy the confidence interval width requirement, given you specified scenario."),
                                  br(),
                                  em("> Scroll over the figure to find the recommendations."),
@@ -342,7 +344,11 @@ ui <-tagList(
                              )),
             conditionalPanel(condition = "output.powercilow",
                              h2("Power by lower end of Confidence Interval"),
-                             p("The plot below shows the required sample size (y-axis) for the number of repeated measurements on the x-axis that are needed for your  scenario with a given ICC to obtain a confidence interval with a lower end as indicated in your scenario."), em("Note that this method was developed for the ICC oneway and the estimated sample size is therefore conservative when applied for ICC agreement or consistency."),
+                             p("The lower limit of the CI is based on an analytical approach. The CI lower limit procedure is a known method in the literature and uses a formula for the confidence intervals presented in ", a("Zou (2011)", href = "https://doi.org/10.1002/sim.5466"), " to estimate the sample size required given the assumed ICC one-way, lower limit of the ICC one-way and the number of raters that will be involved. The advantage of this method is that it can be used beyond the specified conditions that are used in this simulation study. However, this method is based on the ICC one-way, and cannot be generalized to the other types of ICCs."),
+                             p("The plot below shows the required sample size (y-axis) for the number of repeated measurements on the x-axis that are needed for your scenario with a given ICC to obtain a confidence interval with a lower end as indicated in your scenario."),
+                             strong("Confidence interval proportion:"), "Probability limits for the confidence interval, most common is 95% or 99%.",
+                             strong("Power:", "Defined as the assurance probability, which is the probabilitiy of achieving the desired precision level, i.e. lower limit of the confidence interval."),
+                             em("Note that this method was developed for the ICC oneway and the estimated sample size is therefore conservative when applied for ICC agreement or consistency."),
                              fluidRow(plotlyOutput("n_icc_plot"))),
 
         )
