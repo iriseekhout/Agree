@@ -89,7 +89,8 @@ ui <-tagList(
                              width = 10,
                              #side = "right",
                              tabPanel("Bias for SEM", plotOutput("biassem")),
-                             tabPanel("MSE for SEM", plotOutput("msesem"))
+                             tabPanel("MSE for SEM", plotOutput("msesem")),
+                             tabPanel("Width of CI for SEM", plotOutput("widthsem"))
                          )
                      )
                      #fluidRow(
@@ -162,21 +163,21 @@ ui <-tagList(
                 #input power ci width ----
                 conditionalPanel(
                     condition = "output.powerci",
-                    checkboxGroupInput(
+                    radioButtons(
                         "method_iccrgw",
                         label = "Type of ICC",
                         choices = c("oneway", "agreement", "consistency"),
                         selected = "oneway",
                         inline = TRUE
                     ),
-                    checkboxGroupInput(
+                    radioButtons(
                         "correlation_iccrgw",
                         label = "Expected correlation between repeated measurments",
                         choices = c(0.6, 0.7, 0.8),
                         selected = c(0.7),
                         inline = TRUE
                     ),
-                    checkboxGroupInput(
+                    radioButtons(
                         "variance_iccrgw",
                         label = "Expected variance in scores",
                         choices = c(1, 10, 100),
@@ -190,12 +191,14 @@ ui <-tagList(
                         inline = TRUE
                     ),
                     sliderInput(
-                        "ciwidthw",
-                        label = "Target width of the 95% Confidence interval. Note that for SEM the unit changes with the variance",
+                        "ciwidthw_icc",
+                        label = "Target width of the 95% Confidence interval of ICC.",
                         min = 0.1,
-                        max = 5,
+                        max = 1,
                         value = 0.3
-                    )
+                    ),
+                   #update slider with variance unit
+                    uiOutput("slider_ciwidthw_sem")
 
                 ),
         #input power mse ratio ----
@@ -222,21 +225,21 @@ ui <-tagList(
                     ),
         #vary for raters ----
                     # conditionalPanel(
-                    checkboxGroupInput(
+        radioButtons(
                         "method_iccrg",
                         label = "Type of ICC",
                         choices = c("oneway", "agreement", "consistency"),
                         select = "agreement",
                         inline = TRUE
                     ),
-                    checkboxGroupInput(
+        radioButtons(
                         "correlation_iccrg",
                         label = "Expected correlation between repeated measurements",
                         choices = c(0.6, 0.7, 0.8),
                         selected = c(0.7),
                         inline = TRUE
                     ),
-                    checkboxGroupInput(
+        radioButtons(
                         "variance_iccrg",
                         label = "Expected variance in scores",
                         choices = c(1, 10, 100),

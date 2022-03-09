@@ -1,10 +1,4 @@
-#
-# This is the server logic of a Shiny web application. You can run the
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
+
 #
 
 library(shiny)
@@ -90,7 +84,7 @@ shinyServer(function(input, output, session) {
                 xlab("Raters (k)")+
                 theme(text = element_text(size = 16))+
                 scale_color_manual(name = "Sample size (n)", values = ncolors)+
-                ggtitle(paste("ICC type =", input$method), subtitle = paste("| correlation:", input$correlation, "| variance:", input$variance, "| deviate raters:", input$systdif))
+                ggtitle( paste("ICC type =", input$method), subtitle = paste("| correlation:", input$correlation, "| variance:", input$variance, "| deviate raters:", input$systdif))
         })
 
 
@@ -114,6 +108,16 @@ shinyServer(function(input, output, session) {
             theme(text = element_text(size = 16))+
             scale_color_manual(name = "Sample size (n)", values = ncolors)+
             ggtitle(paste("ICC type =", input$method), subtitle = paste("| correlation:", input$correlation, "| variance:", input$variance, "| deviate raters:", input$systdif))
+    })
+
+    output$widthsem <- renderPlot({
+      ggplot(disdat(), aes(x = k, y = width_sem, group = n, color = n))+
+        geom_line(size = 1) +
+        ylab("95% CI width for SEM") +
+        xlab("Raters (k)")+
+        theme(text = element_text(size = 16))+
+        scale_color_manual(name = "Sample size (n)", values = ncolors)+
+        ggtitle(paste("ICC type =", input$method), subtitle = paste("| correlation:", input$correlation, "| variance:", input$variance, "| deviate raters:", input$systdif))
     })
 
     }
@@ -225,6 +229,17 @@ shinyServer(function(input, output, session) {
                     facet_wrap(~method)
             })
 
+            output$widthsem <- renderPlot({
+              ggplot(disdat(), aes(x = k, y = width_sem, group = n, color = n))+
+                geom_line(size = 1) +
+                ylab("95% CI width for SEM") +
+                xlab("Raters (k)")+
+                theme(text = element_text(size = 16))+
+                scale_color_manual(name = "Sample size (n)", values = ncolors)+
+                ggtitle("SEM", subtitle = paste("correlation:", input$correlation, "| variance:", input$variance, "| deviate raters:", input$systdif))+
+                facet_wrap(~method)
+            })
+
         }
     })
 
@@ -331,6 +346,18 @@ shinyServer(function(input, output, session) {
                   ggtitle("ICC", subtitle = paste("ICC type:", input$method,  "| variance:", input$variance, "| deviate raters:", input$systdif))+
                   facet_wrap(~cor)
           })
+
+          output$widthsem <- renderPlot({
+            ggplot(disdat(), aes(x = k, y = width_sem, group = n, color = n))+
+              geom_line(size = 1) +
+              ylab("95% CI width for SEM") +
+              xlab("Raters (k)")+
+              theme(text = element_text(size = 16))+
+              scale_color_manual(name = "Sample size (n)", values = ncolors)+
+              ggtitle("SEM",  subtitle = paste("ICC type:", input$method,  "| variance:", input$variance, "| deviate raters:", input$systdif))+
+              facet_wrap(~cor)
+          })
+
 
       }
   })
@@ -439,6 +466,18 @@ shinyServer(function(input, output, session) {
                   facet_wrap(~variance)
           })
 
+          output$widthsem <- renderPlot({
+            ggplot(disdat(), aes(x = k, y = width_sem, group = n, color = n))+
+              geom_line(size = 1) +
+              ylab("95% CI width for SEM") +
+              xlab("Raters (k)")+
+              theme(text = element_text(size = 16))+
+              scale_color_manual(name = "Sample size (n)", values = ncolors)+
+              ggtitle("SEM",  subtitle = paste("ICC type:", input$method,  "| correlation:", input$correlation, "| deviate raters:", input$systdif))+
+              facet_wrap(~variance)
+          })
+
+
       }
   })
 
@@ -546,6 +585,17 @@ shinyServer(function(input, output, session) {
                   facet_wrap(~deviation)
           })
 
+          output$widthsem <- renderPlot({
+            ggplot(disdat(), aes(x = k, y = width_sem, group = n, color = n))+
+              geom_line(size = 1) +
+              ylab("95% CI width for SEM") +
+              xlab("Raters (k)")+
+              theme(text = element_text(size = 16))+
+              scale_color_manual(name = "Sample size (n)", values = ncolors)+
+              ggtitle("SEM",  subtitle = paste("ICC type:", input$method,  "| correlation:", input$correlation, "| variance:", input$variance))+
+              facet_wrap(~deviation)
+          })
+
       }
   })
 
@@ -607,6 +657,7 @@ shinyServer(function(input, output, session) {
     })
 
     ### CI width -------
+
     refwidth_icc <- reactive({
         out <- Agree::simoutput %>%
             mutate(
@@ -639,6 +690,9 @@ shinyServer(function(input, output, session) {
             ggtitle("Combinations of sample size and raters with required CI width.")
     })
      #plotly heatmap
+
+    ### for icc ----------------
+
     output$widthmap_icc <- renderPlotly({
     # Matrix format
         mat <- Agree::simoutput %>%
@@ -659,7 +713,7 @@ shinyServer(function(input, output, session) {
                 lower = cent - (1.96 * SE),
                 upper = cent + (1.96 * SE),
                 ciwidthm = upper - lower,
-                ciwidthm = ifelse(ciwidthm >!!input$ciwidthw, NA, ciwidthm)
+                ciwidthm = ifelse(ciwidthm >!!input$ciwidthw_icc, NA, ciwidthm)
             ) %>% dplyr::select(n, k, ciwidthm) %>%
             group_by(n, k) %>%
             summarise(ciwidthm = mean(ciwidthm, na.rm = TRUE),
@@ -691,7 +745,14 @@ shinyServer(function(input, output, session) {
     p
     })
 
-
+    ### for sem ----------------
+    output$slider_ciwidthw_sem <- renderUI({
+      sliderInput("ciwidthw_sem", "Target width of the 95% Confidence interval of SEM",
+                  min=0,
+                  max=round(sqrt(as.numeric(input$variance_iccrgw))/2,1),
+                  value=sqrt(as.numeric(input$variance_iccrgw))/2*0.3,
+                  step = 0.05)
+    })
     output$widthmap_sem <- renderPlotly({
       # Matrix format
       mat <- Agree::simoutput %>%
@@ -712,7 +773,7 @@ shinyServer(function(input, output, session) {
           lower = cent - (1.96 * SE),
           upper = cent + (1.96 * SE),
           ciwidthm = upper - lower,
-          ciwidthm = ifelse(ciwidthm > !!input$ciwidthw , NA, ciwidthm)
+          ciwidthm = ifelse(ciwidthm > !!input$ciwidthw_sem , NA, ciwidthm)
         ) %>% dplyr::select(n, k, ciwidthm) %>%
         group_by(n, k) %>%
         summarise(ciwidthm = mean(ciwidthm, na.rm = TRUE),
@@ -784,7 +845,8 @@ shinyServer(function(input, output, session) {
                 ciwidth = mean(width_icc),
                 sem_e = mean(sem),
                 sem = 0,
-                mse_sem = mean(mse_sem)
+                mse_sem = mean(mse_sem),
+                variance = mean(variance)
             ) %>%
             mutate(scenario = "reference")
 
@@ -803,7 +865,8 @@ shinyServer(function(input, output, session) {
                 ciwidth = mean(width_icc),
                 sem_e = mean(sem),
                 sem = 0,
-                mse_sem = mean(mse_sem)
+                mse_sem = mean(mse_sem),
+                variance = mean(variance)
             ) %>%
             mutate(scenario = "goal")
 
@@ -814,7 +877,8 @@ shinyServer(function(input, output, session) {
                    upper = icc + (1.96 * SE),
                    scenario = factor(scenario, levels = c("reference", "goal")),
                    mseratio = ref$mse/goal$mse,
-                   statistic = "ICC")
+                   statistic = "ICC",
+                   yfact = 1)
         #added for sem
         scenario_sem <- bind_rows(ref, goal) %>%
           mutate(SE = sqrt(mse_sem),
@@ -822,10 +886,11 @@ shinyServer(function(input, output, session) {
                  upper = sem + (1.96 * SE),
                  scenario = factor(scenario, levels = c("reference", "goal")),
                  mseratio = ref$mse_sem/goal$mse_sem,
-                 statistic = "SEM")
+                 statistic = "SEM",
+                 yfact = sqrt(variance))
 
         if(input$statistic == "ICC"){
-        scenario <- scenario_icc}
+          scenario <- scenario_icc}
 
         if(input$statistic == "SEM"){
           scenario <- scenario_sem}
@@ -871,7 +936,7 @@ shinyServer(function(input, output, session) {
         geom_line(data = scenario, aes(x = scenario, y = lower, group = 1), lty = "dashed") +
         geom_line(data = scenario, aes(x = scenario, y = upper, group = 1), lty = "dashed") +
         geom_errorbar(aes( x = scenario, ymin = lower, ymax = upper), width = 0.2)+
-        ylim(-0.6, 0.6) +
+        ylim(-(0.6*scenario$yfact[1]), (0.6*scenario$yfact[1])) +
         ylab(paste("Confidence interval for", scenario$statistic[1], sep = " ")) +
         annotate(geom= "text", label= paste("MSE ratio = ", round(scenario$mseratio[1],2)), x = 2.2, y = 0.45)
 
