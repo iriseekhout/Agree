@@ -5,8 +5,8 @@ account: iriseekhout
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3540333
-bundleId: 5304803
+bundleId: 5652647
 url: https://iriseekhout.shinyapps.io/ICCpower/
-when: 1638186658.3527
+when: 1646671725.56841
 asMultiple: FALSE
 asStatic: FALSE
