@@ -63,18 +63,20 @@ true <- bind_rows(true0k, true1k, true2k) %>%
          method = ifelse(method == "cons", "consistency", method))
 
 
-
+#edit 9-3-22 > compute CI width from MSE
 simoutput <- left_join(output, true) %>%
   mutate(bias_icc = icc - Ticc,
          bias_sem = sem - Tsem,
          mse_icc = bias_icc^2,
          mse_sem = bias_sem^2,
-         cov_icc = ifelse(lower < Ticc & upper > Ticc, 1, 0),
-         width_icc = upper - lower
+         cov_icc = ifelse(lower < Ticc & upper > Ticc, 1, 0)
          ) %>%
   group_by(n, cor, k, variance, deviation, method) %>%
   summarise(across(everything(), ~mean(.)),
-            .groups = "drop")
+            .groups = "drop") %>%
+  mutate(width_icc = (sqrt(mse_icc) * 1.96)*2,
+         width_sem = (sqrt(mse_sem) * 1.96)*2
+         )
 
 
 save(simoutput, file =  "data/simoutput.rda")
