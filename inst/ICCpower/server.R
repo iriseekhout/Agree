@@ -639,7 +639,7 @@ shinyServer(function(input, output, session) {
             ggtitle("Combinations of sample size and raters with required CI width.")
     })
      #plotly heatmap
-    output$widthmap <- renderPlotly({
+    output$widthmap_icc <- renderPlotly({
     # Matrix format
         mat <- Agree::simoutput %>%
             filter(
@@ -691,7 +691,62 @@ shinyServer(function(input, output, session) {
     p
     })
 
+
+    output$widthmap_sem <- renderPlotly({
+      # Matrix format
+      mat <- Agree::simoutput %>%
+        filter(
+
+          method %in% !!input$method_iccrgw &
+            deviation %in% !!input$systdif_iccrgw &
+            cor %in% !!input$correlation_iccrgw &
+            variance %in% !!input$variance_iccrgw) %>%
+        # method %in% "agreement" &
+        #     deviation %in% 0 &
+        #     cor %in% 0.7 &
+        #     variance %in% 1) %>%
+        mutate(
+          cent = 0,
+          ciwidth = mean(width_icc),
+          SE = sqrt(mse_sem),
+          lower = cent - (1.96 * SE),
+          upper = cent + (1.96 * SE),
+          ciwidthm = upper - lower,
+          ciwidthm = ifelse(ciwidthm > !!input$ciwidthw , NA, ciwidthm)
+        ) %>% dplyr::select(n, k, ciwidthm) %>%
+        group_by(n, k) %>%
+        summarise(ciwidthm = mean(ciwidthm, na.rm = TRUE),
+                  .groups = "drop") %>%
+        pivot_wider(id_cols = n, names_from = k, values_from = ciwidthm) %>%
+        dplyr::select(n, everything()) %>% as.data.frame()
+      rownames(mat) <- mat$n
+      mat <- mat %>% dplyr::select(-n)
+      mat <- as.matrix(mat)
+
+
+      p <- heatmaply(mat,
+                     dendrogram = "none",
+                     xlab = "Repeated measurements", ylab = "Sample size",
+                     main = paste("Width of Confidence interval for SEM type", paste(input$method_iccrgw, collapse = " & ")),
+                     scale = "none",
+                     margins = c(60,100,40,20),
+                     grid_color = "white",
+                     grid_width = 0.001,
+                     titleX = TRUE,
+                     hide_colorbar = TRUE,
+                     branches_lwd = 0.1,
+                     label_names = c("Sample size", "Repeated Measurements", "CI width"),
+                     fontsize_row = 14, fontsize_col = 14,
+                     labCol = colnames(mat),
+                     labRow = rownames(mat),
+                     heatmap_layers = theme(axis.line=element_blank())
+      )
+      p
+    })
+
+
     ### MSE ratio --------------
+
       observe({ #all output is in this observe!
       if(input$design == "raters"){
        show("designk")
@@ -726,7 +781,10 @@ shinyServer(function(input, output, session) {
                 icc_e = mean(icc),
                 icc = 0,
                 mse = mean(mse_icc),
-                ciwidth = mean(width_icc)
+                ciwidth = mean(width_icc),
+                sem_e = mean(sem),
+                sem = 0,
+                mse_sem = mean(mse_sem)
             ) %>%
             mutate(scenario = "reference")
 
@@ -742,19 +800,36 @@ shinyServer(function(input, output, session) {
                 icc_e = mean(icc),
                 icc = 0,
                 mse = mean(mse_icc),
-                ciwidth = mean(width_icc)
+                ciwidth = mean(width_icc),
+                sem_e = mean(sem),
+                sem = 0,
+                mse_sem = mean(mse_sem)
             ) %>%
             mutate(scenario = "goal")
 
 
-        scenario <- bind_rows(ref, goal) %>%
+        scenario_icc <- bind_rows(ref, goal) %>%
             mutate(SE = sqrt(mse),
                    lower = icc - (1.96 * SE),
                    upper = icc + (1.96 * SE),
                    scenario = factor(scenario, levels = c("reference", "goal")),
-                   mseratio = ref$mse/goal$mse)
+                   mseratio = ref$mse/goal$mse,
+                   statistic = "ICC")
+        #added for sem
+        scenario_sem <- bind_rows(ref, goal) %>%
+          mutate(SE = sqrt(mse_sem),
+                 lower = sem - (1.96 * SE),
+                 upper = sem + (1.96 * SE),
+                 scenario = factor(scenario, levels = c("reference", "goal")),
+                 mseratio = ref$mse_sem/goal$mse_sem,
+                 statistic = "SEM")
 
-        scenario_icc <- scenario
+        if(input$statistic == "ICC"){
+        scenario <- scenario_icc}
+
+        if(input$statistic == "SEM"){
+          scenario <- scenario_sem}
+
     #})
         output$variableselection2 <- renderText({
           paste(
@@ -772,77 +847,52 @@ shinyServer(function(input, output, session) {
           )
         })
 
+        #added for sem
+        output$variableselection3 <- renderText({
+          paste(
+            paste("Input ICC:", input$correlation_iccrg),
+            paste("Variance:", input$variance_iccrg),
+            paste("Method:", input$method_iccrg),
+            paste("Raters with deviation:", input$systdif_iccrg),
+            paste("n_ref: ", n_iccr()),
+            paste("n_goal: ", n_iccg()),
+            paste("k_ref: ", k_iccr()),
+            paste("k_goal: ", k_iccg()),
+            paste("mse_ref_sem: ", ref$mse_sem),
+            paste("mse_goal_sem: ", goal$mse_sem)
+
+          )
+        })
+
     output$mseratio_icc <- renderPlot({
-    ggplot(scenario_icc, aes(x = scenario, y = icc))+
+
+    ggplot(scenario, aes(x = scenario, y = icc))+
         # geom_point() +
-        geom_line(data = scenario_icc, aes(x = scenario, y = lower, group = 1), lty = "dashed") +
-        geom_line(data = scenario_icc, aes(x = scenario, y = upper, group = 1), lty = "dashed") +
+        geom_line(data = scenario, aes(x = scenario, y = lower, group = 1), lty = "dashed") +
+        geom_line(data = scenario, aes(x = scenario, y = upper, group = 1), lty = "dashed") +
         geom_errorbar(aes( x = scenario, ymin = lower, ymax = upper), width = 0.2)+
         ylim(-0.6, 0.6) +
-        ylab("Confidence interval for ICC") +
-        annotate(geom= "text", label= paste("MSE ratio = ", round(scenario_icc$mseratio[1],2)), x = 2.2, y = 0.45)
+        ylab(paste("Confidence interval for", scenario$statistic[1], sep = " ")) +
+        annotate(geom= "text", label= paste("MSE ratio = ", round(scenario$mseratio[1],2)), x = 2.2, y = 0.45)
+
+
+
     })
 
     output$MSEratio <- renderText({
         if(input$design == "sample size"){
-           statement <-  paste0("The MSE ratio is the required increase in repeated measurements to achieve the precision for the design with a sample size of ", input$n_iccg, " (indicated as target), with an actual sample size of ", input$n_iccr, " (indicated as adapted design). Accordingly, the number of repeated measurements (", input$k_iccrg, ") needs to be multiplied by ", round(scenario_icc$mseratio[1],2), ", and change to ",round(as.numeric(input$k_iccrg) * scenario_icc$mseratio[1]), " to have a precision close to the precision with a sample size of ", input$n_iccg,  ". When it is not possible to increase the number of repeated measurements accordingly, the precision as expected under the target design will decrease in the adapted design.")
+           statement <-  paste0("The MSE ratio is the required increase in repeated measurements to achieve the precision for the design with a sample size of ", input$n_iccg, " (indicated as target), with an actual sample size of ", input$n_iccr, " (indicated as adapted design). Accordingly, the number of repeated measurements (", input$k_iccrg, ") needs to be multiplied by ", round(scenario$mseratio[1],2), ", and change to ",round(as.numeric(input$k_iccrg) * scenario$mseratio[1]), " to have a precision close to the precision with a sample size of ", input$n_iccg,  ". When it is not possible to increase the number of repeated measurements accordingly, the precision as expected under the target design will decrease in the adapted design.")
         }
         if(input$design == "raters"){
-           statement <-  paste0("The MSE ratio is the required sample size increase to achieve the precision for the design with ", input$k_iccg, " raters (indicated as target), with only ", input$k_iccr, " raters (indicated as adapted design). Accordingly, the sample size of ", input$n_iccrg, " needs to be multiplied by ", round(scenario_icc$mseratio[1],2), " and change to ", round(as.numeric(input$n_iccrg) * scenario_icc$mseratio[1]), " to have a precision close to the precision with ", input$k_iccg, " repeated measurements. When it is not possible to increase sample size accordingly, the precision as expected under the target design will decrease in the adapted design.")
+           statement <-  paste0("The MSE ratio is the required sample size increase to achieve the precision for the design with ", input$k_iccg, " raters (indicated as target), with only ", input$k_iccr, " raters (indicated as adapted design). Accordingly, the sample size of ", input$n_iccrg, " needs to be multiplied by ", round(scenario$mseratio[1],2), " and change to ", round(as.numeric(input$n_iccrg) * scenario$mseratio[1]), " to have a precision close to the precision with ", input$k_iccg, " repeated measurements. When it is not possible to increase sample size accordingly, the precision as expected under the target design will decrease in the adapted design.")
         }
+
         statement
     })
     })
 
 
 
-    # # simulation page ----
-    # nseq <- reactive({
-    #     seq(from = input$n[1], to = input$n[2], length.out = input$nlength)
-    # })
-    # nseq <- seq(from = 10, to = 100, length.out = 5)
-    #
-    # kseq <- reactive({
-    #     seq(from = input$k[1], to = input$k[2], by =1)
-    # })
-    # kseq <- seq(from = 2, to = 5, by = 1)
-    #
-    # mean = 0
-    # correlation = 0.7
-    # variance = 1
-    #
-    # output <- vector()
-    # for(ni in nseq){ #nseq = nseq()
-    #     for(ki in kseq){ #kseq = kseq()
-    #         for(i in 1:100){
-    #             means <- rep(mean, ki) #mean = input$mean kr = kr()
-    #             cov <- matrix(correlation,ki, ki) #correlation = input$correlation
-    #                 # set up variance
-    #             diag(cov) <- 1
-    #             cov <- cov* variance #variance = input$variance
-    #
-    #             dat <- as.data.frame(mvrnorm(means, cov, n=ni))
-    #
-    #             measures <- Agree::icc(data = dat, var = TRUE)
-    #
-    #
-    #             iteration <- c(measures["oneway",], measures["agreement",], measures["consistency",])
-    #
-    #             iteration <- c(measures["oneway",], measures["agreement",], measures["consistency",])
-    #
-    #
-    #             names(iteration) <- c(paste(names(iteration)[1:7], "oneway", sep = "_"),
-    #                                   paste(names(iteration)[8:14], "agr", sep = "_"),
-    #                                   paste(names(iteration)[15:21], "cons", sep = "_"))
-    #             iteration <- c(set=i,n=ni, k=ki, iteration)
-    #
-    #
-    #             output <- rbind(output, iteration) #stack each simulation iteration in rows (end of simulation run, 1000 rows)
-    #
-    #
-    #         }
-    #     }
-    # }
     # settings page ----
 
     # background page ----
@@ -850,70 +900,3 @@ shinyServer(function(input, output, session) {
 })
 
 
-#
-#
-# ### old code for MSE ratios.
-# ## calculate MSE ratio's with settings.
-# ratdat_n <- reactive({
-#     disdat2 <- output_mse %>%
-#         filter(cor == !!input$correlation &
-#                    variance == !!input$variance &
-#                    type == !!input$icc &
-#                    sk == !!input$systdif) %>%
-#         filter(n == !!input$startn)
-#
-#     iccref <- disdat2[disdat2$k == input$startk,"icc"]
-#
-#     fratios <- as.numeric(unlist(iccref)/disdat2$icc)
-#     ks <- disdat2$k
-#     ns <- as.numeric(input$startn) * fratios
-#     res <- data.frame(k = ks, n = ns, start = ifelse(ns == as.numeric(input$startn), 1, 0))
-#     res
-# })
-#
-# ratdat_k <- reactive({
-#     disdat <- output_mse %>%
-#         filter(cor == !!input$correlation & variance == !!input$variance &
-#                    type == !!input$icc & sk == !!input$systdif) %>%
-#         filter(k == !!input$startk)
-#     iccref <- disdat[disdat$n == input$startn,"icc"]
-#
-#     fratios <- unlist(iccref)/disdat$icc
-#     ns <- disdat$n
-#     ks <- as.numeric(input$startk) * fratios
-#     res <- cbind(n = ns, k = ks , start = ifelse(ks == as.numeric(input$startk), 1, 0))
-#     data.frame(res)
-# })
-#
-# output$ratdf_k <- renderDataTable(
-#     ratdat_n()
-# )
-#
-#
-# output$mseratio_k <- renderPlot({
-#     ggplot(ratdat_n(), aes(x = k, y = n, color = factor(start)))+
-#         geom_point(size = 3)+
-#         xlab("Raters (k)") + ylab("Sample size (n)") +
-#         scale_color_manual(values=c("#999999", "#E69F00"))+
-#         theme(legend.position = "none",
-#               text = element_text(size = 16))+
-#         ggtitle("Required sample size increase",
-#                 subtitle = "Orange point indicates the current sample size.")#+
-#     # ggtitle("Required sample size increase when the precision of more raters wanted",
-#     #        subtitle = "Orange point indicates the current sample size.")
-# })
-#
-#
-# output$mseratio_n <- renderPlot({
-#     ggplot(ratdat_k(), aes(x = k, y = k, color = factor(start)))+
-#         geom_point(size = 3)+
-#         xlab("Sample size (n)") + ylab("Raters (k)") +
-#         scale_color_manual(values=c("#999999", "#E69F00"))+
-#         theme(legend.position = "none",
-#               text = element_text(size = 16))+
-#         ggtitle("Required rater increase",
-#                 subtitle = "Orange point indicates the current number of raters.")#+
-#     # ggtitle("Required rater increase when the precision of higher sample size is wanted",
-#     #        subtitle = "Orange point indicates the current number of raters.")
-# })
-#

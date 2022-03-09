@@ -109,9 +109,7 @@ ui <-tagList(
             # MSE ratio's paper
             sidebarPanel(
                 tags$h2("Study Design"),
-                tags$p(
-                    "First indicate the approach for the power calculation. Then, depending on the method, parts of the study design can be specified."
-                ),
+
 
               radioButtons(
                     "power",
@@ -193,19 +191,27 @@ ui <-tagList(
                     ),
                     sliderInput(
                         "ciwidthw",
-                        label = "Target width of the 95% Confidence interval for ICC",
+                        label = "Target width of the 95% Confidence interval. Note that for SEM the unit changes with the variance",
                         min = 0.1,
-                        max = 1,
+                        max = 5,
                         value = 0.3
                     )
 
                 ),
-                #input power mse ratio ----
+        #input power mse ratio ----
                 conditionalPanel(
                     condition = "output.powermse",
-                    p(
-                        "Either the sample size or the number of repeated measurements can be varied between the adapted (what you have collected so far) and target design (the chosen design at the start of the study, referring to the target sample size and number of repeated measurements). For that condition the MSE ratio is calculated. The MSE ratio can be used to estimate the required sample size/rater increase to reach the goal."
+                    p("The MSE ratio can be computed to optimize the design with respect to the ICC statistic or for the SEM statistic."),
+                    radioButtons(
+                        "statistic",
+                        label = "MSE ratio procedure for ICC or for SEM.",
+                        choices = c("ICC", "SEM"),
+                        selected = "ICC",
+                        inline = T
                     ),
+                    p("Either the sample size or the number of repeated measurements can be varied between the adapted (what you have collected so far) and target design (the chosen design at the start of the study, referring to the target sample size and number of repeated measurements). For that condition the MSE ratio is calculated. The MSE ratio can be used to estimate the required sample size/rater increase to reach the goal."
+                    ),
+
                     br(),
                     em("Target design refers to the intended number of patients or number of repeated measurements chosen at the start of the study, i.e. your goal; adapted design refers to the number of patients or repeated measurements included so far."),
                     selectInput(
@@ -214,7 +220,7 @@ ui <-tagList(
                         choices = c("raters", "sample size"),
                         selected = character(0)
                     ),
-                    #vary for raters ----
+        #vary for raters ----
                     # conditionalPanel(
                     checkboxGroupInput(
                         "method_iccrg",
@@ -301,22 +307,23 @@ ui <-tagList(
                     p("The Design choice assistant informs your choice on sample size and number of repeated measurements in a study on reliability and measurement error. You can choose between three different approaches, depending on the phase you are in, or the model that you prefer."
                     ),
                     br(),
-                strong("Confidence Interval (CI) width procedure:"), "you can use this procedure when you are designing your study. this procedure is based on  the results of the simulations study. The specified width of the confidence interval (CI) is used to determine what conditions of repeated measurements  and sample size can achieve that CI width under the chosen design conditions."
-            ),
+                strong("Confidence Interval (CI) width procedure:"), "you can use this procedure when you are designing your study. this procedure is based on the results of the simulation study. The specified width of the confidence interval (CI) is used to determine what conditions of sample size and repeated measurements can achieve that CI width under the chosen design conditions."
+            ,
             br(),
-            strong("Confidence Interval (CI) lower limit procedure: "), "you can choose this procedure when you are designing a study and want to apply the one-way random effects model. the CI lower procedure is based on  a formula presented in ", a("Zou (2011)", href = "https://doi.org/10.1002/sim.5466"), "to estimate the sample size required. This model requires somewhat larger sample sizes, so it will give an conservative recommendations for use in other effect models.  With this method it is possible to give a range of numbers of repeated measurements in order to visualize the required sample size for different numbers of repeated measurements."),
+            strong("Confidence Interval (CI) lower limit procedure: "), "you can choose this procedure when you are designing a study and want to apply the one-way random effects model. The CI lower procedure is based on  a formula presented in ", a("Zou (2011)", href = "https://doi.org/10.1002/sim.5466"), "to estimate the sample size required. This model requires somewhat larger sample sizes, so it will give an conservative recommendations for use in other effect models.  With this method it is possible to give a range of numbers of repeated measurements in order to visualize the required sample size for different numbers of repeated measurements.",
             br(),
-                    strong("MSE ratio procedure: "), "and there is a need to change or reconsider the target design of the study, e.g. the patient recruitment is slow or one of the raters drops out, you can use the MSE ratio procedure. The MSE ratio procedure is based on the results of the simulation study to estimate to what extend a current adapted design (i.e. the number of patients or repeated measurements included so far in the study) needs to be updated to achieve a similar precision as the target design (i.e. the indended number of patients or repeated measruements chosen at the start of the study).",
+                    strong("MSE ratio procedure: "), "When there is a need to change or reconsider the target design of the study, e.g. the patient recruitment is slow or one of the raters drops out, you can use the MSE ratio procedure. The MSE ratio procedure is based on the results of the simulation study to estimate to what extend a current adapted design (e.g. the number of patients or repeated measurements included so far in the study) needs to be updated to achieve a similar precision as the target design (i.e. the intended number of patients or repeated measruements chosen at the start of the study)." ))
+            #,
 
-            br(),
-            "We specifically used the results for ICC estimations for the recommendations, as these required (in addition to MSE values) confidence intervals, which we could not obtain for the SEM estimations. In addition, because we saw the same trends in MSE values for ICC and SEM, and we recommend always reporting both parameters in a study, we focus only on ICC estimations."
+           # br(),
+         #   "We specifically used the results for ICC estimations for the recommendations, as these required (in addition to MSE values) confidence intervals, which we could not obtain for the SEM estimations. In addition, because we saw the same trends in MSE values for ICC and SEM, and we recommend always reporting both parameters in a study, we focus only on ICC estimations."
             ,
 
 
             conditionalPanel(
                 condition = "output.powermse",
                 fluidRow(
-                    textOutput("variableselection2"),#for testing
+                    #textOutput("variableselection2"),#for testing
                     h3("Power by MSE procedure"),
                     p("The figure below shows the confidence interval computed via the mean squared error for the adapted design and the target design (> link Mokkink et al.,  2022)."),
                     plotOutput("mseratio_icc")),
@@ -335,12 +342,16 @@ ui <-tagList(
             conditionalPanel(condition = "output.powerci",
                              fluidRow(
                                  h2("Power by Confidence interval width"),
-                                 p("The CI width procedures can be used when designing the study, i.e. before the start of the data collection, to determine the precision of the target design. In the CI width procedure a pre-specified width of the confidence interval (e.g. 0.3) is set to determine what conditions of sample size and repeated measurements can achieve that specific CI width under the specified design conditions. This way, various designs can be considered to decide on the most efficient target design (i.e. the chosen design that will be described in the study protocol)."),
+                                 p("The CI width procedures can be used when designing the study, i.e. before the start of the data collection, to determine the precision of the target design. In the CI width procedure a pre-specified width of the confidence interval (e.g. 0.3 for ICC) is set to determine what conditions of sample size and repeated measurements can achieve that specific CI width under the specified design conditions. The CI width procedure can be used for the precision of the ICC or the SEM. This way, various designs can be considered to decide on the most efficient target design (i.e. the chosen design that will be described in the study protocol)."),
                                  br(),
-                                 p("The plot below shows the sample size and rater combinations that satisfy the confidence interval width requirement, given you specified scenario."),
+                                 p("The plot below shows the sample size and rater combinations that satisfy the confidence interval width requirement, given you specified scenario. The ICC plot is shown in the ICC-tab and the plot for SEM in the SEM-tab."),
                                  br(),
-                                 em("> Scroll over the figure to find the recommendations."),
-                                 plotlyOutput("widthmap")
+                                 em(">> Scroll over the figure to find the recommendations."),
+                                 tabsetPanel(type = "tabs",
+                                             tabPanel("ICC", plotlyOutput("widthmap_icc")),
+                                             tabPanel("SEM", plotlyOutput("widthmap_sem"))
+                                 )
+                                 #plotlyOutput("widthmap")
                              )),
             conditionalPanel(condition = "output.powercilow",
                              h2("Power by lower end of Confidence Interval"),
