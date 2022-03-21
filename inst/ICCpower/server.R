@@ -830,7 +830,7 @@ shinyServer(function(input, output, session) {
 
       }
 
-
+      # adapted design
        ref <- Agree::simoutput %>%
             filter(method %in% !!input$method_iccrg &
                        k %in% !!k_iccr() &
@@ -848,8 +848,8 @@ shinyServer(function(input, output, session) {
                 mse_sem = mean(mse_sem),
                 variance = mean(variance)
             ) %>%
-            mutate(scenario = "reference")
-
+            mutate(scenario = "adapted")
+        #target design
         goal <-
             Agree::simoutput %>%
             filter(method %in% !!input$method_iccrg &
@@ -868,14 +868,14 @@ shinyServer(function(input, output, session) {
                 mse_sem = mean(mse_sem),
                 variance = mean(variance)
             ) %>%
-            mutate(scenario = "goal")
+            mutate(scenario = "target")
 
 
         scenario_icc <- bind_rows(ref, goal) %>%
             mutate(SE = sqrt(mse),
                    lower = icc - (1.96 * SE),
                    upper = icc + (1.96 * SE),
-                   scenario = factor(scenario, levels = c("reference", "goal")),
+                   scenario = factor(scenario, levels = c("adapted", "target")),
                    mseratio = ref$mse/goal$mse,
                    statistic = "ICC",
                    yfact = 1)
@@ -884,7 +884,7 @@ shinyServer(function(input, output, session) {
           mutate(SE = sqrt(mse_sem),
                  lower = sem - (1.96 * SE),
                  upper = sem + (1.96 * SE),
-                 scenario = factor(scenario, levels = c("reference", "goal")),
+                 scenario = factor(scenario, levels = c("adapted", "target")),
                  mseratio = ref$mse_sem/goal$mse_sem,
                  statistic = "SEM",
                  yfact = sqrt(variance))

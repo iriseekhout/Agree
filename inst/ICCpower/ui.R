@@ -263,7 +263,7 @@ ui <-tagList(
                         ),
                         radioButtons(
                             "k_iccr",
-                            label = "number of repeated measurements in adapted(current) design",
+                            label = "number of repeated measurements in adapted (current) design",
                             choices = c(2, 3, 4, 5, 6),
                             selected = "2",
                             inline = TRUE
@@ -285,7 +285,7 @@ ui <-tagList(
                         ),
                         radioButtons(
                             "n_iccr",
-                            label = "Sample size in adapted(current) design",
+                            label = "Sample size in adapted (current) design",
                             choices = c(10, 20, 25, 30, 40, 50, 100, 200),
                             selected = "50",
                             inline = TRUE
