@@ -8,7 +8,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Welcome
 
-This web-application is an extension for the paper "Sample size requirements for studies on reliability and measurement error: an online application based on a simulation study" (BMC Medical Resaerch Methodology, in submission) and developed by Iris Eekhout and Wieneke Mokkink. This app offers all results of the simulation study visualized, and the Design choice assistant to help you decide on the sample size of your study and the number of repeated measurements.
+This web-application is an extension for the paper "Sample size requirements for studies on reliability and measurement error: an online application based on a simulation study" and developed by Iris Eekhout and Wieneke Mokkink. This app offers all results of the simulation study visualized, and the Design choice assistant to help you decide on the sample size of your study and the number of repeated measurements.
 
 In this paper we performed a series of simulation studies to investigate the precision of various reliability and measurement error parameters under different conditions within different study designs. We aim to study the trade-off between sample size of patients (n) and for the number of repeated measurements (k), and for which conditions of n and k the optimal estimations of the ICCs and SEMs can be achieved. Based on the results, we developed this freely available web-application that shows the implications for decisions about the sample sizes in reliability studies, i.e. the Design choice assistant.
 
