@@ -9,6 +9,9 @@
 #' @param cols character vector with the column names to be used as observers.
 #' Default is `cols = colnames(data)`.
 #' @param alpha confidence interval level, default `alpha = 0.05`.
+#' @param CI_estimator character "exact" or "approx" to switch between using an
+#' exact F-test or an approximated estimate. The latter accounts for the three
+#' independent variance components. Default is `CI_estimator = "exact"`.
 #' @importFrom lme4 ngrps VarCorr
 #' @importFrom stats qf
 #' @importFrom dplyr mutate %>%
@@ -20,7 +23,7 @@
 #' of the subject variance, rater variance and the residual variance. The ICC for
 #' agreement generalizes to other raters within a population (Shrout & Fleiss,
 #' 1979). The `varcomp()` function is used to compute the variances.
-#' Thes variance components are estimated from a `lmer` model with a random
+#' The variance components are estimated from a `lmer` model with a random
 #' slope for the subjects as well as for the raters. The sem is the square
 #' root of the sum of the rater variance and the error variance.
 #' The confidence intervals are approximated to account for the three independent
@@ -33,7 +36,7 @@
 #' components. Biometrics, 1946, 2, 110-114.
 #' Shrout, P.E. & Fleiss, J.L. (1979) Intraclass Correlations: Uses in Assessing
 #' Rater Reliability. Psychological Bulletin, 87(2), 420-428.
-icc_agreement <- function(data, cols = colnames(data), alpha = 0.05){
+icc_agreement <- function(data, cols = colnames(data), alpha = 0.05, CI_estimator = "exact"){
 
   k <- length(cols)
   n <- nrow(data)
@@ -81,6 +84,11 @@ icc_agreement <- function(data, cols = colnames(data), alpha = 0.05){
   U_a <- (n * (F3L * MSB - varerr_agr))/(k * (n * varobs_agr + varerr_agr) + (k * n -
                                                                               k - n) * varerr_agr + n * F3L * MSB)#checked with shrout fleis.
 
+  if(CI_estimator == "approx"){
+    #use upper case L for PSYCH version/ lowercase l for same logic as in oneway and consistency - however the observer part is then ignored.
+    l_a <- L_a
+    u_a <- U_a
+  }
   return(
     data.frame(
     list(

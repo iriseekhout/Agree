@@ -4,7 +4,12 @@
 \alias{icc_agreement}
 \title{ICC agreement}
 \usage{
-icc_agreement(data, cols = colnames(data), alpha = 0.05)
+icc_agreement(
+  data,
+  cols = colnames(data),
+  alpha = 0.05,
+  CI_estimator = "exact"
+)
 }
 \arguments{
 \item{data}{data.frame with a column for each observer/rater and a row per
@@ -14,6 +19,10 @@ rated subject.}
 Default is `cols = colnames(data)`.}
 
 \item{alpha}{confidence interval level, default `alpha = 0.05`.}
+
+\item{CI_estimator}{character "exact" or "approx" to switch between using an
+exact F-test or an approximated estimate. The latter accounts for the three
+independent variance components. Default is `CI_estimator = "exact"`.}
 }
 \value{
 list
@@ -28,7 +37,7 @@ The icc type agreement is the variance between the subjects divided by the sum
 of the subject variance, rater variance and the residual variance. The ICC for
 agreement generalizes to other raters within a population (Shrout & Fleiss,
 1979). The `varcomp()` function is used to compute the variances.
-Thes variance components are estimated from a `lmer` model with a random
+The variance components are estimated from a `lmer` model with a random
 slope for the subjects as well as for the raters. The sem is the square
 root of the sum of the rater variance and the error variance.
 The confidence intervals are approximated to account for the three independent

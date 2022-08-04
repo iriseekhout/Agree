@@ -14,6 +14,12 @@
 #' bootCI(data = diagnoses, fun = agreement)
 #' agreement(diagnoses, specific = "4. Neurosis")
 #' bootCI(data = diagnoses, fun = agreement, specific = "4. Neurosis")
+#' ## bootsctrap CI for SEM agreement
+#' icc(data = breast[,c("PCH1_score", "PCH2_score", "PCH3_score")], method = "agreement", confint = FALSE)["sem"]
+#' sem_a <- function(x){icc(data = x, method = "agreement", confint = FALSE)["sem"]}
+#' sem_a <- function(x){unlist(icc_agreement(x)["sem"])}
+#' bootCI(data = breast[,c("PCH1_score", "PCH2_score", "PCH3_score")],
+#' fun = sem_a)
 bootCI <- function(data,
                    b=1000,
                    alpha=0.05,
@@ -24,7 +30,7 @@ bootCI <- function(data,
       fun(data[x,], ...)
       }
   res1a <- boot::boot(data,boot.fun,b)
-  BCI <-  quantile(res1a$t,c((alpha)/2,(1-alpha)+((alpha)/2)), na.rm=TRUE)    # Bootstrapped confidence interval of Light's kappa
+  BCI <-  quantile(res1a$t,c((alpha)/2,(1-alpha)+((alpha)/2)), na.rm=TRUE)
   names(BCI) <- c("lower", "upper")
   BCI
 }
