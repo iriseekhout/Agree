@@ -15,20 +15,15 @@
 #' @return data.frame with the variance components in rows
 #' @export
 #' @importFrom lme4 lmer VarCorr
-#' @importFrom dplyr %>% select
+#' @importFrom dplyr %>% select .data
 #'
 #' @examples
-#' form <- score ~ (1|patient)
-#' form_cros <- score ~ (1|rater) + (1|patient)
-#' #form_nest <- score ~ (1|rater/patient)
-#'
-#' varcomp(form, data = fake_1)
-#' varcomp(form_cros, data = fake_2nest)
-#' varcomp(form_cros, data = fake_2cros)
-#'
-#' form_3nest <- score ~ (1|rater/patient)
-#' library(dplyr)
-#' varcomp(form_3nest, data = fake_3nest %>% tidyr::drop_na(score))
+#' pch <- breast[,c("PCH1_score", "PCH2_score","PCH3_score",
+#' "PCH4_score","PCH5_score")] %>%
+#' mutate(id = 1:nrow(breast))
+#' pch_l <- tidyr::pivot_longer(pch, cols= PCH1_score:PCH5_score,
+#' names_to = "rater", values_to = "score")
+#' varcomp(formula = score ~ (1|id) + (1|rater),  data = pch_l)
 #'
 varcomp <- function(formula, data){
 

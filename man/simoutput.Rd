@@ -29,6 +29,7 @@ A data frame with 2280 rows and 22 variables:
   \item{mse_sem}{result parameter: mean squared error for sem}
   \item{cov_icc}{result parameter: coverage of CI for icc}
   \item{width_icc}{result parameter: width of CI for icc}
+  \item{width_sem}{result parameter: width of CI for sem}
 }
 }
 \source{
