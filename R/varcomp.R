@@ -18,6 +18,7 @@
 #' @importFrom dplyr %>% select .data
 #'
 #' @examples
+#' library(dplyr)
 #' pch <- breast[,c("PCH1_score", "PCH2_score","PCH3_score",
 #' "PCH4_score","PCH5_score")] %>%
 #' mutate(id = 1:nrow(breast))
