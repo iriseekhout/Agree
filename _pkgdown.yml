@@ -1,4 +1,47 @@
-url: ~
+url: https://iriseekhout.github.io/Agree
 destination: '../academic-website/static/r/Agree'
+navbar:
+  right:
+  - icon: fa-arrow-circle-left fa-lg
+    href: https://iriseekhout.com/#r
+    text: Go back to main site
+    type: inverse
 template:
-  bootstrap: 5
+  params:
+    bootswatch: flatly
+reference:
+  - title: "Agreement for categorical variables"
+    desc: >
+      Functions to compute the agreement between multiple raters on categorical variables (i.e. dichotomous or polytomous).
+    contents:
+      - sumtable
+      - agreement
+      - conditional.agreement
+      - weighted.agreement
+      - CIbootagreement
+      - kappa
+  - title: "Reliability (ICC and SEM) for continuous variables"
+    desc: >
+      Functions for computing the reliability for multiple raters as ICC and SEM for continuous variables.
+    contents:
+      - icc
+      - icc_oneway
+      - icc_agreement
+      - icc_consistency
+      - bootCI
+  - title: "Calculate the variance compontents"
+    desc: >
+      Compute the variance compontents from multilevel models in order to compute ICC's for different study designs.
+    contents:
+      - varcomp
+  - title: "Sample size calculations"
+    desc: >
+      Sample size computations for Reliability studies.
+    contents:
+      - n_icc
+  - title: "Datasets"
+    desc: "Built-in datasets"
+    contents:
+      - breast
+      - diagnoses
+      - simoutput
