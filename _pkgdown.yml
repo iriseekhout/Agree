@@ -1,4 +1,4 @@
 url: ~
+destination: '../academic-website/static/r/Agree'
 template:
   bootstrap: 5
-
