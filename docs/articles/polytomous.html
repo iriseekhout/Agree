@@ -274,17 +274,17 @@ bootstrapped.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/agreement.html">agreement</a></span><span class="op">(</span><span class="va">data1</span>, specific<span class="op">=</span><span class="st">"satisfied"</span>, confint <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                                       p     lower     upper</span></span>
 <span><span class="co">## overall agreement             0.4333333 0.3286321 0.5434725</span></span>
-<span><span class="co">## specific agreement: satisfied 0.3163842 0.2258945 0.3981481</span></span></code></pre>
+<span><span class="co">## specific agreement: satisfied 0.3163842 0.2222222 0.4035303</span></span></code></pre>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/agreement.html">agreement</a></span><span class="op">(</span><span class="va">data1</span>, specific<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"satisfied"</span>, <span class="st">"very satisfied"</span><span class="op">)</span>, confint <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                                                         p     lower     upper</span></span>
 <span><span class="co">## overall agreement                               0.4333333 0.3286321 0.5434725</span></span>
-<span><span class="co">## specific agreement: satisfied vs very satisfied 0.5185185 0.3688830 0.6601988</span></span></code></pre>
+<span><span class="co">## specific agreement: satisfied vs very satisfied 0.5185185 0.3829787 0.6400000</span></span></code></pre>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/agreement.html">agreement</a></span><span class="op">(</span><span class="va">data1</span>, specific<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"satisfied"</span>,<span class="st">"neutral"</span><span class="op">)</span>, confint <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                                                  p     lower     upper</span></span>
 <span><span class="co">## overall agreement                        0.4333333 0.3286321 0.5434725</span></span>
-<span><span class="co">## specific agreement: satisfied vs neutral 0.5045045 0.3678044 0.6263085</span></span></code></pre>
+<span><span class="co">## specific agreement: satisfied vs neutral 0.5045045 0.3689320 0.6250000</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="conditional-probability">Conditional probability<a class="anchor" aria-label="anchor" href="#conditional-probability"></a>
@@ -703,27 +703,27 @@ confidence intervals for specific agreement are bootstrapped.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/agreement.html">agreement</a></span><span class="op">(</span><span class="va">data2</span>, specific<span class="op">=</span><span class="st">"Depression"</span>, confint <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                                        p     lower     upper</span></span>
 <span><span class="co">## overall agreement              0.3955556 0.2805873 0.5200202</span></span>
-<span><span class="co">## specific agreement: Depression 0.3538462 0.1110606 0.5238254</span></span></code></pre>
+<span><span class="co">## specific agreement: Depression 0.3538462 0.1279579 0.5230769</span></span></code></pre>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/agreement.html">agreement</a></span><span class="op">(</span><span class="va">data2</span>, specific<span class="op">=</span><span class="st">"Pers disord."</span>, confint <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                                          p     lower     upper</span></span>
 <span><span class="co">## overall agreement                0.3955556 0.2805873 0.5200202</span></span>
-<span><span class="co">## specific agreement: Pers disord. 0.3680000 0.1777778 0.5454848</span></span></code></pre>
+<span><span class="co">## specific agreement: Pers disord. 0.3680000 0.1846154 0.5556140</span></span></code></pre>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/agreement.html">agreement</a></span><span class="op">(</span><span class="va">data2</span>, specific<span class="op">=</span><span class="st">"Schizophrenia"</span>, confint <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                                           p     lower     upper</span></span>
 <span><span class="co">## overall agreement                 0.3955556 0.2805873 0.5200202</span></span>
-<span><span class="co">## specific agreement: Schizophrenia 0.5333333 0.3832955 0.6588235</span></span></code></pre>
+<span><span class="co">## specific agreement: Schizophrenia 0.5333333 0.3750000 0.6600000</span></span></code></pre>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/agreement.html">agreement</a></span><span class="op">(</span><span class="va">data2</span>, specific<span class="op">=</span><span class="st">"Neurosis"</span>, confint <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                                      p     lower     upper</span></span>
 <span><span class="co">## overall agreement            0.3955556 0.2805873 0.5200202</span></span>
-<span><span class="co">## specific agreement: Neurosis 0.4930233 0.3789474 0.5875064</span></span></code></pre>
+<span><span class="co">## specific agreement: Neurosis 0.4930233 0.3882169 0.5891094</span></span></code></pre>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/agreement.html">agreement</a></span><span class="op">(</span><span class="va">data2</span>, specific<span class="op">=</span><span class="st">"Other"</span>, confint <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                                   p     lower     upper</span></span>
 <span><span class="co">## overall agreement         0.3955556 0.2805873 0.5200202</span></span>
-<span><span class="co">## specific agreement: Other 0.5931034 0.3237143 0.7364394</span></span></code></pre>
+<span><span class="co">## specific agreement: Other 0.5931034 0.3333333 0.7393939</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="conditional-agreement">Conditional agreement<a class="anchor" aria-label="anchor" href="#conditional-agreement"></a>
