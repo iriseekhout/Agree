@@ -1,0 +1,30 @@
+---
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# About the team
+
+## Iris Eekhout
+
+
+Dr. Iris Eekhout holds a double master in clinical psychology and methodology and statistics of psychology (Leiden University). She obtained her PhD at the Department of Epidemiology and Biostatistics of the VU University medical centre in Amsterdam. Her dissertation work resulted in novel ways of dealing with missing data in questionnaire items and total scores. Currently, Iris teaches a [course on missing data analysis](https://www.epidm.nl/en/course/missing-data-consequences-and-solutions-online-course/) in the epidemiology masters program at VU University medical centre. At TNO, Iris works on a variety of projects as a methodologist and statistical analyst related to child health, e.g., measuring child development (D-score) and adaptive screenings for psycho-social problems (psycat). Her main interests and expertise are missing data methods (multiple imputation), longitudinal (multilevel) modeling, R programming, developing shiny applications, interactive visualizations, psychometrics and measurement.
+
+
+**Personal website**: [www.iriseekhout.com](www.iriseekhout.com)
+
+**GitHub**: [iriseekhout](www.github.com/iriseekhout)
+
+## Wieneke (Lidwine) Mokkink
+
+Dr. Wieneke Mokkink is epidemiologist by background and her focus of research is on clinimetrics; it is her aim to develop user-friendly tools to help researchers and clinicians by the selection of health measurement instruments, and to help them to understand clinimetrics. She is one of the founders of the COSMIN initiative and obtained her PhD degree on the first COSMIN study (2010). Wieneke is a teacher in [courses on clinimetrics](https://www.epidm.nl/en/course/clinimetrics-assessing-measurement-properties-of-health-measurement-instruments-online-course/), and develops a course on conducting systematic reviews of outcome measurement instruments. In 2016, she received a personal research grant from The Netherlands Organisation for Health Research and Development (ZonMw), which allowed her to perform the work on which this website is based, among other studies, which can be find [here](https://link.springer.com/epdf/10.1186/s12874-020-01179-5?sharing_token=TIOaAx_2EVr8VK2OBtN4km_BpE1tBhCbnbw3BuzI2RMcff7cpmG24oUod23vpyUIGb9OK9H3ESfRPMsPU-dP9Cc4U9gxzl8XGhoibvdDpS_wHsQBOpOeK5txHMnchUASzrNA_fQM-oqcMNYTwooyGVOP-qtY0W0smuWMMP_-9X8%3D) and here.
+
+
+**Website**: [www.cosmin.nl](https://www.cosmin.nl/)
+
+
+
+

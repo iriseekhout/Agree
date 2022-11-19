@@ -1,0 +1,13 @@
+name: ICCpower_beta
+title: ICCpower_beta
+username:
+account: tnochildhealthstatistics
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 7606069
+bundleId: 6532578
+url: https://tnochildhealthstatistics.shinyapps.io/ICCpower_beta/
+when: 1668869016.46588
+lastSyncTime: 1668869016.46588
+asMultiple: FALSE
+asStatic: FALSE
