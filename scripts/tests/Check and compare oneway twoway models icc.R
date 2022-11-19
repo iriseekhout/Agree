@@ -28,3 +28,5 @@ psych::ICC(data, lmer = TRUE)
 psych::ICC(na.omit(data), lmer = FALSE)
 
 
+icc_agreement(data, CI_estimator = "approx" )
+icc_agreement(data, CI_estimator = "exact" )
