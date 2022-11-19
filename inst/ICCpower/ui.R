@@ -12,7 +12,7 @@ ui <-tagList(
                          frameborder = 0, scrolling = "auto", style = "height: 100vh;"
              )
     ),
-
+##### simulation results ----
     tabPanel("Simulation results",
              sidebarLayout(
                  # MSE ratio's paper
@@ -104,12 +104,15 @@ ui <-tagList(
                      #)
                  )
              )),
+#### design choice assistant ----
     tabPanel(
         "Design choice assistant", value = "design",
+
+
         sidebarLayout(
             # MSE ratio's paper
             sidebarPanel(
-                tags$h2("Study Design"),
+
 
 
               radioButtons(
@@ -122,6 +125,8 @@ ui <-tagList(
                 #input power ci lower ----
                 conditionalPanel(
                     condition = "output.powercilow",
+                    tags$h2("Study Design"),
+                    tags$p("Define the design of your study below:"),
                     sliderInput(
                         "icc_e",
                         label = "Expected ICC",
@@ -163,6 +168,8 @@ ui <-tagList(
                 #input power ci width ----
                 conditionalPanel(
                     condition = "output.powerci",
+                    tags$h2("Study Design"),
+                    tags$p("Define the design of your study below:"),
                     radioButtons(
                         "method_iccrgw",
                         label = "Type of ICC",
@@ -193,7 +200,7 @@ ui <-tagList(
                     sliderInput(
                         "ciwidthw_icc",
                         label = "Target width of the 95% Confidence interval of ICC.",
-                        min = 0.1,
+                        min = 0,
                         max = 1,
                         value = 0.3
                     ),
@@ -225,6 +232,8 @@ ui <-tagList(
                     ),
         #vary for raters ----
                     # conditionalPanel(
+        tags$h2("Study Design"),
+        tags$p("Define the design of your study below:"),
         radioButtons(
                         "method_iccrg",
                         label = "Type of ICC",
@@ -349,7 +358,7 @@ ui <-tagList(
                                  br(),
                                  p("The plot below shows the sample size and rater combinations that satisfy the confidence interval width requirement, given you specified scenario. The ICC plot is shown in the ICC-tab and the plot for SEM in the SEM-tab."),
                                  br(),
-                                 em(">> Scroll over the figure to find the recommendations."),
+                                 em(">> Scroll over the figure to find the exact results"),
                                  tabsetPanel(type = "tabs",
                                              tabPanel("ICC", plotlyOutput("widthmap_icc")),
                                              tabPanel("SEM", plotlyOutput("widthmap_sem"))
@@ -368,7 +377,7 @@ ui <-tagList(
         )
     )
 ),
-## FAQ ----
+#### FAQ ----
 tabPanel("FAQ & links",
          fluidRow(
              column(width = 8, offset = 2,
