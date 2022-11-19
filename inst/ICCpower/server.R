@@ -650,7 +650,7 @@ shinyServer(function(input, output, session) {
         dat <- data.frame(raters = krange, n = n)
 
         p <- ggplot(dat, aes(x = raters, y = n)) +
-            geom_bar(stat = "identity") +
+            geom_bar(stat = "identity", fill = "#3CB371") +
             xlab("Number of repeated measurements (k)") +
             ylab('Sample size (n)')
         ggplotly(p)
@@ -700,9 +700,9 @@ shinyServer(function(input, output, session) {
 
                 method %in% !!input$method_iccrgw &
                     deviation %in% !!input$systdif_iccrgw &
-                    cor %in% !!input$correlation_iccrgw &
-                    variance %in% !!input$variance_iccrgw) %>%
-            # method %in% "agreement" &
+                  cor %in% !!input$correlation_iccrgw &
+                   variance %in% !!input$variance_iccrgw) %>%
+             #method %in% "agreement" &
             #     deviation %in% 0 &
             #     cor %in% 0.7 &
             #     variance %in% 1) %>%
@@ -712,17 +712,25 @@ shinyServer(function(input, output, session) {
                 SE = sqrt(mse_icc),
                 lower = cent - (1.96 * SE),
                 upper = cent + (1.96 * SE),
-                ciwidthm = upper - lower,
-                ciwidthm = ifelse(ciwidthm >!!input$ciwidthw_icc, NA, ciwidthm)
+                ciwidthm = upper - lower
             ) %>% dplyr::select(n, k, ciwidthm) %>%
             group_by(n, k) %>%
             summarise(ciwidthm = mean(ciwidthm, na.rm = TRUE),
                       .groups = "drop") %>%
-            pivot_wider(id_cols = n, names_from = k, values_from = ciwidthm) %>%
+            pivot_wider(id_cols = n, names_from = k, values_from = c(ciwidthm)) %>%
             dplyr::select(n, everything()) %>% as.data.frame()
         rownames(mat) <- mat$n
         mat <- mat %>% dplyr::select(-n)
         mat <- as.matrix(mat)
+        mat <- round(mat, 2)
+
+
+        mat_label = mat
+        mat_label = paste("CI width:", mat_label)
+        mat_label[mat <= input$ciwidthw_icc] <- ""
+        mat_label <- matrix(mat_label, ncol = ncol(mat))
+        mat[mat > input$ciwidthw_icc] <- NA
+
 
 
     p <- heatmaply(mat,
@@ -730,13 +738,16 @@ shinyServer(function(input, output, session) {
                    xlab = "Repeated measurements", ylab = "Sample size",
                    main = paste("Width of Confidence interval for ICC type", paste(input$method_iccrgw, collapse = " & ")),
                    scale = "none",
-                   margins = c(60,100,40,20),
-                   grid_color = "white",
+                  row_text_angle = 0,
+                  column_text_angle = 0,
+                  margins = c(60,100,40,20),
+                   grid_color = "lightgrey",
                    grid_width = 0.001,
                    titleX = TRUE,
                    hide_colorbar = TRUE,
                    branches_lwd = 0.1,
-                   label_names = c("Sample size", "Repeated Measurements", "CI width"),
+                   label_names = c("Sample size", "Repeated Measurements", "Width"),
+                   custom_hovertext = mat_label,
                    fontsize_row = 14, fontsize_col = 14,
                    labCol = colnames(mat),
                    labRow = rownames(mat),
@@ -772,8 +783,7 @@ shinyServer(function(input, output, session) {
           SE = sqrt(mse_sem),
           lower = cent - (1.96 * SE),
           upper = cent + (1.96 * SE),
-          ciwidthm = upper - lower,
-          ciwidthm = ifelse(ciwidthm > !!input$ciwidthw_sem , NA, ciwidthm)
+          ciwidthm = upper - lower
         ) %>% dplyr::select(n, k, ciwidthm) %>%
         group_by(n, k) %>%
         summarise(ciwidthm = mean(ciwidthm, na.rm = TRUE),
@@ -783,6 +793,14 @@ shinyServer(function(input, output, session) {
       rownames(mat) <- mat$n
       mat <- mat %>% dplyr::select(-n)
       mat <- as.matrix(mat)
+      mat <- round(mat, 2)
+
+
+      mat_label = mat
+      mat_label = paste("CI width:", mat_label)
+      mat_label[mat <= input$ciwidthw_sem] <- ""
+      mat_label <- matrix(mat_label, ncol = ncol(mat))
+      mat[mat > input$ciwidthw_sem] <- NA
 
 
       p <- heatmaply(mat,
@@ -790,13 +808,16 @@ shinyServer(function(input, output, session) {
                      xlab = "Repeated measurements", ylab = "Sample size",
                      main = paste("Width of Confidence interval for SEM type", paste(input$method_iccrgw, collapse = " & ")),
                      scale = "none",
+                     row_text_angle = 0,
+                     column_text_angle = 0,
                      margins = c(60,100,40,20),
-                     grid_color = "white",
+                     grid_color = "lightgrey",
                      grid_width = 0.001,
                      titleX = TRUE,
                      hide_colorbar = TRUE,
                      branches_lwd = 0.1,
-                     label_names = c("Sample size", "Repeated Measurements", "CI width"),
+                     label_names = c("Sample size", "Repeated Measurements", "Width"),
+                     custom_hovertext = mat_label,
                      fontsize_row = 14, fontsize_col = 14,
                      labCol = colnames(mat),
                      labRow = rownames(mat),
