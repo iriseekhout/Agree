@@ -8,7 +8,6 @@ library(MASS)
 shinyServer(function(input, output, session) {
 
 
-
 ################################################################################
     #RESULTS
 ################################################################################
@@ -611,30 +610,30 @@ shinyServer(function(input, output, session) {
 
 
     # scenario 3: icc agreement is about 0.7, currently we have 30 patients rated by 4 raters, how close are we to the 3 raters; n = 50 situation - will we need more raters or patients?
-  output$startpage <- reactive({
-      FALSE
-      if(length(input$power) == 0) TRUE
-  })
-  outputOptions(output, "startpage", suspendWhenHidden = FALSE)
+  #output$startpage <- reactive({
+  #    FALSE
+  #    if(length(input$power) == 0) TRUE
+  #})
+  #outputOptions(output, "startpage", suspendWhenHidden = FALSE)
 
   #note: evaluation of "input$power# givens een warning (Warning: Error in if: argument is of length zero) by definition, because when length(input$power) == 0; then input$power == "CI lower" cannot be evaluated. >> not a problem for the app.
-  output$powercilow <- reactive({
-        FALSE
-        if(length(input$power) > 0 & input$power == "CI lower") TRUE
-    })
-    outputOptions(output, "powercilow", suspendWhenHidden = FALSE)
+  #output$powercilow <- reactive({
+  #      FALSE
+  #      if(length(input$power) > 0 & input$power == "CI lower") TRUE
+  #  })
+  #  outputOptions(output, "powercilow", suspendWhenHidden = FALSE)
 
-    output$powerci <- reactive({
-        FALSE
-        if(length(input$power) > 0 & input$power == "CI width") TRUE
-    })
-    outputOptions(output, "powerci", suspendWhenHidden = FALSE)
+  #  output$powerci <- reactive({
+  #      FALSE
+  #      if(length(input$power) > 0 & input$power == "CI width") TRUE
+  #  })
+  #  outputOptions(output, "powerci", suspendWhenHidden = FALSE)
 
-    output$powermse <- reactive({
-        FALSE
-        if(length(input$power) > 0 & input$power == "MSE ratio") TRUE
-    })
-    outputOptions(output, "powermse", suspendWhenHidden = FALSE)
+   # output$powermse <- reactive({
+  #      FALSE
+  #      if(length(input$power) > 0 & input$power == "MSE ratio") TRUE
+  #  })
+  #  outputOptions(output, "powermse", suspendWhenHidden = FALSE)
 
 
     ### CI lower ----
@@ -952,6 +951,8 @@ shinyServer(function(input, output, session) {
 
     output$mseratio_icc <- renderPlot({
 
+    if(input$systdif_iccrg == 2 & (k_iccg() < 4 |k_iccr() < 4)){stop("When 2 repeated measurements have systematic differences, the number of repeated measurements must be at least 4 for a valid ratio estimate.")}
+
     ggplot(scenario, aes(x = scenario, y = icc))+
         # geom_point() +
         geom_line(data = scenario, aes(x = scenario, y = lower, group = 1), lty = "dashed") +
@@ -967,10 +968,10 @@ shinyServer(function(input, output, session) {
 
     output$MSEratio <- renderText({
         if(input$design == "sample size"){
-           statement <-  paste0("The MSE ratio is the required increase in repeated measurements to achieve the precision for the design with a sample size of ", input$n_iccg, " (indicated as target), with an actual sample size of ", input$n_iccr, " (indicated as adapted design). Accordingly, the number of repeated measurements (", input$k_iccrg, ") needs to be multiplied by ", round(scenario$mseratio[1],2), ", and change to ",round(as.numeric(input$k_iccrg) * scenario$mseratio[1]), " to have a precision close to the precision with a sample size of ", input$n_iccg,  ". When it is not possible to increase the number of repeated measurements accordingly, the precision as expected under the target design will decrease in the adapted design.")
+           statement <-  paste0("The MSE ratio is the required increase in repeated measurements to achieve the precision for the design with a sample size of ", input$n_iccg, " (indicated as target), with an actual sample size of ", input$n_iccr, " (indicated as adapted design). Accordingly, the number of repeated measurements (", input$k_iccrg, ") needs to be multiplied by ", round(scenario$mseratio[1],2), ", thus be increased to at least ",round(as.numeric(input$k_iccrg) * scenario$mseratio[1]), " to have a precision close to the precision with a sample size of ", input$n_iccg,  ". When it is not possible to increase the number of repeated measurements accordingly, the precision as expected under the target design will decrease in the adapted design.")
         }
         if(input$design == "raters"){
-           statement <-  paste0("The MSE ratio is the required sample size increase to achieve the precision for the design with ", input$k_iccg, " raters (indicated as target), with only ", input$k_iccr, " raters (indicated as adapted design). Accordingly, the sample size of ", input$n_iccrg, " needs to be multiplied by ", round(scenario$mseratio[1],2), " and change to ", round(as.numeric(input$n_iccrg) * scenario$mseratio[1]), " to have a precision close to the precision with ", input$k_iccg, " repeated measurements. When it is not possible to increase sample size accordingly, the precision as expected under the target design will decrease in the adapted design.")
+           statement <-  paste0("The MSE ratio is the required sample size increase to achieve the precision for the design with ", input$k_iccg, " raters (indicated as target), with only ", input$k_iccr, " raters (indicated as adapted design). Accordingly, the sample size of ", input$n_iccrg, " needs to be multiplied by ", round(scenario$mseratio[1],2), ", thu sbe increased to at least ", round(as.numeric(input$n_iccrg) * scenario$mseratio[1]), " to have a precision close to the precision with ", input$k_iccg, " repeated measurements. When it is not possible to increase sample size accordingly, the precision as expected under the target design will decrease in the adapted design.")
         }
 
         statement

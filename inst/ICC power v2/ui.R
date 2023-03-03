@@ -1,50 +1,266 @@
+library(shinyWidgets)
+library(shinyBS)
 
 ui <-tagList(
-    tags$head(tags$script(src="js/index.js")),
+    tags$head(tags$script(src="js/index.js"),
+              useShinydashboard()#,
+      #         tags$script(HTML('
+      #   var fakeClick = function(tabName) {
+      #     var dropdownList = document.getElementsByTagName("a");
+      #     for (var i = 0; i < dropdownList.length; i++) {
+      #       var link = dropdownList[i];
+      #       if(link.getAttribute("data-value") == tabName) {
+      #         link.click();
+      #       };
+      #     }
+      #   };
+      # '))
+              ),
 
     navbarPage(
-    theme = shinytheme("cerulean"),
+    theme = shinytheme("flatly"),
     collapsible = TRUE,
     "ICC power      ",
-    tabPanel("Home",
-             #tags$iframe(src = "./home.html",
-            #             width = "100%",
-            #             frameborder = 0, scrolling = "auto", style = "height: 100vh;"
-            tags$head(tags$script(HTML('
-        var fakeClick = function(tabName) {
-          var dropdownList = document.getElementsByTagName("a");
-          for (var i = 0; i < dropdownList.length; i++) {
-            var link = dropdownList[i];
-            if(link.getAttribute("data-value") == tabName) {
-              link.click();
-            };
-          }
-        };
-      '))),
-            fluidPage(
-              fluidRow(box(h1("Sample size choice assistent"),
-                           p("The tools on this webpage help you to choose the sample size that matches with your study goals and study design. There are three different approaches, each suited for a different phase in the study."))),
-              fluidRow(box(h2("MSE ratio"),
-                           "Brief explanation of method and when to use it.. by clicking on the box you will be directed to the MSE ratio page directly."
 
-                           , onclick = "fakeClick('MSE ratio')")),
-              fluidRow(box(h2("CI width"),
-                               "Brief explanation of method and when to use it.. by clicking on the box you will be directed to the CI width page directly.",
-                               onclick = "fakeClick('CI width')")),
-              fluidRow(box(h2("CI lower"),
-                           "Brief explanation of method and when to use it.. by clicking on the box you will be directed to the CI lower page directly.", onclick = "fakeClick('CI lower')")),
+    ####HOME ----
+    tabPanel("Home",
+            fluidPage(
+              fluidRow(
+                box( width = 9,
+                h1("Sample Size Decision Assistant"),
+                p("The sample size decision assistant helps to decide on the number of study participants and reapeated measurement for your study on reliability or measurement error."),
+                div("One of the decisions you need to make when designing you study on reliability or measurement error is about ", strong("how many patients"), " you need to include in your study and ", strong("how often"), " you need to measure them, for example by different raters in an inter-rater design, or on different occasions in a test-retest design. Naturally, you want to include ",strong("as efficiently as possible"),". You don't want to include too many patients or repeat measurements, because that can be too burdensome for patients and expensive for you as researchers. But you also don't want to have too few patients or repeated measurements, because then you get inaccurate results.")
+                )
+                ),
+              fluidRow(
+                box(width = 9,
+                  p("In this application you can choose between ", strong("three different approaches"), " to help you decide upon the most accurate number of patients and number of repeated measurements, depending on the study phase or model you prefer.")
+                )),
+              fluidRow(
+                box(title =p("Confidence Interval width",
+                             style="color:white",
+                             onclick = "customHref('CI width')"),
+                    solidHeader = TRUE,
+                    collapsible = TRUE,
+                    collapsed = TRUE,
+                    div(strong("Are you in the design phase of your study?"), " Use the Confidence Interval (CI) width procedure. Specify the acceptable width of the confidence intervals, provide assumptions about your instrument of interest, and suitable sample size and repeated measurements are returned for your preferred CI width. ", a("Click here to move to CI width page.", onclick = "customHref('CI width')")),
+                    status = "success",
+                    width = 3
+                ),
+                box(title =p("Confidence Interval lower-limit",
+                             style="color:white",
+                             onclick = "customHref('CI lower')"),
+                    solidHeader = TRUE,
+                    collapsible = TRUE,
+                    collapsed = TRUE,
+                    div(strong("Are you designing a study and want to apply the one-way random effects model?"), " Use the Confidence Interval (CI) lower limit procedure. The one-way effects model requires somewhat larger sample sizes, so recommendations are conservative. Where the other two procedures are restricted within the conditions chosen in the", a("simulation studies", onclick = "customHref('Simulation results')"), "this procedure can be used for any conditions as it is based on an analytical approach. ", a("Click here to move to CI lower", onclick = "customHref('CI lower')")),
+                    status = "success",
+                    width = 3
+                ),
+                box(
+                  title = p("MSE ratio",
+                            style="color:white",
+                            onclick = "customHref('MSE ratio')"),
+                  solidHeader = TRUE,
+                  collapsible = TRUE,
+                  collapsed = TRUE,
+                  div(strong("Are you conducting a study, and your inclusion is (s)low?"), " Use the MSE ratio procedure. This gives you insight in the decrease of precision due to lower sample sizes, or provides you with insight in how to adapt your design. ", a("Click here to move to MSE ratio", onclick = "customHref('MSE ratio')")),
+                 status = "success",
+                 width = 3)
+
+
+              ),
 
               br(), br(),
 
-              fluidRow(box(h2("Simulation study"),
-                           p("Explanation of simulation study and that you can reach it by clicking on this box.", onclick = "fakeClick('Simulation results')")))
+              fluidRow(
+                box(title = p("Simulation study", style="color:white",
+                                     onclick = "customHref('Simulation results')"),
+                           solidHeader = TRUE,
+                           collapsible = TRUE,
+                           collapsed = TRUE,
+                           div("The CI width procedure and the MSE ratio procedure are based on simulation studies (Mokkink et al. 2022). All specific results of the simulations are shown ",a("here", onclick="customHref('Simulation results')"),". The CI lower limit procedure can be used in situations beyond the conditions considered in the simulation studies."),
+                           status = "primary",
+                           width = 9),
+                box(title = p("Beyond sample size", style="color:white",
+                              onclick = "customHref('FAQ & links')"),
+                    solidHeader = TRUE,
+                    collapsible = TRUE,
+                    collapsed = TRUE,
+                    div("For assistance in making other design choices, such as which patients and professionals should be included, and the preferred statistical methods to use, we refer to this article < link>."),
+                    status = "primary",
+                    width = 9)
+                )
             )
 
 
     ),
+    navbarMenu("Sample Size Decision assistant",
 
-    navbarMenu("Sample size choice assistant",
+               ####CIWidth----------
+               tabPanel("CI width",
+                        fluidPage(
+                          fluidRow(
+                          box(title = h2("Confidence Interval (CI) width procedure"),
+                              width = 12,
+                              solidHeader = TRUE,
+                              collapsible = TRUE,
+                              collapsed = FALSE,
+                              div(strong("Phase of use:"), " design phase of your study, i.e. before the start of the data collection",br(), strong("Goal:"), " determine the precision of your target design (i.e. the  chosen design that you will of have described in the study protocol): what conditions of sample size and repeated measurements can achieve your acceptable CI width?",br(), strong("Pre-specifications:"), " acceptable width of the confidence interval, ICC or SEM model that you will use, expected ICC/SEM value",
+                                br(),  strong("Reach of procedure:"), " feasible for all conditions described in the simulation study <link ref> as it is based on the results of the ",a("simulation", onclick="customHref('Simulation results')") )
+                              )
+                          ),
+
+
+                      sidebarLayout(
+                          # CI widthinput
+                        sidebarPanel(
+                            tags$h3("Input settings"),
+
+                            tags$p("Define the design of your study below: (?)", id = "ciwsetting"),
+                            bsTooltip("ciwsetting", "You need to specify some design choices, and make an assumptions on the correlation between the repeated measurements (e.g. based on previously reported ICCs), the presence of a systematic difference (e.g. between raters), and expected variance in score (…).", placement = "top", trigger = "hover"),
+                            radioButtons(
+                              "method_iccrgw",
+                              label = "Type of ICC or SEM",
+                              choices = c("oneway", "agreement", "consistency"),
+                              selected = "oneway",
+                              inline = TRUE
+                            ),
+                            radioButtons(
+                              "correlation_iccrgw",
+                              label = "Expected correlation between repeated measurments",
+                              choices = c(0.6, 0.7, 0.8),
+                              selected = c(0.7),
+                              inline = TRUE
+                            ),
+                            radioButtons(
+                              "variance_iccrgw",
+                              label = "Expected variance in scores",
+                              choices = c(1, 10, 100),
+                              selected = 1,
+                              inline = TRUE
+                            ),
+                            radioButtons(
+                              "systdif_iccrgw",
+                              label = "Systematic differences expected between 0, 1 or 2 of the repeated measurements",
+                              choices = c(0, 1, 2),
+                              inline = TRUE
+                            ),
+                            sliderInput(
+                              "ciwidthw_icc",
+                              label = "Target width of the 95% Confidence interval of ICC.",
+                              min = 0,
+                              max = 1,
+                              value = 0.3),
+                              bsTooltip("ciwidthw_icc", "The width depends of the unit of measurements. As the range of the ICC is always between 0-1, the range of the target width is fixed, and it is set default at 0.3.", placement = "top", trigger = "hover", options = list(container = "body")),
+
+                            #update slider with variance unit
+                            uiOutput("slider_ciwidthw_sem"),
+                            bsTooltip("slider_ciwidthw_sem", "The width depends of the unit of measurements. The SEM depends on the unit of measurement, and the default setting for the target width of the 95% CI width changes across conditions v.", placement = "top", trigger = "hover", options = list(container = "body"))
+
+                          ),
+                          mainPanel(
+                            fluidRow(
+                              h3("Recommendations"),
+                              p("The plot below shows the sample size and rater combinations that satisfy the confidence interval width requirement, given your specified scenario. The ICC plot is shown in the ICC-tab and the plot for SEM in the SEM-tab."),
+                              br(),
+                              em(">> Scroll over the figure to find the exact results"),
+                              tabsetPanel(type = "tabs",
+                                          tabPanel("ICC", plotlyOutput("widthmap_icc")),
+                                          tabPanel("SEM", plotlyOutput("widthmap_sem"))
+                              )
+                            )
+                          )
+                        )
+)
+
+               ),
+#### CILOWER-----
+tabPanel("CI lower",
+         fluidPage(
+           fluidRow(
+             box(title = h2("Confidence Interval (CI) lower limit procedure"),
+                 width = 12,
+                 solidHeader = TRUE,
+                 collapsible = TRUE,
+                 collapsed = FALSE,
+                 div(strong("Phase of use:"), " design phase of your study, i.e. before the start of the data collection, and you want to apply the ", strong("one-way random effects model"),".",br(), strong("Goal:"), " determine the precision of your target design (i.e. the chosen design that you will of have described in the study protocol); what conditions of sample size and repeated measurements can achieve your acceptable CI width in your one-way random effects analysis",br(), strong("Pre-specifications:"), " acceptable lower limit of the 95% confidence interval, expected ICC/SEM value.",
+                     br(),  strong("Reach of procedure:"), " any conditions in a one-way random effects model, as it is based on an analytical approach", a("Zou (2011)", href = "https://doi.org/10.1002/sim.5466"))
+             )
+           ),
+
+         sidebarLayout(
+
+           sidebarPanel(
+             tags$h3("Input settings"),
+             tags$p("Define the design of your study below:"),
+             sliderInput(
+               "icc_e",
+               label = "Expected ICC",
+               min = 0.1,
+               max = 1,
+               value = 0.7
+             ),
+             sliderInput(
+               "cilower",
+               label = "Accepted lower limit of the Confidence interval for ICC (needs to be lower than expected ICC)",
+               min = 0.1,
+               max = 1,
+               value = 0.55
+             ),
+             sliderInput(
+               "alphalevel",
+               label = "Confidence interval proportion",
+               min = 0.90,
+               max = 0.99,
+               value = 0.95
+             ),
+             bsTooltip("alphalevel", "Probability limits for the confidence interval, most common is 95% or 99%.", placement = "top", trigger = "hover", options = list(container = "body")),
+             sliderInput(
+               "betapower",
+               label = "Power, also called assurance probability.",
+               min = 0.80,
+               max = 0.99,
+               value = 0.80
+             ),
+             bsTooltip("betapower", "Assurance probability: the probability of achieving the desired precision level, i.e. lower limit of the confidence interval.", placement = "top", trigger = "hover", options = list(container = "body")),
+             sliderInput(
+               "raterrange",
+               label = "Number of repeated measurments",
+               min = 1,
+               max = 99,
+               step = 1,
+               value = c(2, 6)
+             ),
+             bsTooltip("raterrange", "The target number of repeated measurements (i.e. as described in the protocol).", placement = "top", trigger = "hover", options = list(container = "body"))
+           ),
+           mainPanel(
+             ## results for CI lower
+             h3("Recommendations"),
+             p("The plot below shows the required sample size (y-axis) for the number of repeated measurements on the x-axis that are needed for your scenario with a given ICC to obtain a confidence interval with a lower end as indicated in your scenario."),
+             em("Note that this method was developed for the ICC oneway and the estimated sample size is therefore conservative when applied for ICC agreement or consistency."),
+             fluidRow(plotlyOutput("n_icc_plot"))
+           )
+
+
+         )
+         )
+),
+    #####MSE ratio-----
                tabPanel("MSE ratio",
+                        fluidPage(
+                          fluidRow(
+                            box(title = h2("MSE ratio procedure"),
+                                width = 12,
+                                solidHeader = TRUE,
+                                collapsible = TRUE,
+                                collapsed = FALSE,
+                                div(strong("Phase of use:"), " during data collection or after you have finished data collection, and you realized that the intended sample size of patients and the number of repeated measurements (as described in your protocol) cannot be reached.",br(), strong("Goal:"), " (1) To estimate to what extend a current adapted design (e.g. the number of patients or repeated measurements included so far in the study)  needs to be updated to achieve a similar precision as the target design (i.e. the intended number of patients or repeated measurements chosen at the start of the study). (2) To understand what the decrease in precision is when you compare the adapted design (i.e. the number of patients or repeated measurements included so far in the study) to the target design (i.e. as described in the protocol).",br(), strong("Pre-specifications:"), " ICC or SEM model that you will use, expected ICC/SEM value, expected variance in scores.",
+                                    br(),  strong("Reach of procedure:"), " feasible for all conditions described in the simulation study <link ref> as it is based on the results of the ",a("simulation", onclick="customHref('Simulation results')"))
+                            )
+                          ),
+
+
                         sidebarLayout(
                           # MSE ratio's paper
                           sidebarPanel(
@@ -57,24 +273,26 @@ ui <-tagList(
                               selected = "ICC",
                               inline = T
                             ),
-                            p("Either the sample size or the number of repeated measurements can be varied between the adapted (what you have collected so far) and target design (the chosen design at the start of the study, referring to the target sample size and number of repeated measurements). For that condition the MSE ratio is calculated. The MSE ratio can be used to estimate the required sample size/rater increase to reach the goal."
+                            p("Either the sample size or the number of repeated measurements can be varied between the adapted (what you have collected so far) and target design (the chosen design at the start of the study, refering to the target sample size and number of repeated measurements). For that condition the MSE ratio is calculated. The MSE ratio can be used to estimate the required sample size/rater increase to reach the goal."
                             ),
 
                             br(),
-                            em("Target design refers to the intended number of patients or number of repeated measurements chosen at the start of the study, i.e. your goal; adapted design refers to the number of patients or repeated measurements included so far."),
+                            em(""),
                             selectInput(
                               "design",
                               label = "Design aspect to vary between adapted (current) design and target (goal) design",
                               choices = c("raters", "sample size"),
                               selected = character(0)
                             ),
-                            #vary for raters ----
+
+                            bsTooltip("design", "Adapted design: number of patients or repeated measurements included so far; Target design: the intended number of patients or repeated measurements chosen at the start of the study, i.e. your goal.", placement = "top", trigger = "hover", options = list(container = "body")),
+                            #vary for raters
                             # conditionalPanel(
-                            tags$h2("Study Design"),
+                            tags$h3("Input settings"),
                             tags$p("Define the design of your study below:"),
                             radioButtons(
                               "method_iccrg",
-                              label = "Type of ICC",
+                              label = "Type of ICC or SEM",
                               choices = c("oneway", "agreement", "consistency"),
                               select = "agreement",
                               inline = TRUE
@@ -150,7 +368,7 @@ ui <-tagList(
                           ,
                           mainPanel(
                             ## results for MSE ratio
-                            h3("Power by MSE procedure"),
+                            h3("Relative precision"),
                             p("The figure below shows the confidence interval computed via the mean squared error for the adapted design and the target design (> link Mokkink et al.,  2022)."),
                             plotOutput("mseratio_icc"),
                           fluidRow(
@@ -168,131 +386,10 @@ ui <-tagList(
 
                         )
 
-                        ),
-               tabPanel("CI width",
-
-                        sidebarLayout(
-                          # CI widthinput
-                          sidebarPanel(
-                        tags$h2("Study Design"),
-                        tags$p("Define the design of your study below:"),
-                        radioButtons(
-                          "method_iccrgw",
-                          label = "Type of ICC",
-                          choices = c("oneway", "agreement", "consistency"),
-                          selected = "oneway",
-                          inline = TRUE
-                        ),
-                        radioButtons(
-                          "correlation_iccrgw",
-                          label = "Expected correlation between repeated measurments",
-                          choices = c(0.6, 0.7, 0.8),
-                          selected = c(0.7),
-                          inline = TRUE
-                        ),
-                        radioButtons(
-                          "variance_iccrgw",
-                          label = "Expected variance in scores",
-                          choices = c(1, 10, 100),
-                          selected = 1,
-                          inline = TRUE
-                        ),
-                        radioButtons(
-                          "systdif_iccrgw",
-                          label = "Systematic differences expected between 0, 1 or 2 of the repeated measurements",
-                          choices = c(0, 1, 2),
-                          inline = TRUE
-                        ),
-                        sliderInput(
-                          "ciwidthw_icc",
-                          label = "Target width of the 95% Confidence interval of ICC.",
-                          min = 0,
-                          max = 1,
-                          value = 0.3
-                        ),
-                        #update slider with variance unit
-                        uiOutput("slider_ciwidthw_sem")
-
-               ),
-               mainPanel(
-                 fluidRow(
-                   h2("Power by Confidence interval width"),
-                   p("The CI width procedures can be used when designing the study, i.e. before the start of the data collection, to determine the precision of the target design. In the CI width procedure a pre-specified width of the confidence interval (e.g. 0.3 for ICC) is set to determine what conditions of sample size and repeated measurements can achieve that specific CI width under the specified design conditions. The CI width procedure can be used for the precision of the ICC or the SEM. This way, various designs can be considered to decide on the most efficient target design (i.e. the chosen design that will be described in the study protocol)."),
-                   br(),
-                   p("The plot below shows the sample size and rater combinations that satisfy the confidence interval width requirement, given you specified scenario. The ICC plot is shown in the ICC-tab and the plot for SEM in the SEM-tab."),
-                   br(),
-                   em(">> Scroll over the figure to find the exact results"),
-                   tabsetPanel(type = "tabs",
-                               tabPanel("ICC", plotlyOutput("widthmap_icc")),
-                               tabPanel("SEM", plotlyOutput("widthmap_sem"))
-                   )
-                   #plotlyOutput("widthmap")
-                 )
-               )
                         )
+)
                ),
-
-               tabPanel("CI lower",
-
-                        sidebarLayout(
-                          # MSE ratio's paper
-                          sidebarPanel(
-                          tags$h2("Study Design"),
-                          tags$p("Define the design of your study below:"),
-                          sliderInput(
-                            "icc_e",
-                            label = "Expected ICC",
-                            min = 0.1,
-                            max = 1,
-                            value = 0.7
-                          ),
-                          sliderInput(
-                            "cilower",
-                            label = "Accepted lower limit of the Confidence interval for ICC (needs to be lower than expected ICC)",
-                            min = 0.1,
-                            max = 1,
-                            value = 0.55
-                          ),
-                          sliderInput(
-                            "alphalevel",
-                            label = "Confidence interval proportion",
-                            min = 0.90,
-                            max = 0.99,
-                            value = 0.95
-                          ),
-                          sliderInput(
-                            "betapower",
-                            label = "Power, also called assurance probability.",
-                            min = 0.80,
-                            max = 0.99,
-                            value = 0.80
-                          ),
-                          sliderInput(
-                            "raterrange",
-                            label = "Number of repeated measurments",
-                            min = 1,
-                            max = 99,
-                            step = 1,
-                            value = c(2, 6)
-                          )
-                          ),
-                          mainPanel(
-                            ## results for CI lower
-                            h2("Power by lower end of Confidence Interval"),
-                            p("The lower limit of the CI is based on an analytical approach. The CI lower limit procedure is a known method in the literature and uses a formula for the confidence intervals presented in ", a("Zou (2011)", href = "https://doi.org/10.1002/sim.5466"), " to estimate the sample size required given the assumed ICC one-way, lower limit of the ICC one-way and the number of raters that will be involved. The advantage of this method is that it can be used beyond the specified conditions that are used in this simulation study. However, this method is based on the ICC one-way, and cannot be generalized to the other types of ICCs."),
-                            p("The plot below shows the required sample size (y-axis) for the number of repeated measurements on the x-axis that are needed for your scenario with a given ICC to obtain a confidence interval with a lower end as indicated in your scenario."),
-                            strong("Confidence interval proportion:"), "Probability limits for the confidence interval, most common is 95% or 99%.",
-                            strong("Power:", "Defined as the assurance probability, which is the probabilitiy of achieving the desired precision level, i.e. lower limit of the confidence interval."),
-                            em("Note that this method was developed for the ICC oneway and the estimated sample size is therefore conservative when applied for ICC agreement or consistency."),
-                            fluidRow(plotlyOutput("n_icc_plot"))
-                            )
-
-
-
-                        )
-               )
-               ),
-##### simulation results ----
+##### Simulation results ----
     tabPanel("Simulation results",
              sidebarLayout(
                  # MSE ratio's paper
@@ -385,20 +482,20 @@ ui <-tagList(
                  )
              )),
 #### design choice assistant ----
-    tabPanel(
-        "Design choice assistant", value = "design",
-
-                h2("Power estimations"),
-                div(
-                    p("The Design choice assistant informs your choice on sample size and number of repeated measurements in a study on reliability and measurement error. You can choose between three different approaches, depending on the phase you are in, or the model that you prefer."
-                    ),
-                    br(),
-                strong("Confidence Interval (CI) width procedure:"), "you can use this procedure when you are designing your study. this procedure is based on the results of the simulation study. The specified width of the confidence interval (CI) is used to determine what conditions of sample size and repeated measurements can achieve that CI width under the chosen design conditions."
-            ,
-            br(),
-            strong("Confidence Interval (CI) lower limit procedure: "), "you can choose this procedure when you are designing a study and want to apply the one-way random effects model. The CI lower procedure is based on  a formula presented in ", a("Zou (2011)", href = "https://doi.org/10.1002/sim.5466"), "to estimate the sample size required. This model requires somewhat larger sample sizes, so it will give an conservative recommendations for use in other effect models.  With this method it is possible to give a range of numbers of repeated measurements in order to visualize the required sample size for different numbers of repeated measurements.",
-            br(),
-                    strong("MSE ratio procedure: "), "When there is a need to change or reconsider the target design of the study, e.g. the patient recruitment is slow or one of the raters drops out, you can use the MSE ratio procedure. The MSE ratio procedure is based on the results of the simulation study to estimate to what extend a current adapted design (e.g. the number of patients or repeated measurements included so far in the study) needs to be updated to achieve a similar precision as the target design (i.e. the intended number of patients or repeated measruements chosen at the start of the study)." )),
+   # # tabPanel(
+   #      "Design choice assistant", value = "design",
+   #
+   #              h2("Power estimations"),
+   #              div(
+   #                  p("The Design choice assistant informs your choice on sample size and number of repeated measurements in a study on reliability and measurement error. You can choose between three different approaches, depending on the phase you are in, or the model that you prefer."
+   #                  ),
+   #                  br(),
+   #              strong("Confidence Interval (CI) width procedure:"), "you can use this procedure when you are designing your study. this procedure is based on the results of the simulation study. The specified width of the confidence interval (CI) is used to determine what conditions of sample size and repeated measurements can achieve that CI width under the chosen design conditions."
+   #          ,
+   #          br(),
+   #          strong("Confidence Interval (CI) lower limit procedure: "), "you can choose this procedure when you are designing a study and want to apply the one-way random effects model. The CI lower procedure is based on  a formula presented in ", a("Zou (2011)", href = "https://doi.org/10.1002/sim.5466"), "to estimate the sample size required. This model requires somewhat larger sample sizes, so it will give an conservative recommendations for use in other effect models.  With this method it is possible to give a range of numbers of repeated measurements in order to visualize the required sample size for different numbers of repeated measurements.",
+   #          br(),
+   #                  strong("MSE ratio procedure: "), "When there is a need to change or reconsider the target design of the study, e.g. the patient recruitment is slow or one of the raters drops out, you can use the MSE ratio procedure. The MSE ratio procedure is based on the results of the simulation study to estimate to what extend a current adapted design (e.g. the number of patients or repeated measurements included so far in the study) needs to be updated to achieve a similar precision as the target design (i.e. the intended number of patients or repeated measruements chosen at the start of the study)." )),
 
            # br(),
          #   "We specifically used the results for ICC estimations for the recommendations, as these required (in addition to MSE values) confidence intervals, which we could not obtain for the SEM estimations. In addition, because we saw the same trends in MSE values for ICC and SEM, and we recommend always reporting both parameters in a study, we focus only on ICC estimations."
@@ -406,23 +503,44 @@ ui <-tagList(
 
 #### FAQ ----
 tabPanel("FAQ & links",
+         fluidPage(
          fluidRow(
-             column(width = 8, offset = 2,
-           h1("Frequently Asked Questions"),
+
+         h1("Frequently Asked Questions"),
          br(),
-           h4("Where can I find more information?"),
-           p("> link paper"),
-           h4("Where can I find information to decide which ICC or SEM formula matches my design?"),
-           p("> link paper"),
-           h4("Where can I find help to decide on the number of patients and repeated measurements in my study"),
-         tags$div("The", tags$a("choice assistent", onclick = "customHref('design')"), " in this application can guide you with this decision."),
-           h4("How can I estimate the ICCs and SEMs in R?"),
-           tags$div("The R package", tags$a("Agree", href = "https://github.com/iriseekhout/Agree"), "includes all functions to obtain the ICCs and SEMs for different types of ICCs. The Agree package is publically available and can be installed in R using the following code: ", tags$code("remotes::install_github(repo = 'iriseekhout/Agree')")),
-           h4("How can I estimate the ICCs and SEMs in SPSS?"),
-           p("")
-           )
-         )
-         ),
+         fluidRow(
+         box(
+           title = "Where can I find more information?",
+           collapsible = TRUE,
+           collapsed = TRUE,
+           solidHeader = TRUE,
+           status = "success",
+           p("> link paper with more info")
+
+         )),
+         fluidRow(
+         box(
+           title = "Where can I find information to decide which ICC or SEM formula matches my design?",
+           collapsible = TRUE,
+           collapsed = TRUE,
+           solidHeader = TRUE,
+           status = "success",
+           p("> link paper with more info")
+
+         )),
+         fluidRow(
+         box(
+           title = "How can I estimate the ICCs and SEMs in R?",
+           collapsible = TRUE,
+           collapsed = TRUE,
+           solidHeader = TRUE,
+           status = "success",
+           tags$div("The R package", tags$a("Agree", href = "https://github.com/iriseekhout/Agree"), "includes all functions to obtain the ICCs and SEMs for different types of ICCs. The Agree package is publically available and can be installed in R using the following code: ", tags$code("remotes::install_github(repo = 'iriseekhout/Agree')"))
+         ))
+
+         ))
+
+),
 ## about ----
 tabPanel("About the team",
            tags$iframe(src = "./about.html",
