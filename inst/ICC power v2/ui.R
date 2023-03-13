@@ -28,14 +28,18 @@ ui <-tagList(
               fluidRow(
                 box( width = 9,
                 h1("Sample Size Decision Assistant"),
-                p("The sample size decision assistant helps to decide on the number of study participants and reapeated measurement for your study on reliability or measurement error."),
-                div("One of the decisions you need to make when designing you study on reliability or measurement error is about ", strong("how many patients"), " you need to include in your study and ", strong("how often"), " you need to measure them, for example by different raters in an inter-rater design, or on different occasions in a test-retest design. Naturally, you want to include ",strong("as efficiently as possible"),". You don't want to include too many patients or repeat measurements, because that can be too burdensome for patients and expensive for you as researchers. But you also don't want to have too few patients or repeated measurements, because then you get inaccurate results.")
+                p("The sample size decision assistant helps you to decide on the number of study participants and repeated measurements for your study on reliability or measurement error. This tool helps to trade-off ", strong("efficiency"), " and ", strong("precision."))#,
+               # div("One of the decisions you need to make when designing you study on reliability or measurement error is about ", strong("how many patients"), " you need to include in your study and ", strong("how often"), " you need to measure them, for example by different raters in an inter-rater design, or on different occasions in a test-retest design. Naturally, you want to include ",strong("as efficiently as possible"),". You don't want to include too many patients or repeat measurements, because that can be too burdensome for patients and expensive for you as researchers. But you also don't want to have too few patients or repeated measurements, because then you get inaccurate results.")
                 )
                 ),
               fluidRow(
-                box(width = 9,
-                  p("In this application you can choose between ", strong("three different approaches"), " to help you decide upon the most accurate number of patients and number of repeated measurements, depending on the study phase or model you prefer.")
-                )),
+                column(width = 3,
+                       strong("Are you in the design phase of your study?")),
+                column(width = 3,
+                     strong("Are you designing a one-way reliability study?")),
+                column(width = 3,
+                   strong("Is data collection in you study (s)low?"))
+              ),
               fluidRow(
                 box(title =p("Confidence Interval width",
                              style="color:white",
@@ -43,7 +47,7 @@ ui <-tagList(
                     solidHeader = TRUE,
                     collapsible = TRUE,
                     collapsed = TRUE,
-                    div(strong("Are you in the design phase of your study?"), " Use the Confidence Interval (CI) width procedure. Specify the acceptable width of the confidence intervals, provide assumptions about your instrument of interest, and suitable sample size and repeated measurements are returned for your preferred CI width. ", a("Click here to move to CI width page.", onclick = "customHref('CI width')")),
+                    div(strong("Design phase:"), " use the Confidence Interval (CI) width procedure. Suitable recommendations for sample size and repeated measurements are returned, based on your acceptable width of the confidence intervals and your assumptions about the measurement instrument. ", a("Click here to move to CI width page.", onclick = "customHref('CI width')")),
                     status = "success",
                     width = 3
                 ),
@@ -53,7 +57,7 @@ ui <-tagList(
                     solidHeader = TRUE,
                     collapsible = TRUE,
                     collapsed = TRUE,
-                    div(strong("Are you designing a study and want to apply the one-way random effects model?"), " Use the Confidence Interval (CI) lower limit procedure. The one-way effects model requires somewhat larger sample sizes, so recommendations are conservative. Where the other two procedures are restricted within the conditions chosen in the", a("simulation studies", onclick = "customHref('Simulation results')"), "this procedure can be used for any conditions as it is based on an analytical approach. ", a("Click here to move to CI lower", onclick = "customHref('CI lower')")),
+                    div(strong("One-way random effects model:"), " Use the Confidence Interval (CI) lower limit procedure. The one-way effects model requires somewhat larger sample sizes, so recommendations are conservative. Where the other two procedures are restricted within the conditions chosen in the", a("simulation studies", onclick = "customHref('Simulation results')"), "this procedure can be used for any conditions as it is based on an analytical approach. ", a("Click here to move to CI lower", onclick = "customHref('CI lower')")),
                     status = "success",
                     width = 3
                 ),
@@ -64,7 +68,7 @@ ui <-tagList(
                   solidHeader = TRUE,
                   collapsible = TRUE,
                   collapsed = TRUE,
-                  div(strong("Are you conducting a study, and your inclusion is (s)low?"), " Use the MSE ratio procedure. This gives you insight in the decrease of precision due to lower sample sizes, or provides you with insight in how to adapt your design. ", a("Click here to move to MSE ratio", onclick = "customHref('MSE ratio')")),
+                  div(strong("Slow inclusion:"), " Use the MSE ratio procedure. This gives (1) insight in the decrease of precision due to lower sample sizes, or (2) provides you with insight in how to adapt your design to obtain an acceptable width of the confidence interval. ", a("Click here to move to MSE ratio", onclick = "customHref('MSE ratio')")),
                  status = "success",
                  width = 3)
 
@@ -74,20 +78,21 @@ ui <-tagList(
               br(), br(),
 
               fluidRow(
-                box(title = p("Simulation study", style="color:white",
+                box(title = p("Simulation study & how to cite", style="color:white",
                                      onclick = "customHref('Simulation results')"),
                            solidHeader = TRUE,
                            collapsible = TRUE,
                            collapsed = TRUE,
-                           div("The CI width procedure and the MSE ratio procedure are based on simulation studies (Mokkink et al. 2022). All specific results of the simulations are shown ",a("here", onclick="customHref('Simulation results')"),". The CI lower limit procedure can be used in situations beyond the conditions considered in the simulation studies."),
+                           div("The CI width procedure and the MSE ratio procedure are based on simulation studies (Mokkink et al. 2022). All specific results of the simulations are shown ",a("here", onclick="customHref('Simulation results')"),". The CI lower limit procedure can be used in situations beyond the conditions considered in the simulation studies.", br(),br(), strong("Citation for the app:"), br(),
+                              "Mokkink, L.B., de Vet, H., Diemeer, S. et al. Sample size recommendations for studies on reliability and measurement error: an online application based on simulation studies. Health Serv Outcomes Res Method (2022).", a("https://doi.org/10.1007/s10742-022-00293-9",href = "https://doi.org/10.1007/s10742-022-00293-9") ),
                            status = "primary",
                            width = 9),
-                box(title = p("Beyond sample size", style="color:white",
+                box(title = p("Design issues beyond sample size", style="color:white",
                               onclick = "customHref('FAQ & links')"),
                     solidHeader = TRUE,
                     collapsible = TRUE,
                     collapsed = TRUE,
-                    div("For assistance in making other design choices, such as which patients and professionals should be included, and the preferred statistical methods to use, we refer to this article < link>."),
+                    div("For assistance in comprehensively formulating your reserach question, and making other design choices, such as which patients and professionals should be included, and how to build the appropriate statistical formula for your study, we refer to this article < link>."),
                     status = "primary",
                     width = 9)
                 )
@@ -106,7 +111,7 @@ ui <-tagList(
                               solidHeader = TRUE,
                               collapsible = TRUE,
                               collapsed = FALSE,
-                              div(strong("Phase of use:"), " design phase of your study, i.e. before the start of the data collection",br(), strong("Goal:"), " determine the precision of your target design (i.e. the  chosen design that you will of have described in the study protocol): what conditions of sample size and repeated measurements can achieve your acceptable CI width?",br(), strong("Pre-specifications:"), " acceptable width of the confidence interval, ICC or SEM model that you will use, expected ICC/SEM value",
+                              div(strong("Phase of use:"), " design phase of your study, i.e. before the start of the data collection",br(), strong("Goal:"), " determine the precision of your target sample size to report in your study protocol: what conditions of sample size of patients and repeated measurements can achieve your acceptable CI width?",br(), strong("Pre-specifications:"), " acceptable width of the confidence interval, ICC or SEM model that you will use, expected ICC/SEM value",
                                 br(),  strong("Reach of procedure:"), " feasible for all conditions described in the simulation study <link ref> as it is based on the results of the ",a("simulation", onclick="customHref('Simulation results')") )
                               )
                           ),
@@ -117,7 +122,7 @@ ui <-tagList(
                         sidebarPanel(
                             tags$h3("Input settings"),
 
-                            tags$p("Define the design of your study below: (?)", id = "ciwsetting"),
+                            tags$div("Define the design of your study below",tags$sup("?"), id = "ciwsetting"),
                             bsTooltip("ciwsetting", "You need to specify some design choices, and make an assumptions on the correlation between the repeated measurements (e.g. based on previously reported ICCs), the presence of a systematic difference (e.g. between raters), and expected variance in score (…).", placement = "top", trigger = "hover"),
                             radioButtons(
                               "method_iccrgw",
@@ -126,9 +131,10 @@ ui <-tagList(
                               selected = "oneway",
                               inline = TRUE
                             ),
+                            bsTooltip("method_iccrgw", "SEM is expressed in the unit of measurement of the instrument.", placement = "top", trigger = "hover"),
                             radioButtons(
                               "correlation_iccrgw",
-                              label = "Expected correlation between repeated measurments",
+                              label = "Expected correlation between repeated measurements",
                               choices = c(0.6, 0.7, 0.8),
                               selected = c(0.7),
                               inline = TRUE
@@ -162,9 +168,7 @@ ui <-tagList(
                           mainPanel(
                             fluidRow(
                               h3("Recommendations"),
-                              p("The plot below shows the sample size and rater combinations that satisfy the confidence interval width requirement, given your specified scenario. The ICC plot is shown in the ICC-tab and the plot for SEM in the SEM-tab."),
-                              br(),
-                              em(">> Scroll over the figure to find the exact results"),
+                              p("Scroll over the plot below to find the exact results for the CI width per combination of the sample size and number of repeated measurements. Colored boxed indicate combinations that satisfy your acceptable width for the confidence interval, given your specified scenario. The ICC plot is shown in the ICC-tab and the plot for SEM in the SEM-tab."),
                               tabsetPanel(type = "tabs",
                                           tabPanel("ICC", plotlyOutput("widthmap_icc")),
                                           tabPanel("SEM", plotlyOutput("widthmap_sem"))
@@ -184,7 +188,7 @@ tabPanel("CI lower",
                  solidHeader = TRUE,
                  collapsible = TRUE,
                  collapsed = FALSE,
-                 div(strong("Phase of use:"), " design phase of your study, i.e. before the start of the data collection, and you want to apply the ", strong("one-way random effects model"),".",br(), strong("Goal:"), " determine the precision of your target design (i.e. the chosen design that you will of have described in the study protocol); what conditions of sample size and repeated measurements can achieve your acceptable CI width in your one-way random effects analysis",br(), strong("Pre-specifications:"), " acceptable lower limit of the 95% confidence interval, expected ICC/SEM value.",
+                 div(strong("Phase of use:"), " design phase of your study, i.e. before the start of the data collection, and you want to apply the ", strong("one-way random effects model"),".",br(), strong("Goal:"), " determine the precision of your target sample size (to report in the study protocol); what conditions of sample size and repeated measurements can achieve your acceptable CI width in your one-way random effects analysis",br(), strong("Pre-specifications:"), " acceptable lower limit of the 95% confidence interval, expected ICC/SEM value.",
                      br(),  strong("Reach of procedure:"), " any conditions in a one-way random effects model, as it is based on an analytical approach", a("Zou (2011)", href = "https://doi.org/10.1002/sim.5466"))
              )
            ),
@@ -255,7 +259,7 @@ tabPanel("CI lower",
                                 solidHeader = TRUE,
                                 collapsible = TRUE,
                                 collapsed = FALSE,
-                                div(strong("Phase of use:"), " during data collection or after you have finished data collection, and you realized that the intended sample size of patients and the number of repeated measurements (as described in your protocol) cannot be reached.",br(), strong("Goal:"), " (1) To estimate to what extend a current adapted design (e.g. the number of patients or repeated measurements included so far in the study)  needs to be updated to achieve a similar precision as the target design (i.e. the intended number of patients or repeated measurements chosen at the start of the study). (2) To understand what the decrease in precision is when you compare the adapted design (i.e. the number of patients or repeated measurements included so far in the study) to the target design (i.e. as described in the protocol).",br(), strong("Pre-specifications:"), " ICC or SEM model that you will use, expected ICC/SEM value, expected variance in scores.",
+                                div(strong("Phase of use:"), " during data collection when inclusion is (s)low, and you realize that the intended sample size of patients and the number of repeated measurements (as described in your protocol) cannot be reached.",br(), strong("Goal:"), " (1) To estimate the decrease in precision is when you compare the current design (i.e. the number of patients or repeated measurements included so far in the study) to the target design (i.e. as described in the protocol). (2) To understand how the current design can be updated in terms of either number of patients or number of repeated measurements to achieve a similar precision as the target design.",br(), strong("Pre-specifications:"), " ICC or SEM model that you will use, expected ICC/SEM value, expected variance in scores.",
                                     br(),  strong("Reach of procedure:"), " feasible for all conditions described in the simulation study <link ref> as it is based on the results of the ",a("simulation", onclick="customHref('Simulation results')"))
                             )
                           ),
@@ -265,28 +269,15 @@ tabPanel("CI lower",
                           # MSE ratio's paper
                           sidebarPanel(
 
-                            p("The MSE ratio can be computed to optimize the design with respect to the ICC statistic or for the SEM statistic."),
                             radioButtons(
                               "statistic",
-                              label = "MSE ratio procedure for ICC or for SEM.",
+                              label = "Main interest in ICC or SEM?",
                               choices = c("ICC", "SEM"),
                               selected = "ICC",
                               inline = T
                             ),
-                            p("Either the sample size or the number of repeated measurements can be varied between the adapted (what you have collected so far) and target design (the chosen design at the start of the study, refering to the target sample size and number of repeated measurements). For that condition the MSE ratio is calculated. The MSE ratio can be used to estimate the required sample size/rater increase to reach the goal."
-                            ),
 
                             br(),
-                            em(""),
-                            selectInput(
-                              "design",
-                              label = "Design aspect to vary between adapted (current) design and target (goal) design",
-                              choices = c("raters", "sample size"),
-                              selected = character(0)
-                            ),
-
-                            bsTooltip("design", "Adapted design: number of patients or repeated measurements included so far; Target design: the intended number of patients or repeated measurements chosen at the start of the study, i.e. your goal.", placement = "top", trigger = "hover", options = list(container = "body")),
-                            #vary for raters
                             # conditionalPanel(
                             tags$h3("Input settings"),
                             tags$p("Define the design of your study below:"),
@@ -317,15 +308,18 @@ tabPanel("CI lower",
                               choices = c(0, 1, 2),
                               inline = TRUE
                             ),
+
+                            selectInput(
+                              "design",
+                              label = "What aspect of the design is lagging?",
+                              choices = c("repeated measurements", "sample size"),
+                              selected = character(0)
+                            ),
+
                             shinyjs::useShinyjs(),
                             div(id = "designk", ##vary for raters
-                                radioButtons(
-                                  "n_iccrg",
-                                  label = "Sample size (patients)",
-                                  choices = c(10, 20, 25, 30, 40, 50, 100, 200),
-                                  selected = "50",
-                                  inline = TRUE
-                                ),
+                                strong("Repeated measurement are lagging, specify the current and goal numbers."),
+                                br(),
                                 radioButtons(
                                   "k_iccr",
                                   label = "number of repeated measurements in adapted (current) design",
@@ -335,19 +329,22 @@ tabPanel("CI lower",
                                 ),
                                 radioButtons(
                                   "k_iccg",
-                                  label = "number of repeated measurements in target (goal) design",
+                                  label = "number of repeated measurements in target (goal) design per protocol",
                                   choices = c(2, 3, 4, 5, 6),
                                   selected = "3",
+                                  inline = TRUE
+                                ),
+                                radioButtons(
+                                  "n_iccrg",
+                                  label = "Sample size (patients)",
+                                  choices = c(10, 20, 25, 30, 40, 50, 100, 200),
+                                  selected = "50",
                                   inline = TRUE
                                 )
                             ) %>% hidden(),
                             div(id = "designn", ## vary for sample size
-                                radioButtons(
-                                  "k_iccrg",
-                                  label = "number of repeated measurements",
-                                  choices = c(2, 3, 4, 5, 6),
-                                  inline = TRUE
-                                ),
+                                strong("Sample size is lagging, specify the size and target size."),
+                                br(),
                                 radioButtons(
                                   "n_iccr",
                                   label = "Sample size in adapted (current) design",
@@ -361,6 +358,12 @@ tabPanel("CI lower",
                                   choices = c(10, 20, 25, 30, 40, 50, 100, 200),
                                   selected = "100",
                                   inline = TRUE
+                                ),
+                                radioButtons(
+                                  "k_iccrg",
+                                  label = "number of repeated measurements",
+                                  choices = c(2, 3, 4, 5, 6),
+                                  inline = TRUE
                                 )
                             ) %>% hidden()
                           )
@@ -368,24 +371,44 @@ tabPanel("CI lower",
                           ,
                           mainPanel(
                             ## results for MSE ratio
-                            h3("Relative precision"),
-                            p("The figure below shows the confidence interval computed via the mean squared error for the adapted design and the target design (> link Mokkink et al.,  2022)."),
-                            plotOutput("mseratio_icc"),
+
+                            h3("Precision loss"),
+                            strong("Target input:"),
+                            textOutput("mseratio_targetinput"),
+                            strong("Adapted input:"),
+                            textOutput("mseratio_adaptedinput"),
+
+                           # p("The figure below shows the confidence interval computed via the mean squared error for the adapted design and the target design (> link Mokkink et al.,  2022)."),
+                            plotOutput("mseratio_icc", height = "200px", width = "75%"),
+
                           fluidRow(
-                            h3("MSE ratio"),
+                            h3("Recommendations"),
+                            plotOutput("mseratio_plot", height = "100px", width = "75%"),
+
+                            box(title = "MSE ratio interpretation",
+                                collapsible = T,
+                                collapsed = F,
+                                solidHeader = T,
+                                width = 12,
+                                textOutput("MSEratio")
+                                ),
+                            box(title = "Explanations",
+                                collapsible = T,
+                                collapsed = T,
+                                solidHeader = T,
+                                width = 12,
+                                h4("MSE ratio"),
                             p( "The MSE ratio relates directly to the sample size, and the number of repeated measurements. The mean squared error is a combination of the squared standard error and the squared bias (see Mokkink et al.). In the situation of virtually no bias, the square root of the MSE equals the standard error. The standard error decreases by the square root of the number of repeated measurements. Accordingly, the MSE is directly related to the sample size and the number of repeated measurements; the MSE decreases by the sample size."
                             ),
-                            h3("Simulation results"),
+                            h4("Simulation results"),
                             p( "The simulation results can be used to compare different study design scenario's. By computing the ratio of the MSE in two different scenarios, that is the adapted (current) and target (defined at the start of the study) design, the ratio indicates the required change in sample size or repeated measurements for the scenario's to achieve equal precision. The decreased precision of the adapted design shows the loss in precision relative to the target design, when the sample size or repeated measurements cannot be further increased."
-                            ),
-                            ##hier dan nog uitleg toevoegen over hoe de MSE ratio geinterpreteerd moet worden. Dit moet helemaal geleid worden met de input parameters.
-                            h3("Interpreting MSE ratio"),
-                            textOutput("MSEratio")
-                          )
+                            )
+                            )
+
                           )
 
                         )
-
+)
                         )
 )
                ),
