@@ -829,7 +829,7 @@ shinyServer(function(input, output, session) {
     ### MSE ratio --------------
 
       observe({ #all output is in this observe!
-      if(input$design == "raters"){
+      if(input$design == "repeated measurements"){
        show("designk")
        hide("designn")
 
@@ -868,7 +868,9 @@ shinyServer(function(input, output, session) {
                 mse_sem = mean(mse_sem),
                 variance = mean(variance)
             ) %>%
-            mutate(scenario = "adapted")
+            mutate(scenario = "adapted",
+                   k = k_iccr(),
+                   n = n_iccr())
         #target design
         goal <-
             Agree::simoutput %>%
@@ -888,7 +890,9 @@ shinyServer(function(input, output, session) {
                 mse_sem = mean(mse_sem),
                 variance = mean(variance)
             ) %>%
-            mutate(scenario = "target")
+            mutate(scenario = "target",
+                   k = k_iccg(),
+                   n = n_iccg())
 
 
         scenario_icc <- bind_rows(ref, goal) %>%
@@ -948,6 +952,14 @@ shinyServer(function(input, output, session) {
 
           )
         })
+## 2do: add manual legend for the dotplot and bar plot to explain.
+    output$mseratio_targetinput <- renderText({
+      paste(k_iccg(), "repeated measurements with a sample size of",  n_iccg())
+      })
+    output$mseratio_adaptedinput <- renderText({
+    paste(k_iccr(), "repeated measurements with a sample size of",  n_iccr())
+    })
+
 
     output$mseratio_icc <- renderPlot({
 
@@ -962,15 +974,70 @@ shinyServer(function(input, output, session) {
         ylab(paste("Confidence interval for", scenario$statistic[1], sep = " ")) +
         annotate(geom= "text", label= paste("MSE ratio = ", round(scenario$mseratio[1],2)), x = 2.2, y = 0.45)
 
-
+     ggplot(scenario, aes(x = scenario, y = icc))+
+      geom_errorbar(aes( x = scenario, ymin = lower, ymax = upper), width = 0.2)+
+      ylim(-(0.6*scenario$yfact[1]), (0.6*scenario$yfact[1])) +
+      ylab("") + xlab("")+
+      coord_flip()+
+      annotate(geom = "text", label = paste("width = ", round(scenario$ciwidth[1],2)), y = 0, x = 1.1)+
+      annotate(geom = "text", label = paste("width = ", round(scenario$ciwidth[2],2)), y = 0, x = 2.1)+
+      annotate(geom= "text", label= paste("MSE ratio = ", round(scenario$mseratio[1],2)), y = 0.45, x = 1.5)+
+       theme(text = element_text(size = 16), legend.position = "none")+
+       ggtitle(paste("Confidence interval for", scenario$statistic[1], sep = " "))
 
     })
 
+
+
+
+    output$mseratio_plot <- renderPlot({
+
+      if(input$design == "sample size"){
+        oldk <- data.frame(old = rep(1, input$k_iccrg))
+        newk <-  data.frame(new =rep(1, round(as.numeric(input$k_iccrg) * scenario$mseratio[1])))
+        colors <- c("recommended" = "#34495E", "current" = "#73C6B6")
+     p1<-
+      ggplot()+
+        geom_dotplot(data= newk, aes(new, fill = "recommended"), binwidth = 1, dotsize = 3/6,  method = "histodot", color = "black")+
+        geom_dotplot(data= oldk, aes(old, fill ="current"), binwidth = 1, dotsize = 3/6,  method = "histodot", color = "black")+
+        scale_fill_manual("",values = colors)+
+        coord_flip()+
+        theme_void()+
+        ggtitle("Recommended increase in repeated measurements")+
+        theme(legend.position = "left")
+
+      }
+
+      if(input$design == "repeated measurements"){
+
+        newn <- data.frame(new = rep(1, round(as.numeric(input$n_iccrg) * scenario$mseratio[1])))
+        oldn <- data.frame(old =rep(1, input$n_iccrg))
+        colors <- c("recommended" = "#34495E", "current" = "#73C6B6")
+p1 <-
+        ggplot()+
+          geom_bar(data= newn, aes(new, fill = "recommended"), stat = "count")+
+          geom_bar(data= oldn, aes(old, fill ="current"), stat = "count")+
+          scale_fill_manual("", values = colors)+
+          coord_flip()+
+        theme_classic()+
+          ylim(0,200)+
+          theme(axis.line.y = element_blank(), axis.text.y = element_blank(), axis.title = element_blank())+
+          ggtitle("Recommended increase in sample size")+
+          theme(legend.position = "left")
+
+
+      }
+ p1
+
+    })
+
+
     output$MSEratio <- renderText({
+         statement <- character(0)
         if(input$design == "sample size"){
            statement <-  paste0("The MSE ratio is the required increase in repeated measurements to achieve the precision for the design with a sample size of ", input$n_iccg, " (indicated as target), with an actual sample size of ", input$n_iccr, " (indicated as adapted design). Accordingly, the number of repeated measurements (", input$k_iccrg, ") needs to be multiplied by ", round(scenario$mseratio[1],2), ", thus be increased to at least ",round(as.numeric(input$k_iccrg) * scenario$mseratio[1]), " to have a precision close to the precision with a sample size of ", input$n_iccg,  ". When it is not possible to increase the number of repeated measurements accordingly, the precision as expected under the target design will decrease in the adapted design.")
         }
-        if(input$design == "raters"){
+        if(input$design == "repeated measurements"){
            statement <-  paste0("The MSE ratio is the required sample size increase to achieve the precision for the design with ", input$k_iccg, " raters (indicated as target), with only ", input$k_iccr, " raters (indicated as adapted design). Accordingly, the sample size of ", input$n_iccrg, " needs to be multiplied by ", round(scenario$mseratio[1],2), ", thu sbe increased to at least ", round(as.numeric(input$n_iccrg) * scenario$mseratio[1]), " to have a precision close to the precision with ", input$k_iccg, " repeated measurements. When it is not possible to increase sample size accordingly, the precision as expected under the target design will decrease in the adapted design.")
         }
 
