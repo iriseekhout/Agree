@@ -259,8 +259,8 @@ tabPanel("CI lower",
                                 solidHeader = TRUE,
                                 collapsible = TRUE,
                                 collapsed = FALSE,
-                                div(strong("Phase of use:"), " during data collection when inclusion is (s)low, and you realize that the intended sample size of patients and the number of repeated measurements (as described in your protocol) cannot be reached.",br(), strong("Goal:"), " (1) To estimate the decrease in precision is when you compare the current design (i.e. the number of patients or repeated measurements included so far in the study) to the target design (i.e. as described in the protocol). (2) To understand how the current design can be updated in terms of either number of patients or number of repeated measurements to achieve a similar precision as the target design.",br(), strong("Pre-specifications:"), " ICC or SEM model that you will use, expected ICC/SEM value, expected variance in scores.",
-                                    br(),  strong("Reach of procedure:"), " feasible for all conditions described in the simulation study <link ref> as it is based on the results of the ",a("simulation", onclick="customHref('Simulation results')"))
+                                div(strong("Phase of use:"), " during data collection when inclusion is (s)low, and you realize that the intended sample size of patients and the number of repeated measurements (as described in your protocol) cannot be reached.",br(), strong("Goal:"), " (1) Precision loss: estimate the decrease in precision when you compare the current design (i.e. the number of patients or repeated measurements included so far in the study) to the target design (i.e. as described in the protocol). (2) Recommendations: understand how the current design can be updated in terms of either number of patients or number of repeated measurements to achieve a similar precision as the target design.",br(), strong("Pre-specifications:"), " ICC or SEM model that you will use, expected ICC/SEM value, expected variance in scores.",
+                                    br(),  strong("Reach of procedure:"), " feasible for all conditions described in the ",a("simulation study",href = "https://link.springer.com/article/10.1007/s10742-022-00293-9"),  " as it is based on the results of the ",a("simulation", onclick="customHref('Simulation results')"))
                             )
                           ),
 
@@ -311,18 +311,19 @@ tabPanel("CI lower",
 
                             selectInput(
                               "design",
-                              label = "What aspect of the design is lagging?",
+                              label = "What aspect of the design is delayed?",
                               choices = c("repeated measurements", "sample size"),
                               selected = character(0)
                             ),
 
                             shinyjs::useShinyjs(),
                             div(id = "designk", ##vary for raters
-                                strong("Repeated measurement are lagging, specify the current and goal numbers."),
+                                strong("Repeated measurement are delayed, specify the current and target (i.e. by procotol) numbers."),
+                                br(),
                                 br(),
                                 radioButtons(
                                   "k_iccr",
-                                  label = "number of repeated measurements in adapted (current) design",
+                                  label = "number of repeated measurements in current design",
                                   choices = c(2, 3, 4, 5, 6),
                                   selected = "2",
                                   inline = TRUE
@@ -343,18 +344,18 @@ tabPanel("CI lower",
                                 )
                             ) %>% hidden(),
                             div(id = "designn", ## vary for sample size
-                                strong("Sample size is lagging, specify the size and target size."),
+                                strong("Sample size is delayed, specify the current sample size and target size."),
                                 br(),
                                 radioButtons(
                                   "n_iccr",
-                                  label = "Sample size in adapted (current) design",
+                                  label = "Sample size in current design",
                                   choices = c(10, 20, 25, 30, 40, 50, 100, 200),
                                   selected = "50",
                                   inline = TRUE
                                 ),
                                 radioButtons(
                                   "n_iccg",
-                                  label = "Sample size in target (goal) design",
+                                  label = "Sample size in target (goal) design by protocol",
                                   choices = c(10, 20, 25, 30, 40, 50, 100, 200),
                                   selected = "100",
                                   inline = TRUE
@@ -373,12 +374,12 @@ tabPanel("CI lower",
                             ## results for MSE ratio
 
                             h3("Precision loss"),
-                            strong("Target input:"),
+                            strong("Target design input:"),
                             textOutput("mseratio_targetinput"),
-                            strong("Adapted input:"),
-                            textOutput("mseratio_adaptedinput"),
+                            strong("Current design input:"),
+                            textOutput("mseratio_currentinput"),
 
-                           # p("The figure below shows the confidence interval computed via the mean squared error for the adapted design and the target design (> link Mokkink et al.,  2022)."),
+                           # p("The figure below shows the confidence interval computed via the mean squared error for the current design and the target design (> link Mokkink et al.,  2022)."),
                             plotOutput("mseratio_icc", height = "200px", width = "75%"),
 
                           fluidRow(
@@ -401,7 +402,7 @@ tabPanel("CI lower",
                             p( "The MSE ratio relates directly to the sample size, and the number of repeated measurements. The mean squared error is a combination of the squared standard error and the squared bias (see Mokkink et al.). In the situation of virtually no bias, the square root of the MSE equals the standard error. The standard error decreases by the square root of the number of repeated measurements. Accordingly, the MSE is directly related to the sample size and the number of repeated measurements; the MSE decreases by the sample size."
                             ),
                             h4("Simulation results"),
-                            p( "The simulation results can be used to compare different study design scenario's. By computing the ratio of the MSE in two different scenarios, that is the adapted (current) and target (defined at the start of the study) design, the ratio indicates the required change in sample size or repeated measurements for the scenario's to achieve equal precision. The decreased precision of the adapted design shows the loss in precision relative to the target design, when the sample size or repeated measurements cannot be further increased."
+                            p( "The simulation results can be used to compare different study design scenario's. By computing the ratio of the MSE in two different scenarios, that is the current and target (defined at the start of the study) design, the ratio indicates the required change in sample size or repeated measurements for the scenario's to achieve equal precision. The decreased precision of the current design shows the loss in precision relative to the target design, when the sample size or repeated measurements cannot be further increased."
                             )
                             )
 
@@ -460,8 +461,8 @@ tabPanel("CI lower",
                      fluidRow(box(
                          width = 12,
                          h1("Simulation results"),
-                          p(
-                            "The methods and general results of the simulation study can be found in Mokkink et al. <link>"
+                          div(
+                            "The methods and general results of the simulation study can be found in ", a("Mokkink et al.",href = "https://link.springer.com/article/10.1007/s10742-022-00293-9"),"."
                           )
                          # textOutput("variableselection")
                      )),

@@ -850,7 +850,7 @@ shinyServer(function(input, output, session) {
 
       }
 
-      # adapted design
+      # current design
        ref <- Agree::simoutput %>%
             filter(method %in% !!input$method_iccrg &
                        k %in% !!k_iccr() &
@@ -868,7 +868,7 @@ shinyServer(function(input, output, session) {
                 mse_sem = mean(mse_sem),
                 variance = mean(variance)
             ) %>%
-            mutate(scenario = "adapted",
+            mutate(scenario = "current",
                    k = k_iccr(),
                    n = n_iccr())
         #target design
@@ -899,7 +899,7 @@ shinyServer(function(input, output, session) {
             mutate(SE = sqrt(mse),
                    lower = icc - (1.96 * SE),
                    upper = icc + (1.96 * SE),
-                   scenario = factor(scenario, levels = c("adapted", "target")),
+                   scenario = factor(scenario, levels = c("current", "target")),
                    mseratio = ref$mse/goal$mse,
                    statistic = "ICC",
                    yfact = 1)
@@ -908,7 +908,7 @@ shinyServer(function(input, output, session) {
           mutate(SE = sqrt(mse_sem),
                  lower = sem - (1.96 * SE),
                  upper = sem + (1.96 * SE),
-                 scenario = factor(scenario, levels = c("adapted", "target")),
+                 scenario = factor(scenario, levels = c("current", "target")),
                  mseratio = ref$mse_sem/goal$mse_sem,
                  statistic = "SEM",
                  yfact = sqrt(variance))
@@ -956,7 +956,7 @@ shinyServer(function(input, output, session) {
     output$mseratio_targetinput <- renderText({
       paste(k_iccg(), "repeated measurements with a sample size of",  n_iccg())
       })
-    output$mseratio_adaptedinput <- renderText({
+    output$mseratio_currentinput <- renderText({
     paste(k_iccr(), "repeated measurements with a sample size of",  n_iccr())
     })
 
@@ -994,7 +994,7 @@ shinyServer(function(input, output, session) {
 
       if(input$design == "sample size"){
         oldk <- data.frame(old = rep(1, input$k_iccrg))
-        newk <-  data.frame(new =rep(1, round(as.numeric(input$k_iccrg) * scenario$mseratio[1])))
+        newk <-  data.frame(new =rep(1, ceiling(as.numeric(input$k_iccrg) * scenario$mseratio[1])))
         colors <- c("recommended" = "#34495E", "current" = "#73C6B6")
      p1<-
       ggplot()+
@@ -1003,26 +1003,27 @@ shinyServer(function(input, output, session) {
         scale_fill_manual("",values = colors)+
         coord_flip()+
         theme_void()+
-        ggtitle("Recommended increase in repeated measurements")+
+        ggtitle("Recommended increase in repeated measurements to prevent precision loss")+
         theme(legend.position = "left")
 
       }
 
       if(input$design == "repeated measurements"){
 
-        newn <- data.frame(new = rep(1, round(as.numeric(input$n_iccrg) * scenario$mseratio[1])))
+        newn <- data.frame(new = rep(1, ceiling(as.numeric(input$n_iccrg) * scenario$mseratio[1])))
         oldn <- data.frame(old =rep(1, input$n_iccrg))
         colors <- c("recommended" = "#34495E", "current" = "#73C6B6")
 p1 <-
         ggplot()+
           geom_bar(data= newn, aes(new, fill = "recommended"), stat = "count")+
+          geom_text(data = newn, aes(x = new, label = ..count..), stat = "count", vjust = 1.5, colour = "white", hjust = 1.5)+
           geom_bar(data= oldn, aes(old, fill ="current"), stat = "count")+
           scale_fill_manual("", values = colors)+
           coord_flip()+
         theme_classic()+
           ylim(0,200)+
           theme(axis.line.y = element_blank(), axis.text.y = element_blank(), axis.title = element_blank())+
-          ggtitle("Recommended increase in sample size")+
+          ggtitle("Recommended increase in sample size to prevent precision loss")+
           theme(legend.position = "left")
 
 
@@ -1035,10 +1036,10 @@ p1 <-
     output$MSEratio <- renderText({
          statement <- character(0)
         if(input$design == "sample size"){
-           statement <-  paste0("The MSE ratio is the required increase in repeated measurements to achieve the precision for the design with a sample size of ", input$n_iccg, " (indicated as target), with an actual sample size of ", input$n_iccr, " (indicated as adapted design). Accordingly, the number of repeated measurements (", input$k_iccrg, ") needs to be multiplied by ", round(scenario$mseratio[1],2), ", thus be increased to at least ",round(as.numeric(input$k_iccrg) * scenario$mseratio[1]), " to have a precision close to the precision with a sample size of ", input$n_iccg,  ". When it is not possible to increase the number of repeated measurements accordingly, the precision as expected under the target design will decrease in the adapted design.")
+           statement <-  paste0("The MSE ratio is the required increase in repeated measurements to achieve the precision for the design with a sample size of ", input$n_iccg, " (indicated as target in the protocol), with an actual sample size of ", input$n_iccr, " (indicated as current design). Accordingly, the current number of repeated measurements (", input$k_iccrg, ") needs to be multiplied by ", round(scenario$mseratio[1],2), ", thus be increased to at least ",ceiling(as.numeric(input$k_iccrg) * scenario$mseratio[1]), " to have a precision close to the precision with a sample size of ", input$n_iccg,  ". When it is not possible to increase the number of repeated measurements accordingly, the precision as expected under the target design will decrease in the current design.")
         }
         if(input$design == "repeated measurements"){
-           statement <-  paste0("The MSE ratio is the required sample size increase to achieve the precision for the design with ", input$k_iccg, " raters (indicated as target), with only ", input$k_iccr, " raters (indicated as adapted design). Accordingly, the sample size of ", input$n_iccrg, " needs to be multiplied by ", round(scenario$mseratio[1],2), ", thu sbe increased to at least ", round(as.numeric(input$n_iccrg) * scenario$mseratio[1]), " to have a precision close to the precision with ", input$k_iccg, " repeated measurements. When it is not possible to increase sample size accordingly, the precision as expected under the target design will decrease in the adapted design.")
+           statement <-  paste0("The MSE ratio is the required sample size increase to achieve the precision for the design with ", input$k_iccg, " repeated measurements (indicated as target in the protocol), with only ", input$k_iccr, " repeated measurements (indicated as current design). Accordingly, the sample size of ", input$n_iccrg, " needs to be multiplied by ", round(scenario$mseratio[1],2), ", thus be increased to at least ", ceiling(as.numeric(input$n_iccrg) * scenario$mseratio[1]), " to have a precision close to the precision with ", input$k_iccg, " repeated measurements. When it is not possible to increase sample size accordingly, the precision as expected under the target design will decrease in the current design.")
         }
 
         statement
