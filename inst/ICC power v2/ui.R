@@ -84,7 +84,7 @@ ui <-tagList(
                            collapsible = TRUE,
                            collapsed = TRUE,
                            div("The CI width procedure and the MSE ratio procedure are based on simulation studies (Mokkink et al. 2022). All specific results of the simulations are shown ",a("here", onclick="customHref('Simulation results')"),". The CI lower limit procedure can be used in situations beyond the conditions considered in the simulation studies.", br(),br(), strong("Citation for the app:"), br(),
-                              "Mokkink, L.B., de Vet, H., Diemeer, S. et al. Sample size recommendations for studies on reliability and measurement error: an online application based on simulation studies. Health Serv Outcomes Res Method (2022).", a("https://doi.org/10.1007/s10742-022-00293-9",href = "https://doi.org/10.1007/s10742-022-00293-9") ),
+                              "Mokkink, L.B., de Vet, H., Diemeer, S. et al. Sample size recommendations for studies on reliability and measurement error: an online application based on simulation studies. Health Serv Outcomes Res Method (2022).", a("https://doi.org/10.1007/s10742-022-00293-9",href = "https://doi.org/10.1007/s10742-022-00293-9", target="_blank") ),
                            status = "primary",
                            width = 10),
                 box(title = p("Design issues beyond sample size", style="color:white",
@@ -92,7 +92,7 @@ ui <-tagList(
                     solidHeader = TRUE,
                     collapsible = TRUE,
                     collapsed = TRUE,
-                    div("For assistance in comprehensively formulating your reserach question, and making other design choices, such as which patients and professionals should be included, and how to build the appropriate statistical formula for your study, we refer to our paper: ", a("Studies on Reliability and Measurement Error of Measurements in Medicine – From Design to Statistics Explained for Medical Researchers",href = "https://doi.org/10.2147/PROM.S398886") ),
+                    div("For assistance in comprehensively formulating your reserach question, and making other design choices, such as which patients and professionals should be included, and how to build the appropriate statistical formula for your study, we refer to our paper: ", a("Studies on Reliability and Measurement Error of Measurements in Medicine – From Design to Statistics Explained for Medical Researchers",href = "https://doi.org/10.2147/PROM.S398886", target="_blank") ),
                     status = "primary",
                     width = 10)
                 )
@@ -112,7 +112,7 @@ ui <-tagList(
                               collapsible = TRUE,
                               collapsed = FALSE,
                               div(strong("Phase of use:"), " design phase of your study, i.e. before the start of the data collection",br(), strong("Goal:"), " determine the precision of your target sample size to report in your study protocol: what conditions of sample size of patients and repeated measurements can achieve your acceptable CI width?",br(), strong("Pre-specifications:"), " acceptable width of the confidence interval, ICC or SEM model that you will use, expected ICC/SEM value",
-                                br(),  strong("Reach of procedure:"), " feasible for all conditions described in the ", a("simulation study",href = "https://doi.org/10.1007/s10742-022-00293-9"),  " as it is based on the results of the ",a("simulation", onclick="customHref('Simulation results')") )
+                                br(),  strong("Reach of procedure:"), " feasible for all conditions described in the ", a("simulation study",href = "https://doi.org/10.1007/s10742-022-00293-9", target="_blank"),  " as it is based on the results of the ",a("simulation", onclick="customHref('Simulation results')") )
                               )
                           ),
 
@@ -190,7 +190,7 @@ ui <-tagList(
                                 collapsible = TRUE,
                                 collapsed = FALSE,
                                 div(strong("Phase of use:"), " during data collection when inclusion is (s)low, and you realize that the intended sample size of patients and the number of repeated measurements (as described in your protocol) cannot be reached.",br(), strong("Goal:"), " (1) Precision loss: estimate the decrease in precision when you compare the current design (i.e. the number of patients or repeated measurements included so far in the study) to the target design (i.e. as described in the protocol). (2) Recommendations: understand how the current design can be updated in terms of either number of patients or number of repeated measurements to achieve a similar precision as the target design.",br(), strong("Pre-specifications:"), " ICC or SEM model that you will use, expected ICC/SEM value, expected variance in scores.",
-                                    br(),  strong("Reach of procedure:"), " feasible for all conditions described in the ",a("simulation study",href = "https://link.springer.com/article/10.1007/s10742-022-00293-9"),  " as it is based on the results of the ",a("simulation", onclick="customHref('Simulation results')"))
+                                    br(),  strong("Reach of procedure:"), " feasible for all conditions described in the ",a("simulation study",href = "https://link.springer.com/article/10.1007/s10742-022-00293-9", target="_blank"),  " as it is based on the results of the ",a("simulation", onclick="customHref('Simulation results')"))
                             )
                           ),
 
@@ -352,7 +352,7 @@ tabPanel("CI lower",
                  collapsible = TRUE,
                  collapsed = FALSE,
                  div(strong("Phase of use:"), " design phase of your study, i.e. before the start of the data collection, and you want to apply the ", strong("one-way random effects model"),".",br(), strong("Goal:"), " determine the precision of your target sample size (to report in the study protocol); what conditions of sample size and repeated measurements can achieve your acceptable CI width in your one-way random effects analysis",br(), strong("Pre-specifications:"), " acceptable lower limit of the 95% confidence interval, expected ICC/SEM value.",
-                     br(),  strong("Reach of procedure:"), " any conditions in a one-way random effects model, as it is based on an analytical approach", a("Zou (2011)", href = "https://doi.org/10.1002/sim.5466"))
+                     br(),  strong("Reach of procedure:"), " any conditions in a one-way random effects model, as it is based on an analytical approach", a("Zou (2011)", href = "https://doi.org/10.1002/sim.5466", target="_blank"))
              )
            ),
 
@@ -463,7 +463,7 @@ tabPanel("CI lower",
                          width = 12,
                          h1("Simulation results"),
                           div(
-                            "The methods and general results of the simulation study can be found in ", a("Mokkink et al.",href = "https://link.springer.com/article/10.1007/s10742-022-00293-9"),"."
+                            "The methods and general results of the simulation study can be found in ", a("Mokkink et al.",href = "https://link.springer.com/article/10.1007/s10742-022-00293-9", target="_blank"),"."
                           )
                          # textOutput("variableselection")
                      )),
@@ -540,7 +540,7 @@ tabPanel("FAQ & links",
                  collapsed = TRUE,
                  solidHeader = TRUE,
                  status = "success",
-                 div("The app and the recommendations that you get are based on a simulation study published in", a("Health Services and Outcomes Research Methodology", href = "https://link.springer.com/article/10.1007/s10742-022-00293-9"))
+                 div("The app and the recommendations that you get are based on a simulation study published in", a("Health Services and Outcomes Research Methodology", href = "https://link.springer.com/article/10.1007/s10742-022-00293-9", target="_blank"))
 
                )),
              fluidRow(
@@ -550,7 +550,7 @@ tabPanel("FAQ & links",
                  collapsed = TRUE,
                  solidHeader = TRUE,
                  status = "success",
-                 div("Many different designs are possible for studies on reliability and measurement error of measurement instruments. To decide on the design and subsequently on the appropriate ICC and SEM formula we refer to our paper published in", a("Patient Related Outcome Measures", href = "https://doi.org/10.2147/PROM.S398886")), br(),
+                 div("Many different designs are possible for studies on reliability and measurement error of measurement instruments. To decide on the design and subsequently on the appropriate ICC and SEM formula we refer to our paper published in", a("Patient Related Outcome Measures", href = "https://doi.org/10.2147/PROM.S398886", target="_blank")), br(),
                  div("In this app we provide recommendations for one-way random effects model (ICC (1.1)), two-way random effects models for agreement (ICC (2.1)), or the two-way mixed effects model for consistency (ICC (3.1)). By default, the two-way random effects model for agreement is selected, as in most cases in medicine this model is preferred over the other two models.")
 
                )),
@@ -561,7 +561,7 @@ tabPanel("FAQ & links",
                  collapsed = TRUE,
                  solidHeader = TRUE,
                  status = "success",
-                 tags$div("The R package", tags$a("Agree", href = "https://github.com/iriseekhout/Agree"), "includes all functions to obtain the ICCs and SEMs for different types of ICCs. The Agree package is publically available and can be installed in R using the following code: ", tags$code("remotes::install_github(repo = 'iriseekhout/Agree')"))
+                 tags$div("The R package", tags$a("Agree", href = "https://github.com/iriseekhout/Agree", target="_blank"), "includes all functions to obtain the ICCs and SEMs for different types of ICCs. The Agree package is publically available and can be installed in R using the following code: ", tags$code("remotes::install_github(repo = 'iriseekhout/Agree')"))
                )),
              fluidRow(
                box(
@@ -571,7 +571,7 @@ tabPanel("FAQ & links",
                  solidHeader = TRUE,
                  status = "success",
                  tags$div("The oneway refers to the ICC or SEM based on an one-way random effects model (ICC (1.1)).", br(), "The agreement type refers to the ICC or SEM based on a two-way random effects models for agreement (ICC (2.1)) where all error is taken into account, thus also systematic differences between repeated measurements.", br(), "The consistency type refers to the ICC or SEM based on a two-way mixed effects model for consistency (ICC (3.1)); it excludes any systematic error between the repeated measurements and is comparable to a Peason correlation coefficient.", br(),
-                          "For more information we refer to", a("Mokkink et al. 2023", href = "https://doi.org/10.2147/PROM.S398886"))
+                          "For more information we refer to", a("Mokkink et al. 2023", href = "https://doi.org/10.2147/PROM.S398886", target="_blank"))
                )),
              fluidRow(
                box(
