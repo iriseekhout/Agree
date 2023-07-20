@@ -1,4 +1,5 @@
-
+##original version of app === depricated and offline since 20-7-2023
+## preceeded by v2
 ui <-tagList(
     tags$head(tags$script(src="js/index.js")),
 
