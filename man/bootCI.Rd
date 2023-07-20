@@ -25,6 +25,7 @@ named vector with confidence interval levels
 bootCI
 }
 \examples{
+\dontrun{
 agreement(diagnoses)
 bootCI(data = diagnoses, fun = agreement)
 agreement(diagnoses, specific = "4. Neurosis")
@@ -36,4 +37,5 @@ sem_a <- function(x){icc(data = x, method = "agreement", confint = FALSE)["sem"]
 sem_a <- function(x){unlist(icc_agreement(x)["sem"])}
 bootCI(data = breast[,c("PCH1_score", "PCH2_score", "PCH3_score")],
 fun = sem_a)
+}
 }
