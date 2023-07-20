@@ -10,3 +10,6 @@
 ^doc$
 ^Meta$
 ^old$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
